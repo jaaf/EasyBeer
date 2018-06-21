@@ -343,6 +343,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.mash_sparge_water_volume_edit.setText(str(val))
  
     def calculate_IBU(self,s=None):
+        print('Entering calculate_IBU')
         '''
         this function is called afer hop amounts have been calculated or on editing finished for one specific hop adopted amount 
         and calculate the IBU contribution for all hops or the selected hop
@@ -1760,7 +1761,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
 if __name__ == "__main__":
  
     app = QApplication(sys.argv)
-    MainWindow = MainWindow()
+    MainWindow = MainWindow(translator)
     ui = MainWindowUI.Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
