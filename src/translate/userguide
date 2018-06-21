@@ -1,0 +1,10 @@
+Message extraction
+Depuis le niveau qui contient src 
+
+pylupdate5 src/view/*.py -ts src/translate/fr_FR.ts
+
+Dans la commmade précédente MaMousse contient les sources
+
+Cette command produit le fichier fr_FR.ts qu'il faut ouvrir avec Qt5Linguist pour le traduire
+
+Dans l'outil Qt5Linguist il suffit de sauvegarder le fichier puis d'appeler la commmande release.

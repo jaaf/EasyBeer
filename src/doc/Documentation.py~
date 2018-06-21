@@ -1,0 +1,75 @@
+'''
+Created on 16 juil. 2017
+
+@author: jaaf
+'''
+from PyQt4.uic.Compiler.qtproxies import QtCore
+
+
+#!/usr/bin/python3
+#­*­coding: utf­8 -­*­
+
+#MaMousse
+#Copyright (C) 2017 José FOURNIER
+
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 3
+#of the License, or (at your option) any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+from PyQt4 import QtCore
+
+class Documentation(object):
+    
+    text=''''
+    
+    
+class Document()
+<h1>Introduction</h1>
+This is a very quick help as the dialogs are self explanatory.
+
+MaMousse consist of a main dialog that opens as soon as you launch the application and a series of dialogs that help you to prepare a bier brewing session.
+
+These dialogs can be opened from the menu in the main window. The main window is where you prepare a brewing session. Nevertheless, you cannot prepare a brewing session as long as you have not declared at least
+an equipment and a recipe. Moreover, to declare a recipe, you must have created a database for all your ingredients, malts, hops, adjuncts and yeast.
+
+It is a good starting point to use the dialogs that permits you to create these databases even if you only put one or two items into them. As you will see soon, it is rather simple
+
+<h1>Basic Principles in Dialogs</h1>
+
+In every dialog:
+<ul>
+<li>Inputs to fill have a lightgreen background color and text is in red color</li>
+<li>Calculated values appear in green text on a yellow background</li>
+<li>Read only values appear in black on a grey background</li>
+<li>Question mark buttons open a contextual explanatory window</li>
+</ul>
+
+<h1>Opening the database dialogs</h1>
+Dialogs for storing ingredients into the database can be opened using the Database menu entry in the main window.
+<ul>
+<li>Database -> Edit Malt Database for Malt Dialog</li>
+<li>Database -> Edit Hop Database for Hop Dialog</li>
+<li>Database -> Edit Yeast Database for Yeast Dialog</li>
+<li>Database -> Edit Recipe Database for Recipe Dialog</li>
+<li>Database -> Edit Equipment Database for Equipment Database</li>
+
+</ul>
+
+<h1>What is in a recipe and what is not?</h1>
+A recipe define how to make a beer. It defines the malts you have to use but doesn't define the quantities. Only the proportions are given e.g. 90% of malt 1 and 10% of malt2. The sum of percentages
+must be equal to 100, otherwise you cannot save the recipe in the data base. Quantities are calculated in the brewing session once you have defined the batch size
+It also defines the hops to use and the targeted
+
+
+    
+    
+  '''
