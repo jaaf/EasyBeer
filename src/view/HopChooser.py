@@ -39,9 +39,9 @@ class HopChooser(QWidget,HopChooserUI.Ui_Form ):
         self.set_connections()  
         
         
-    def add_hop_view(self):
+    def save_hop(self):
         hopT=self.owner.model.get_hop(str(self.hop_list_widget.currentItem().text()))
-        self.owner.add_hop_view(hopT)  
+        self.owner.save_hop(hopT)  
         self.hide()    
     
    
@@ -64,7 +64,7 @@ class HopChooser(QWidget,HopChooserUI.Ui_Form ):
         self.load_selected_hop()     
         
     def set_connections(self):
-        self.hop_add_button.clicked.connect(self.add_hop_view)    
+        self.hop_add_button.clicked.connect(self.save_hop)    
         self.hop_list_widget.currentItemChanged.connect(self.selection_changed_hop)
         self.hop_list_widget.currentItemChanged.connect(self.selection_changed_hop)
         self.close_button.clicked.connect(self.close)

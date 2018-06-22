@@ -107,7 +107,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.set_connections()
 
         
-    def add_hop_view(self,hop_type,usage=None,duration=None,hop_rate=None):  
+    def save_hop(self,hop_type,usage=None,duration=None,hop_rate=None):  
         
  
         #print('RecipeDialog : Adding a hop')
@@ -876,7 +876,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             print (str(h.hop))
             print(str(h.usage))
             print(str(h.hop_rate))   
-            self.add_hop_view(hop, h.usage, h.duration,h.hop_rate)     
+            self.save_hop(hop, h.usage, h.duration,h.hop_rate)     
                
     def update_yeast_view(self,recipe):
         self.util.clearLayout(self.yeast_layout)

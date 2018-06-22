@@ -19,6 +19,16 @@
 
 import model.constants as mcst
 import os
+import sqlite3 as lite
+import pickle
+from sqlite3 import Error
+from model.Malt import Malt
+from model.Hop import Hop
+from model.Yeast import Yeast
+from model.Rest import Rest
+from model.Recipe import Recipe
+from model.Equipment import Equipment
+
 
 
 import shelve, inspect
@@ -63,7 +73,7 @@ class Model(object):
         self.update_from_db('session')
         self.update_from_db('style')
         
-        #containers for callback functions
+        'containers for callback functions'
         self._target_func={
             'malt': [],
             'hop': [],
@@ -94,7 +104,7 @@ class Model(object):
             self._target_func[target].remove(func)       
                 
     def announce_model_changed(self,target):
-        for func in self._target_func[target]:
+        for func in self._target_func[target]:           
             func(target)
       
  
@@ -168,44 +178,54 @@ class Model(object):
         self.__style_list=l    
         
         
-               
-    
-    
     def get_malt(self,key):
-        'return a malt given a key'
-        self.malt_base=shelve.open(os.path.join(self.database_path,'malt.db'))#(mcst.MALT_DB)
-        malt=self.malt_base[key]
-        self.malt_base.close()
+        'return a malt given its name'   
+        con=lite.connect('easybeer.db')
+        c = con.cursor()  
+        c.execute("""select * from malts where name=:name""",{'name':key})
+        m=c.fetchone()
+        malt=Malt(m[0],m[1],m[2],m[3],m[4],m[5])     
         return malt
     
     def get_hop(self,key):
-        'return a hop given a key'
-        self.hop_base=shelve.open(os.path.join(self.database_path,'hop.db'))#(mcst.HOP_DB)
-        hop=self.hop_base[key]
-        self.hop_base.close()
+        'return a hop given its name'   
+        con=lite.connect('easybeer.db')
+        c = con.cursor()  
+        c.execute("""select * from hops where name=:name""",{'name':key})
+        h=c.fetchone()
+        hop=Hop(h[0],h[1],h[2])     
         return hop
+    
+
     
     def get_rest(self,key):
         'return a rest given a key'
-        self.rest_base=shelve.open(os.path.join(self.database_path,'rest.db'))#(mcst.REST_DB)
-        rest=self.rest_base[key]
-        self.rest_base.close()
+        con=lite.connect('easybeer.db')
+        c = con.cursor()  
+        c.execute("""select * from rests where name=:name""",{'name':key})
+        r=c.fetchone()
+        rest=Rest(r[0],pickle.loads(r[1]),pickle.loads(r[2]),r[3])     
         return rest
     
     def get_yeast(self,key):
-        'return a yeast given a key'
-        self.yeast_base=shelve.open(os.path.join(self.database_path,'yeast.db'))#(mcst.YEAST_DB)
-        yeast=self.yeast_base[key]
-        self.yeast_base.close()
+        'return a yeast given its name'   
+        con=lite.connect('easybeer.db')
+        c = con.cursor()  
+        c.execute("""select * from yeasts where name=:name""",{'name':key})
+        y=c.fetchone()
+        yeast=Yeast(y[0],y[1],y[2],y[3],y[4],y[5],y[6],y[7],y[8])     
         return yeast
     
     def get_recipe(self,key):
-        'return a recipe by key'
-        self.recipe_base=shelve.open(os.path.join(self.database_path,'recipe.db'))#(mcst.RECIPE_DB)
-        recipe=self.recipe_base[key]
-        self.recipe_base.close()
+        'return a recipe given its name'
+        con=lite.connect('easybeer')
+        c = con.cursor()
+        c.execute("""select * from recipe where name=:name""",{'name':key})
+        rcp=c.fetchone()
+        recipe=Recipe(rcp[0],pickle.loads(rcp[1]),pickle.loads(rcp[2]),pickle.loads(rcp[3]),rcp[4],rcp[5],rcp[6],pickle.loads(rcp[7]),rcp[8])
         return recipe
-    
+        
+           
     def get_equipment(self,key):
         'return an equipment by key'
         self.equipment_base=shelve.open(os.path.join(self.database_path,'equipment.db'))#(mcst.EQUIPMENT_DB)
@@ -225,47 +245,97 @@ class Model(object):
         styles=self.style_base[category]
         self.style_base.close()
         return styles
-     
+    
+    
+        
     def save_malt(self,malt):
-        'add a malt persisting it to the db'
-        print('writing in malt.db')
-        self.malt_base=shelve.open(os.path.join(self.database_path,'malt.db'))#(mcst.MALT_DB)
-        self.malt_base[malt.name]=malt
-        self.malt_base.close()
+        print('saving malt with sqlite')
+        con = lite.connect('easybeer.db')
+        c = con.cursor()
+        try:
+            'malts table already exists as created in self.update_from_db'
+            c.execute("insert into malts values (:name,:maker,:max_yield,:color,:kolbach_min, :kolbach_max)",
+                  {'name':malt.name, 'maker':malt.maker, 'max_yield':malt.max_yield, 'color':malt.color, 'kolbach_min':malt.kolbach_min,'kolbach_max':malt.kolbach_max})
+            con.commit()
+            c.execute("select * from malts")    
+        except Error as e :
+            print(e)   
+        c.close()
+        con.close()
         self.update_from_db('malt') #reread the actual key state of db
         self.announce_model_changed('malt')
-        
-    def add_hop_view(self,hop):
-        'add a hop persisting it to the db'
-        self.hop_base=shelve.open(os.path.join(self.database_path,'hop.db'))#(mcst.HOP_DB)
-        self.hop_base[str(hop.name)]=hop
-        self.hop_base.close()
+
+    def save_hop(self,hop):
+        print('saving hop with sqlite')
+        con = lite.connect('easybeer.db')
+        c = con.cursor()
+        try:
+            'hops table already exists as created in self.update_from_db'
+            c.execute("insert into hops values (:name,:alpha_acid,:form)",
+                  {'name':hop.name, 'alpha_acid':hop.alpha_acid, 'form':hop.form})
+            con.commit()
+            c.execute("select * from hops")    
+        except Error as e :
+            print(e)   
+        c.close()
+        con.close()
         self.update_from_db('hop') #reread the actual key state of db
-        self.announce_model_changed('hop')
+        self.announce_model_changed('hop')        
+  
+
         
     def save_rest(self,rest):
-        'add or update a rest in the db'
-        self.rest_base=shelve.open(os.path.join(self.database_path,'rest.db'))#(mcst.REST_DB)
-        self.rest_base[str(rest.name)]=rest
-        self.rest_base.close()
+        print('saving rest with sqlite')
+        con = lite.connect('easybeer.db')
+        c = con.cursor()
+        try:
+            'rests table already exists as created in self.update_from_db'
+            c.execute("insert into rests values (:name,:phs,:temperatures,:guidance)",
+                  {'name':rest.name, 'phs':pickle.dumps(rest.phs), 'temperatures':pickle.dumps(rest.temperatures),'guidance':rest.guidance})
+            con.commit()
+            c.execute("select * from hops")    
+        except Error as e :
+            print(e)   
+        c.close()
+        con.close()
         self.update_from_db('rest')
         self.announce_model_changed('rest')
         
     def save_yeast(self,yeast):
-        'add a yeast persisting it to the db'
-        self.yeast_base=shelve.open(os.path.join(self.database_path,'yeast.db'))#(mcst.YEAST_DB)
-        self.yeast_base[str(yeast.name)]=yeast
-        self.yeast_base.close()
-        self.update_from_db('yeast') #reread the actual key state of db  
-        self.announce_model_changed('yeast') 
+        print('saving yeast with sqlite')
+        con = lite.connect('easybeer.db')
+        c = con.cursor()
+        try:
+            'yeast table already exists as created in self.update_from_db'
+            c.execute("insert into yeasts values (:name,:maker,:max_allowed_temperature,:min_allowed_temperature,:max_advised_temperature, :min_allowed_temperature, :form, :attenuation, :floculation)",
+                  {'name':yeast.name, 'maker':yeast.maker, 'max_allowed_temperature':yeast.max_allowed_temperature, 'min_allowed_temperature':yeast.min_allowed_temperature,
+                    'max_advised_temperature':yeast.max_advised_temperature,'min_advised_temperature':yeast.max_advised_temperature, 'form':yeast.form, 'attenuation':yeast.attenuation, 'floculation':yeast.floculation})
+            con.commit()
+            c.execute("select * from yeasts")    
+        except Error as e :
+            print(e)   
+        c.close()
+        con.close()
+        self.update_from_db('yeast') #reread the actual key state of db
+        self.announce_model_changed('yeast')
         
     def add_recipe(self,recipe):
-        'add a recipe persisting it to the db' 
-        self.recipe_base=shelve.open(os.path.join(self.database_path,'recipe.db'))#(mcst.RECIPE_DB)
-        self.recipe_base[recipe.name]=recipe
-        self.recipe_base.close()
-        self.update_from_db('recipe')
-        self.announce_model_changed('recipe') 
+        con = lite.connect('easybeer.db')
+        c = con.cursor()
+        try:
+            'recipes table already exists as created in self.update_from_db'
+            c.execute("insert into recipes values (:name,:malts_in_mash,:mash_rests,:hops_in_recipe,:targeted_original_gravity,:targeted_bitterness,:boiling_time,:yeasts_in_recipe,:fermentation_explanation)",
+                  {'name':recipe.name, 'malts_in_mash':pickle.dumps(recipe.malts_in_mash), 'mash_rests':pickle.dumps(recipe.mash_rests),'hops_in_recipe':recipe.hops_in_recipe,
+                   'targeted_original_gravity':recipe.targeted_original_gravity,'targeted_bitterness':recipe.targeted_bitterness,'boiling_time':recipe.boiling_time,'yeast_in_recipe':recipe.yeast_in_recipe,
+                   'fermentation_explanation':recipe.fermentation_explanation})
+            con.commit()
+            c.execute("select * from recipes")    
+        except Error as e :
+            print(e)   
+        c.close()
+        con.close()
+        self.update_from_db('rest')
+        self.announce_model_changed('rest')
         
     def add_equipment(self,equipment):
         'add an equipment persisting it to the db' 
@@ -302,22 +372,34 @@ class Model(object):
                
         recipe_base.close()
         
-        
+
     def remove_malt(self,key):
-        'remove a malt from db'
-        self.malt_base=shelve.open(os.path.join(self.database_path,'malt.db'))#(mcst.MALT_DB)
-        del self.malt_base[key]
-        self.malt_base.close()
+        'remove a malt from db given its name' 
+        con=lite.connect('easybeer.db')
+        c = con.cursor()  
+        try:
+            c.execute("""delete from malts where name=:name""",{'name':key})
+            con.commit()
+        except Error as e:
+            print(e)    
+        c.close()
+        con.close()  
         self.update_from_db('malt')
-        self.announce_model_changed('malt')  
+        self.announce_model_changed('malt') 
         
     def remove_hop(self,key):
-        'remove a hop from db'
-        self.hop_base=shelve.open(os.path.join(self.database_path,'hop.db'))#(mcst.HOP_DB)
-        del self.hop_base[key]
-        self.hop_base.close()
+        'remove a hop from db given its name' 
+        con=lite.connect('easybeer.db')
+        c = con.cursor()  
+        try:
+            c.execute("""delete from hops where name=:name""",{'name':key})
+            con.commit()
+        except Error as e:
+            print(e)    
+        c.close()
+        con.close()  
         self.update_from_db('hop')
-        self.announce_model_changed('hop')
+        self.announce_model_changed('hop') 
         
     def remove_session(self,key):
         'remove a brewing session from db' 
@@ -328,18 +410,30 @@ class Model(object):
         
         
     def remove_yeast(self,key):
-        'remove a yeast from db'
-        self.yeast_base=shelve.open(os.path.join(self.database_path,'yeast.db'))#(mcst.YEAST_DB)
-        del self.yeast_base[key]
-        self.yeast_base.close()
+        'remove a yeast from db given its name' 
+        con=lite.connect('easybeer.db')
+        c = con.cursor()  
+        try:
+            c.execute("""delete from yeasts where name=:name""",{'name':key})
+            con.commit()
+        except Error as e:
+            print(e)    
+        c.close()
+        con.close()  
         self.update_from_db('yeast')
-        self.announce_model_changed('yeast')    
+        self.announce_model_changed('yeast')  
         
     def remove_recipe(self,key):
         'remove a recipe from db given its key' 
-        self.recipe_base=shelve.open(os.path.join(self.database_path,'recipe.db'))#(mcst.RECIPE_DB)
-        del self.recipe_base[key]
-        self.recipe_base.close()
+        con=lite.connect('easybeer.db')
+        c = con.cursor()  
+        try:
+            c.execute("""delete from recipes where name=:name""",{'name':key})
+            con.commit()
+        except Error as e:
+            print(e)    
+        c.close()
+        con.close()  
         self.update_from_db('recipe')
         self.announce_model_changed('recipe') 
         
@@ -353,9 +447,15 @@ class Model(object):
         
     def remove_rest(self,key):
         'remove a rest from db given its key'
-        self.rest_base=shelve.open(os.path.join(self.database_path,'rest.db'))#(mcst.REST_DB)
-        del self.rest_base[key]
-        self.rest_base.close()
+        con=lite.connect('easybeer.db')
+        c = con.cursor()  
+        try:
+            c.execute("""delete from rests where name=:name""",{'name':key})
+            con.commit()
+        except Error as e:
+            print(e)    
+        c.close()
+        con.close()
         self.update_from_db('rest')
         self.announce_model_changed('rest')    
         
@@ -363,35 +463,50 @@ class Model(object):
     def update_from_db(self,target):
         'in model update from db'
         def f_malt():
-            print('readinq in /malt.db')
-            self.malt_base=shelve.open(os.path.join(self.database_path,'malt.db'))#('malt.db')#(mcst.MALT_DB)
-            self.__malt_list=list(self.malt_base.keys())
+            print('getting malt list from db')
+            c.execute("""select name from malts""")
+            r=list(c.fetchall())
+            self.__malt_list=list()  
+            for m in r:
+                self.__malt_list.append(m[0])   
             self.__malt_list.sort()
-            self.malt_base.close() 
             
         def f_hop():
-            self.hop_base=shelve.open(os.path.join(self.database_path,'hop.db'))#('hop.db')#(mcst.HOP_DB)
-            self.__hop_list=list(self.hop_base.keys())
-            self.__hop_list.sort()
-            self.hop_base.close()
+            print('getting hop list from db')
+            c.execute("""select name from hops""")
+            r=list(c.fetchall())
+            self.__hop_list=list()  
+            for h in r:
+                self.__hop_list.append(h[0])   
+            self.__hop_list.sort()    
+            
             
         def f_rest():
-            self.rest_base=shelve.open(os.path.join(self.database_path,'rest.db'))#(mcst.REST_DB)
-            self.__rest_list=list(self.rest_base.keys())
-            self.__rest_list.sort()
-            self.rest_base.close()
+            print('getting rest list from db')
+            c.execute("""select name from rests""")
+            r=list(c.fetchall())
+            self.__rest_list=list()  
+            for re in r:
+                self.__rest_list.append(re[0])   
+            self.__rest_list.sort()  
+            
             
         def f_yeast():
-            self.yeast_base=shelve.open(os.path.join(self.database_path,'yeast.db'))#(mcst.YEAST_DB)
-            self.__yeast_list=list(self.yeast_base.keys())
-            self.__yeast_list.sort()
-            self.yeast_base.close() 
+            print('getting yeast list from db')
+            c.execute("""select name from yeasts""")
+            r=list(c.fetchall())
+            self.__yeast_list=list()  
+            for y in r:
+                self.__yeast_list.append(y[0])   
+            self.__yeast_list.sort() 
                     
         def f_recipe():
-            self.recipe_base=shelve.open(os.path.join(self.database_path,'recipe.db'))#(mcst.RECIPE_DB)
-            self.__recipe_list=list(self.recipe_base.keys())
-            self.recipe_list.sort()
-            self.recipe_base.close()
+            c.execute("""select name from recipes""")
+            r=list(c.fetchall())
+            self.__recipe_list=list()  
+            for rec in r:
+                self.__rest_list.append(rec[0])   
+            self.__recipe_list.sort()  
         
         def f_equipment():
             self.equipment_base=shelve.open(os.path.join(self.database_path,'equipment.db'))#(mcst.EQUIPMENT_DB)
@@ -408,8 +523,34 @@ class Model(object):
         def f_style():
             self.style_base=shelve.open(os.path.join(self.database_path,'style.db'))#(mcst.STYLE_DB)
             self.__style_list=list(self.style_base.keys())
-            self.style_base.close()    
+            self.style_base.close()  
+              
+        con=lite.connect("easybeer.db")
+        c=con.cursor()
+        try:
+            sql = """create table if not exists malts (name text primary key not null,maker text,max_yield real,color real,kolbach_min real,kolbach_max real)"""
+            c.execute(sql)  
+              
+            sql = """create table if not exists hops (name text primary key not null,alpha_acid real,form text)"""
+            c.execute(sql)  
+            
+            sql = """create table if not exists yeasts (name text primary key not null,maker text,max_allowed_temperature real,min_allowed_temperature real, 
+            max_advised_temperature real,min_advised_temperature  real, form text, attenuation text, floculation text)"""
+            c.execute(sql) 
+
+            sql = """create table if not exists rests (name text primary key not null,phs text,temperatures text, guidance text)"""
+            c.execute(sql)      
+            
+            sql = """create table if not exists recipes (name text primary key not null,malts_in_mash text, mash_rests text, hops_in_recipe text,targeted_original_gravity real,targeted_bitterness real, boiling_time real,
+            yeast_in_recipe text)"""
+            c.execute(sql)        
         
+            con.commit()
+           
+            
+        except Error as e :
+            print(e)  
+         
         switch_options ={
             'malt': f_malt,
             'hop':  f_hop,

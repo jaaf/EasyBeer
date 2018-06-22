@@ -34,11 +34,11 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
     def __init__(self,model,controller,util):
         QWidget.__init__(self)
         self.setupUi(self)
-        print ('MaltDialog: creating a MaltDialog object')
+        print ('RestDialog: creating a MaltDialog object')
         self.model = model
         self.controller=controller
         self.util=util
-        self.current_rest=None # the malt currently selected
+        self.current_rest=None # the rest currently selected
         
         # register function with model for future model update announcements
         self.model.subscribe_model_changed(['rest'],self.on_model_changed)
@@ -160,7 +160,7 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
             self.clear_edits()       
         
     def save_rest(self):
-        'save or update the malt that is defined by the GUI'
+        'save or update the rest that is defined by the GUI'
         rest=self.read_input()
         self.current_rest=rest.name # in order to be able to select it back on refresh
         for i in range(len(rest.phs)):

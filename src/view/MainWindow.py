@@ -127,8 +127,8 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         
        
   
-    def add_hop_view(self,hop,usage=None,duration=None,hop_rate=None):
-        print('dans add_hop_view hop_rate='+str(hop_rate))
+    def save_hop(self,hop,usage=None,duration=None,hop_rate=None):
+        print('dans save_hop hop_rate='+str(hop_rate))
         hopT=hop
         hl=QHBoxLayout()
         
@@ -147,7 +147,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
 
         label_usage=QLabel()
         label_usage.setAccessibleName('usage')  
-        print('dans add_hop_view : usage= '+usage)      
+        print('dans save_hop : usage= '+usage)      
         label_usage.setText(usage)
         label_usage.setFixedWidth(100)
         hl.addWidget(label_usage)
@@ -701,7 +701,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             for hir in self.hops:
                 hop=self.model.get_hop(hir.hop)
                 use=self.util.hop_usage_dic[hir.usage]
-                self.add_hop_view(hop,use,hir.duration,hir.hop_rate)
+                self.save_hop(hop,use,hir.duration,hir.hop_rate)
             self.targeted_bitterness_value.setText(str(self.recipe.targeted_bitterness))  
             #self.calculate_hop_amounts()
             
@@ -790,7 +790,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             for i in range(len(hops)):
                 his=hops[i]
                 h=self.model.get_hop(his.name)
-                self.add_hop_view(h,his.usage,his.duration) 
+                self.save_hop(h,his.usage,his.duration) 
                 ibu=self.calculate_IBU_later(his.duration,session.batch_volume,
                                              session.targeted_original_gravity,his.amount,h.alpha_acid,session.batch_volume)
                 ibus.append(ibu)

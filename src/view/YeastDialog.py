@@ -26,6 +26,7 @@ from model.Yeast import Yeast
 
 import view.constants as vcst
 import view.styles as sty
+import inspect
 
 
 #from PyQt4.QtGui import QStandardItemModel,QStandardItem,QItemSelectionModel
@@ -45,6 +46,7 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         self.current_yeast=None # the yeast currently selected
         
         # register function with model for future model update announcements
+        #self.model.subscribe_model_changed(['yeast'],self.on_model_changed)
         self.model.subscribe_model_changed(['yeast'],self.on_model_changed)
         
         self.add_button.hide()
@@ -285,19 +287,21 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         self.set_read_only() 
           
         
-    
+  
+               
     def on_model_changed(self,target):
-        '''
-        This function is called by the model when it changes
-        due to the fact that it is subscribed as callback
-        on initialization
-        '''
-        if target == 'yeast':
-            print('1')
-            self.yeast_key_list=self.model.yeast_list 
-            print('2')
-            self.refresh_yeast_list_widget()  
-            print('3')   
+        print('in on model changed')
+        print('target is '+target)
+        frame = inspect.currentframe()
+        args, _, _, values = inspect.getargvalues(frame)
+        
+        for i in args:
+            print ("    %s = %s" % (i, values[i]))
+        
+        exit()
+        #if target == 'yeast':
+        #    self.yeast_key_list=self.model.yeast_list
+        #    self.refresh_yeast_list_widget()           
      
         
     def save_yeast(self):

@@ -142,7 +142,7 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         
     def set_connections(self):
         self.hop_list_widget.currentItemChanged.connect(self.selection_changed) 
-        self.add_button.clicked.connect(self.add_hop_view)
+        self.add_button.clicked.connect(self.save_hop)
         self.edit_button.clicked.connect(self.edit)
         self.new_button.clicked.connect(self.create)
         self.delete_button.clicked.connect(self.delete_hop)
@@ -194,11 +194,11 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         
      
         
-    def add_hop_view(self):
+    def save_hop(self):
         'add the hop that is defined by the GUI'
         hopT=self.read_input()
         self.current_hop=hopT.name # in order to be able to select it back on refresh
-        self.model.add_hop_view(hopT)
+        self.model.save_hop(hopT)
         self.set_read_only()
         self.set_read_only_style()
         self.add_button.hide()
@@ -206,8 +206,11 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         
     def delete_hop(self):
         hopT=self.model.get_hop(self.hop_list_widget.currentItem().text())
+        print ('this is the hop I got')
+        print(hopT)
         # malt=self.malt_key_list[str(self.malt_list_widget.currentItem().text())]
         self.current_hop=None
+        print(hopT.name)
         self.model.remove_hop(hopT.name)
         
     
