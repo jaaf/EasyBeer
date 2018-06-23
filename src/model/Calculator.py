@@ -245,24 +245,24 @@ class Calculator():
         tun_dead_space=0
         if self.equipment.type == 0: tun_dead_space =self.equipment.mash_tun_dead_space
        
-        print('mtds ' +str(tun_dead_space))
-        print ('retention '+str(retention))
-        print('evaporation '+ str(evaporation))
-        print('batch volume '+str(self.batch_volume))
+        #print('mtds ' +str(tun_dead_space))
+        #print ('retention '+str(retention))
+        #print('evaporation '+ str(evaporation))
+        #print('batch volume '+str(self.batch_volume))
         sparge_water_volume = self.batch_volume + self.equipment.boiler_dead_space +evaporation+\
         (self.get_malt_mass()*mcst.MALT_WATER_RETENTION_RATIO) + tun_dead_space -mash_water_volume
-        print('sparge '+str(sparge_water_volume))
+        #print('sparge '+str(sparge_water_volume))
         return sparge_water_volume
         
         
     def get_f_t(self,t): 
         f_t= (1 - math.exp(-0.04 * t))   / 4.15
-        print('f(t) ='+str(f_t))
+        #print('f(t) ='+str(f_t))
         return f_t
     
     def get_f_G(self,gravity):
         f_G=1.65 * (0.000125 **(gravity-1))
-        print('f_G = '+str(f_G))
+        #print('f_G = '+str(f_G))
         return f_G
     
         

@@ -47,8 +47,8 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             self.equipment_list_widget.addItem(key)
             
         # register function with model for future model update announcements
-        print('subscribing update from model')
-        self.model.subscribe_model_changed(['equipment'],self.on_model_changed)
+        #print('subscribing update from model')
+        self.model.subscribe_model_changed(['equipment'],self.on_model_changed_equipment)
     
         self.set_connections()
     
@@ -66,8 +66,8 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
               
         self.refresh_equipment_list_widget()
         item=self.equipment_list_widget.findItems(equipment.name,QtCore.Qt.MatchExactly)
-        print('equipment item[0]')
-        print(item[0].text())
+        #print('equipment item[0]')
+        #print(item[0].text())
         self.equipment_list_widget.setCurrentItem(item[0])     
         self.set_ro()
         self.unset_color()
@@ -84,7 +84,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         
     def all_in_one_type_radiobutton_toggled(self):
         if self.all_in_one_type_radiobutton.isChecked():
-            print('All in one type selected') 
+            #print('All in one type selected') 
             self.mash_tun_size_label.hide()
             self.mash_tun_size_unit_label.hide()
             self.mash_tun_size_edit.hide()
@@ -101,7 +101,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             
     def basic_type_radiobutton_toggled(self):
         if self.basic_type_radiobutton.isChecked():
-            print ('Basic Type')
+            #print ('Basic Type')
             
             self.mash_tun_groupbox.show()
             self.mash_tun_size_label.show()
@@ -140,7 +140,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.close()
         
     def delete_equipment(self):
-        print('demanding equipment deletion in EquipmentDialog')
+        #print('demanding equipment deletion in EquipmentDialog')
         equipment=self.model.get_equipment(self.equipment_list_widget.currentItem().text())
         self.current_equipment=None#avoid selection after update
         self.model.remove_equipment(equipment.name)
@@ -152,7 +152,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.set_color()
         self.add_button.show()   
         
-    def on_model_changed(self,target):
+    def on_model_changed_equipment(self,target):
         '''
         This function is called by the model when it changes
         due to the fact that it is subscribed as callback
@@ -182,7 +182,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
 
     def load_selected(self):
         
-        print('loading selected equipment')
+        #print('loading selected equipment')
         if self.equipment_list_widget.currentItem():
             equipment=self.model.get_equipment(str(self.equipment_list_widget.currentItem().text()))           
             self.clear_edits()
@@ -224,7 +224,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
       
             
     def read_input(self):
-        print('reading user inputs')
+        #print('reading user inputs')
         typ=None
         mash_tun_size=None
         mash_tun_dead_space=None 
@@ -288,7 +288,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             self.equipment_list_widget.setCurrentItem(item[0]) 
             
     def selection_changed(self):
-        print('selection changed')
+        #print('selection changed')
         self.load_selected()
             
     def set_color(self):

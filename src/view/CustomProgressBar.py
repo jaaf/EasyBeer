@@ -55,14 +55,14 @@ class CustomProgressBar(QProgressBar):
 
     def setValue(self, value):
         QProgressBar.setValue(self, value)
-        print('CustomProgressBar : maximum = '+str(self.maximum()))
-        print ('CustomProgressBar : minimum = '+str(self.minimum()))
+        #print('CustomProgressBar : maximum = '+str(self.maximum()))
+        #print ('CustomProgressBar : minimum = '+str(self.minimum()))
         low=float(self.maximum() ) * 0.45
         
-        print('CustomProgressBar : low = '+ str(low))
+        #print('CustomProgressBar : low = '+ str(low))
         
         up=float(self.maximum()) * 0.55
-        print('CustomProgressBar : up = '+str(up))
+        #print('CustomProgressBar : up = '+str(up))
         if float(value) <low  or float(value) > up :
             
             self.setStyleSheet(COMPLETED_STYLE)

@@ -35,7 +35,7 @@ class HopChooser(QWidget,HopChooserUI.Ui_Form ):
         self.hop_key_list=self.owner.model.hop_list
         for key in self.hop_key_list:
             self.hop_list_widget.addItem(key)  
-        self.owner.model.subscribe_model_changed(['hop'],self.on_model_changed)     
+        self.owner.model.subscribe_model_changed(['hop'],self.on_model_changed_hop_chooser)     
         self.set_connections()  
         
         
@@ -90,7 +90,7 @@ class HopChooser(QWidget,HopChooserUI.Ui_Form ):
         self.set_translatable_textes()
         self.set_ro()    
         
-    def on_model_changed(self,target):
+    def on_model_changed_hop_chooser(self,target):
         if target == 'hop':
             self.hop_list_widget.clear()
             self.hop_key_list=self.owner.model.hop_list

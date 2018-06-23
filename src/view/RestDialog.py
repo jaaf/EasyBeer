@@ -38,7 +38,7 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
         self.rest_key_list=self.owner.model.rest_list  
         self.current_rest=None  
         self.refresh_rest_list_widget()
-        self.owner.model.subscribe_model_changed(['rest'],self.on_model_changed) 
+        self.owner.model.subscribe_model_changed(['rest'],self.on_model_changed_rest) 
         
         self.set_connections()  
         self.init_styles()
@@ -107,7 +107,7 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
             self.select_rest_combo.addItem(r)
         
         if self.current_rest:
-            print('RestDialogCreate : current_rest is set and equal to: '+self.current_rest)
+            #print('RestDialogCreate : current_rest is set and equal to: '+self.current_rest)
             index = self.select_rest_combo.findData(self.current_rest)
             self.select_rest_combo.setCurrentIndex(index) 
         else:
@@ -121,11 +121,11 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
             self.rest_list_widget.addItem(key)
 
         if self.current_rest:
-            print('RestDialogCreate : current_rest is set and equal to: '+self.current_rest)
+            #print('RestDialogCreate : current_rest is set and equal to: '+self.current_rest)
             item=self.rest_list_widget.findItems(self.current_rest,QtCore.Qt.MatchExactly)
             self.rest_list_widget.setCurrentItem(item[0])             
             
-    def on_model_changed(self,target):
+    def on_model_changed_rest(self,target):
         if target == 'rest':
             self.refresh_rest_list_widget()     
         
@@ -147,7 +147,7 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
             self.purpose_edit.setText(name)
             self.temperature_edit.setText(str((rest.temperatures[1]+rest.temperatures[2])/2))    
             self.duration_edit.setText(str(60))#this is the recommended duration     
-        print(name)
+        #print(name)
    
         
     def set_connections(self):
@@ -176,9 +176,9 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
         
     def update_rest_list(self):
         
-        print ('Updating rest list')
+        #print ('Updating rest list')
         self.rest_list_combo.clear()
         for r in self.owner.rest_list:
-            print(r.purpose + ' in rest list')
+            #print(r.purpose + ' in rest list')
             self.rest_list_combo.addItem(r.purpose)
             

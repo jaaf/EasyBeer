@@ -512,7 +512,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.rest_list=[]
         
         
-    def on_model_changed(self,target):
+    def on_model_changed_recipe(self,target):
         '''
         This function is called by the model when it changes
         due to the fact that it is subscribed as callback
@@ -767,7 +767,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             pitching_rate_edit.setStyleSheet(sty.field_styles['read_only'])            
                 
     def set_subscriptions(self):
-        self.model.subscribe_model_changed(['recipe'],self.on_model_changed)
+        self.model.subscribe_model_changed(['recipe'],self.on_model_changed_recipe)
                          
     def set_translatable_textes(self):
         self.setWindowTitle(self.tr('Create a Recipe'))
@@ -958,9 +958,9 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.yeast_chooser.show()      
         self.yeast_chooser.window().raise_()     
         'remove the StayOnToHint for Recipe Dialog'
-        self.setWindowFlags(self.windowFlags() & ~QtCore.Qt.WindowStaysOnTopHint)   
+        #self.setWindowFlags(self.windowFlags() & ~QtCore.Qt.WindowStaysOnTopHint)   
         'as the previous hide it, show it again'   
-        self.show()      
+        #self.show()      
                
 
         

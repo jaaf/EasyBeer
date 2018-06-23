@@ -41,7 +41,7 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.current_rest=None # the rest currently selected
         
         # register function with model for future model update announcements
-        self.model.subscribe_model_changed(['rest'],self.on_model_changed)
+        self.model.subscribe_model_changed(['rest'],self.on_model_changed_rest_create)
         
         self.add_button.hide()
         self.set_ro()
@@ -148,7 +148,7 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
             self.name_combo.setCurrentIndex(index)    
              
      
-    def on_model_changed(self,target):
+    def on_model_changed_rest_create(self,target):
         '''
         This function is called by the model when it changes
         due to the fact that it is subscribed as callback

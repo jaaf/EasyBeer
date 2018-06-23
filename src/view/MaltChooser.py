@@ -35,7 +35,7 @@ class MaltChooser(QWidget,MaltChooserUI.Ui_Form ):
         self.malt_key_list=self.owner.model.malt_list
         for key in self.malt_key_list:
             self.malt_list_widget.addItem(key)  
-        self.owner.model.subscribe_model_changed(['malt'],self.on_model_changed)
+        self.owner.model.subscribe_model_changed(['malt'],self.on_model_changed_malt_chooser)
         self.set_connections() 
         self.set_ro() 
         
@@ -111,7 +111,7 @@ class MaltChooser(QWidget,MaltChooserUI.Ui_Form ):
         self.set_translatable_text()  
         #self.setReadOnly(True)  
         
-    def on_model_changed(self, target):
+    def on_model_changed_malt_chooser(self, target):
         if target == 'malt':
             self.malt_list_widget.clear()
             self.malt_key_list=self.owner.model.malt_list

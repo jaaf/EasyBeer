@@ -19,6 +19,7 @@
 
 import model.constants as mcst
 import os
+import inspect
 import sqlite3 as lite
 import pickle
 from sqlite3 import Error
@@ -28,11 +29,13 @@ from model.Yeast import Yeast
 from model.Rest import Rest
 from model.Recipe import Recipe
 from model.Equipment import Equipment
+from model.Session import Session
 
 
 
 import shelve, inspect
 from pycparser.c_ast import Switch
+from pip._vendor.requests.sessions import session
 #from builtins import property
 
 
@@ -52,7 +55,7 @@ class Model(object):
         if self.bundle_dir:
             self.database_path=self.bundle_dir
         else: self.database_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),'..' ) 
-        print('the path in development is'+self.database_path+', which is the src directory')
+        #print('the path in development is'+self.database_path+', which is the src directory')
       
         'below are the lists of function that are subscribed by widgets as callbacks whenever the model changes'
         self._update_funcs_malt = []
@@ -81,6 +84,7 @@ class Model(object):
             'yeast':[],
             'recipe':[],
             'equipment':[],
+            'session':[],
             'style':[] 
             }
         
@@ -98,13 +102,16 @@ class Model(object):
         for target in target_list:
             if func not in self._target_func[target]:
                 self._target_func[target].append(func)
+                #print('registering for '+target)
+                #print (func)
+                
                 
     def unsubscribe_model_changed(self,target, func): 
         if func in self._target_func[target]:
             self._target_func[target].remove(func)       
                 
     def announce_model_changed(self,target):
-        for func in self._target_func[target]:           
+        for func in self._target_func[target]:     
             func(target)
       
  
@@ -217,28 +224,39 @@ class Model(object):
         return yeast
     
     def get_recipe(self,key):
-        'return a recipe given its name'
-        con=lite.connect('easybeer')
+        #print('return a recipe given its name')
+        #print('the name is '+key)
+        recipe=None
+        con=lite.connect('easybeer.db')
         c = con.cursor()
-        c.execute("""select * from recipe where name=:name""",{'name':key})
+        c.execute("""select * from recipes where name=:name""",{'name':key})
         rcp=c.fetchone()
         recipe=Recipe(rcp[0],pickle.loads(rcp[1]),pickle.loads(rcp[2]),pickle.loads(rcp[3]),rcp[4],rcp[5],rcp[6],pickle.loads(rcp[7]),rcp[8])
         return recipe
         
            
     def get_equipment(self,key):
-        'return an equipment by key'
-        self.equipment_base=shelve.open(os.path.join(self.database_path,'equipment.db'))#(mcst.EQUIPMENT_DB)
-        equipment=self.equipment_base[key]
-        self.equipment_base.close()
+        'return an equipment given its name'
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        c.execute("""select * from equipments where name=:name""",{'name':key})
+        eq=c.fetchone()
+        equipment=Equipment(eq[0],eq[1],eq[2],eq[3],eq[4],eq[5],eq[6],eq[7],eq[8],eq[9],eq[10])
         return equipment
     
     def get_session(self,key):
-        'return a session by key'
-        self.session_base=shelve.open(os.path.join(self.database_path,'session.db'))#(mcst.SESSION_DB)
-        session=self.session_base[key]
-        self.session_base.close()
+        'return a session given its designation'
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        c.execute("""select * from sessions where designation=:designation""",{'designation':key})
+        s=c.fetchone()
+        mis=pickle.loads(s[9])#malts_in_session'
+        ris=pickle.loads(s[10])#rests in session
+        his=pickle.loads(s[11])#hops in session
+        yis=pickle.loads(s[12])#yeast in session
+        session=Session(s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7],s[8],mis,ris,his,yis,s[13],s[14],s[15],s[16],s[17],s[18],s[19],s[20],s[21])
         return session
+        
     
     def get_styles(self,category):
         self.style_base=shelve.open(os.path.join(self.database_path,'style.db'))#(mcst.STYLE_DB)
@@ -249,7 +267,7 @@ class Model(object):
     
         
     def save_malt(self,malt):
-        print('saving malt with sqlite')
+        #print('saving malt with sqlite')
         con = lite.connect('easybeer.db')
         c = con.cursor()
         try:
@@ -257,8 +275,9 @@ class Model(object):
             c.execute("insert into malts values (:name,:maker,:max_yield,:color,:kolbach_min, :kolbach_max)",
                   {'name':malt.name, 'maker':malt.maker, 'max_yield':malt.max_yield, 'color':malt.color, 'kolbach_min':malt.kolbach_min,'kolbach_max':malt.kolbach_max})
             con.commit()
-            c.execute("select * from malts")    
+            #c.execute("select * from malts")    
         except Error as e :
+            
             print(e)   
         c.close()
         con.close()
@@ -266,7 +285,7 @@ class Model(object):
         self.announce_model_changed('malt')
 
     def save_hop(self,hop):
-        print('saving hop with sqlite')
+        #print('saving hop with sqlite')
         con = lite.connect('easybeer.db')
         c = con.cursor()
         try:
@@ -285,7 +304,7 @@ class Model(object):
 
         
     def save_rest(self,rest):
-        print('saving rest with sqlite')
+        #print('saving rest with sqlite')
         con = lite.connect('easybeer.db')
         c = con.cursor()
         try:
@@ -302,16 +321,16 @@ class Model(object):
         self.announce_model_changed('rest')
         
     def save_yeast(self,yeast):
-        print('saving yeast with sqlite')
+        #print('saving yeast with sqlite')
         con = lite.connect('easybeer.db')
         c = con.cursor()
         try:
-            'yeast table already exists as created in self.update_from_db'
+            'yeasts table already exists as created in self.update_from_db'
             c.execute("insert into yeasts values (:name,:maker,:max_allowed_temperature,:min_allowed_temperature,:max_advised_temperature, :min_allowed_temperature, :form, :attenuation, :floculation)",
-                  {'name':yeast.name, 'maker':yeast.maker, 'max_allowed_temperature':yeast.max_allowed_temperature, 'min_allowed_temperature':yeast.min_allowed_temperature,
-                    'max_advised_temperature':yeast.max_advised_temperature,'min_advised_temperature':yeast.max_advised_temperature, 'form':yeast.form, 'attenuation':yeast.attenuation, 'floculation':yeast.floculation})
+                 {'name':yeast.name, 'maker':yeast.maker, 'max_allowed_temperature':yeast.max_allowed_temperature, 'min_allowed_temperature':yeast.min_allowed_temperature,'max_advised_temperature':yeast.max_advised_temperature,'min_advised_temperature':yeast.max_advised_temperature, 'form':yeast.form, 'attenuation':yeast.attenuation, 'floculation':yeast.floculation})
+            #c.execute("insert into yeasts values (?,?,?,?,?,?,?,?,?)",{yeast.name,yeast.maker,yeast.max_allowed_temperature,yeast.min_allowed_temperature,yeast.max_advised_temperature,yeast.min_advised_temperature,yeast.form,yeast.attenuation,yeast.floculation})
             con.commit()
-            c.execute("select * from yeasts")    
+            #c.execute("select * from yeasts")    
         except Error as e :
             print(e)   
         c.close()
@@ -320,40 +339,110 @@ class Model(object):
         self.announce_model_changed('yeast')
         
     def add_recipe(self,recipe):
-        con = lite.connect('easybeer.db')
-        c = con.cursor()
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        mim=pickle.dumps(recipe.malts_in_mash)
+        hir=pickle.dumps(recipe.hops_in_recipe)
+        mr=pickle.dumps(recipe.mash_rests)
+        yir=pickle.dumps(recipe.yeast_in_recipe)
         try:
             'recipes table already exists as created in self.update_from_db'
-            c.execute("insert into recipes values (:name,:malts_in_mash,:mash_rests,:hops_in_recipe,:targeted_original_gravity,:targeted_bitterness,:boiling_time,:yeasts_in_recipe,:fermentation_explanation)",
-                  {'name':recipe.name, 'malts_in_mash':pickle.dumps(recipe.malts_in_mash), 'mash_rests':pickle.dumps(recipe.mash_rests),'hops_in_recipe':recipe.hops_in_recipe,
-                   'targeted_original_gravity':recipe.targeted_original_gravity,'targeted_bitterness':recipe.targeted_bitterness,'boiling_time':recipe.boiling_time,'yeast_in_recipe':recipe.yeast_in_recipe,
-                   'fermentation_explanation':recipe.fermentation_explanation})
-            con.commit()
-            c.execute("select * from recipes")    
+            c.execute("insert into recipes values (?,?,?,?,?,?,?,?,?)", (recipe.name,mim,mr,hir,recipe.targeted_original_gravity,recipe.targeted_bitterness,recipe.boiling_time,yir,recipe.fermentation_explanation))
+            #c.execute("insert into recipes values (:name,:malts_in_mash,:mash_rests,:hops_in_recipe,:targeted_original_gravity,:targeted_bitterness,:boiling_time,:yeasts_in_recipe,:fermentation_explanation)",
+            #      {'name':recipe.name, 'malts_in_mash':mim, 'mash_rests':mr,'hops_in_recipe':hir,'targeted_original_gravity':recipe.targeted_original_gravity,'targeted_bitterness':recipe.targeted_bitterness,'boiling_time':recipe.boiling_time,'yeast_in_recipe':yir,'fermentation_explanation':str(recipe.fermentation_explanation)})
+            con.commit()   
         except Error as e :
+            #print('this is an error during insertion')
             print(e)   
         c.close()
         con.close()
-        self.update_from_db('rest')
-        self.announce_model_changed('rest')
+        self.update_from_db('recipe')
+        self.announce_model_changed('recipe')
         
     def add_equipment(self,equipment):
-        'add an equipment persisting it to the db' 
-        self.equipment_base=shelve.open(os.path.join(self.database_path,'equipment.db'))#(mcst.EQUIPMENT_DB)
-        self.equipment_base[equipment.name]=equipment
-        self.equipment_base.close()
+        eq=equipment
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        try:
+            c.execute("insert into equipments values (?,?,?,?,?,?,?,?,?,?,?)",(eq.name,eq.brewing_efficiency,eq.boiler_size,eq.boiler_dead_space,eq.boiler_evaporation_rate,eq.fermentor_size,eq.fermentor_dead_space,eq.type,eq.mash_tun_size,eq.mash_tun_dead_space,eq.mash_tun_heat_losses))
+            con.commit()
+        except Error as e:
+            #print('There was an error while inserting new equipment')
+            print(e)
+        c.close()
+        con.close()
         self.update_from_db('equipment')
-        self.announce_model_changed('equipment') 
+        self.announce_model_changed('equipment')
         
     def save_session(self,session):
         'save or update a session'
-        self.session_base=shelve.open(os.path.join(self.database_path,'session.db'))#(mcst.SESSION_DB)
-        self.session_base[session.designation]=session
-        self.session_base.close()
+        s=session
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        mis=pickle.dumps(s.malts_in_session)#malts_in_session'
+        ris=pickle.dumps(s.rests_in_session)#rests in session
+        his=pickle.dumps(s.hops_in_session)#hops in session
+        yis=pickle.dumps(s.yeast_in_session)#yeast in session
+        try:
+            c.execute("insert into sessions values (\
+            :designation,\
+            :recipe,\
+            :equipment,\
+            :batch_volume,\
+            :grain_temperature,\
+            :targeted_original_gravity,\
+            :targeted_bitterness,\
+            :boiling_time,\
+            :brewing_efficiency,\
+            :malts_in_session,\
+            :rests_in_session,\
+            :hops_in_session,\
+            :yeast_in_session,\
+            :mash_water_volume,\
+            :strike_temperature,\
+            :mash_sparge_water_volume,\
+            :boiler_dead_space,\
+            :feedback_water_treatment_text,\
+            :feedback_mash_ph,\
+            :feedback_preboil_volume,\
+            :feedback_original_gravity,\
+            :feedback_fermentor_volume)",
+            (
+            s.designation,
+            s.recipe,
+            s.equipment,
+            s.batch_volume,
+            s.grain_temperature,
+            s.targeted_original_gravity,
+            s.targeted_bitterness,
+            s.boiling_time,
+            s.brewing_efficiency,
+            mis,
+            ris,
+            his,
+            yis,
+            s.mash_water_volume,
+            s.strike_temperature,
+            s.mash_sparge_water_volume,
+            s.boiler_dead_space,
+            s.feedback_water_treatment_text,
+            s.feedback_mash_ph,
+            s.feedback_preboil_volume,
+            s.feedback_original_gravity,
+            s.feedback_fermentor_volume
+             ))
+            con.commit()
+        except Error as e:
+            #print('There was an error while inserting new session')
+            print(e)
+        c.close()
+        con.close()
         self.update_from_db('session')
+        self.announce_model_changed('session')
+
         
     def save_style(self,category, value):
-        print('save or update a style')
+        #print('save or update a style')
         self.style_base=shelve.open(os.path.join(self.database_path,'style.db'))#(mcst.STYLE_DB)
         self.style_base[category]=value
         self.style_base.close()
@@ -403,10 +492,17 @@ class Model(object):
         
     def remove_session(self,key):
         'remove a brewing session from db' 
-        self.session_base=shelve.open(os.path.join(self.database_path,'session.db'))#(mcst.SESSION_DB)   
-        del self.session_base[key]
-        self.session_base.close()
+        con=lite.connect('easybeer.db')
+        c = con.cursor()  
+        try:
+            c.execute("""delete from sessions where designation=:designation""",{'designation':key})
+            con.commit()
+        except Error as e:
+            print(e)    
+        c.close()
+        con.close()  
         self.update_from_db('session')
+        self.announce_model_changed('session') 
         
         
     def remove_yeast(self,key):
@@ -438,12 +534,20 @@ class Model(object):
         self.announce_model_changed('recipe') 
         
     def remove_equipment(self,key):
-        'remove an equipment from db given its key' 
-        self.equipment_base=shelve.open(os.path.join(self.database_path,'equipment.db'))#(mcst.EQUIPMENT_DB)
-        del self.equipment_base[key]
-        self.equipment_base.close()
+        'remove an equipment from db given its name' 
+        con=lite.connect('easybeer.db')
+        c = con.cursor()  
+        try:
+            c.execute("""delete from equipments where name=:name""",{'name':key})
+            con.commit()
+        except Error as e:
+            print(e)    
+        c.close()
+        con.close()  
         self.update_from_db('equipment')
-        self.announce_model_changed('equipment')    
+        self.announce_model_changed('equipment') 
+        
+    
         
     def remove_rest(self,key):
         'remove a rest from db given its key'
@@ -463,7 +567,7 @@ class Model(object):
     def update_from_db(self,target):
         'in model update from db'
         def f_malt():
-            print('getting malt list from db')
+            #print('getting malt list from db')
             c.execute("""select name from malts""")
             r=list(c.fetchall())
             self.__malt_list=list()  
@@ -472,7 +576,7 @@ class Model(object):
             self.__malt_list.sort()
             
         def f_hop():
-            print('getting hop list from db')
+            #print('getting hop list from db')
             c.execute("""select name from hops""")
             r=list(c.fetchall())
             self.__hop_list=list()  
@@ -482,7 +586,7 @@ class Model(object):
             
             
         def f_rest():
-            print('getting rest list from db')
+            #print('getting rest list from db')
             c.execute("""select name from rests""")
             r=list(c.fetchall())
             self.__rest_list=list()  
@@ -492,7 +596,7 @@ class Model(object):
             
             
         def f_yeast():
-            print('getting yeast list from db')
+            #print('getting yeast list from db')
             c.execute("""select name from yeasts""")
             r=list(c.fetchall())
             self.__yeast_list=list()  
@@ -505,26 +609,33 @@ class Model(object):
             r=list(c.fetchall())
             self.__recipe_list=list()  
             for rec in r:
-                self.__rest_list.append(rec[0])   
+                self.__recipe_list.append(rec[0])   
             self.__recipe_list.sort()  
         
         def f_equipment():
-            self.equipment_base=shelve.open(os.path.join(self.database_path,'equipment.db'))#(mcst.EQUIPMENT_DB)
-            self.__equipment_list=list(self.equipment_base.keys())
-            self.equipment_list.sort()
-            self.equipment_base.close() 
+            c.execute("""select name from equipments""")
+            e=list(c.fetchall())
+            self.__equipment_list=list()  
+            for eq in e:
+                self.__equipment_list.append(eq[0])   
+            self.__equipment_list.sort() 
+            
         
         def f_session():
-            self.session_base=shelve.open(os.path.join(self.database_path,'session.db'))#(mcst.SESSION_DB)
-            self.__session_list = list(self.session_base.keys())
-            self.session_list.sort()
-            self.session_base.close()   
+            c.execute("""select designation from sessions""")
+            ses=list(c.fetchall())
+            self.__session_list=list()
+            for s in ses:
+                self.__session_list.append(s[0])
+            self.__session_list.sort()    
+           
         
         def f_style():
             self.style_base=shelve.open(os.path.join(self.database_path,'style.db'))#(mcst.STYLE_DB)
             self.__style_list=list(self.style_base.keys())
             self.style_base.close()  
-              
+            
+     
         con=lite.connect("easybeer.db")
         c=con.cursor()
         try:
@@ -542,8 +653,36 @@ class Model(object):
             c.execute(sql)      
             
             sql = """create table if not exists recipes (name text primary key not null,malts_in_mash text, mash_rests text, hops_in_recipe text,targeted_original_gravity real,targeted_bitterness real, boiling_time real,
-            yeast_in_recipe text)"""
-            c.execute(sql)        
+            yeast_in_recipe text,fermentation_explanation text)"""
+            c.execute(sql)  
+            
+            sql = """create table if not exists equipments (name text primary key not null,brewing_efficiency real,boiler_size real, boiler_dead_space real,boiler_evaporation_rate real,fermentor_size real,fermentor_dead_space real,type integer,mash_tun_size real,mash_tun_dead_space real,mash_tun_heat_losses real)"""
+            c.execute(sql)      
+            
+            sql = """create table if not exists sessions (\
+            designation text primary key not null,\
+            recipe text,\
+            equipment text,\
+            batch_volume real,\
+            grain_temperature real,\
+            targeted_original_gravity real,\
+            targeted_bitterness real,\
+            boiling_time real,\
+            brewing_efficiency real,\
+            malts_in_session text,\
+            rests_in_session text,\
+            hops_in_session text,\
+            yeast_in_session text,\
+            mash_water_volume real,\
+            strike_temperature real,\
+            mash_sparge_water_volume real,\
+            boiler_dead_space real,\
+            feedback_water_treatment_text text,\
+            feedback_mash_ph real,\
+            feedback_preboil_volume real,\
+            feedback_original_gravity real ,\
+            feedback_fermentor_volume real)"""
+            c.execute(sql)
         
             con.commit()
            

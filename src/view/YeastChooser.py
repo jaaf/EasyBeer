@@ -35,7 +35,7 @@ class YeastChooser(QWidget,YeastChooserUI.Ui_Form ):
         self.yeast_key_list=self.owner.model.yeast_list
         for key in self.yeast_key_list:
             self.yeast_list_widget.addItem(key)  
-        self.owner.model.subscribe_model_changed(['yeast'],self.on_model_changed)    
+        self.owner.model.subscribe_model_changed(['yeast'],self.on_model_changed_yeast_chooser)    
         self.set_connections()  
      
         
@@ -120,7 +120,7 @@ class YeastChooser(QWidget,YeastChooserUI.Ui_Form ):
         self.set_translatable_textes()
         self.set_ro()  
         
-    def on_model_changed(self):
+    def on_model_changed_yeast_chooser(self,target):
         self.yeast_list_widget.clear()
         self.yeast_key_list=self.owner.model.yeast_list
         for key in self.yeast_key_list:

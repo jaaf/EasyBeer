@@ -38,14 +38,14 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
     def __init__(self,model,controller,util):
         QWidget.__init__(self,None,QtCore.Qt.WindowStaysOnTopHint)
         self.setupUi(self)
-        print('HopDialog : creating a HopDialog object')
+        #print('HopDialog : creating a HopDialog object')
         self.model = model
         self.controller=controller
         self.util=util
         self.current_hop=None # the hop currently selected
         
         # register function with model for future model update announcements
-        self.model.subscribe_model_changed(['hop'],self.on_model_changed)
+        self.model.subscribe_model_changed(['hop'],self.on_model_changed_hop)
         
         self.add_button.hide()
         self.set_read_only()
@@ -71,7 +71,7 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.form_list.setCurrentIndex(idx)
         
     def closeEvent(self,event):
-        print('HopDialog : Mass Window close')
+        #print('HopDialog : Mass Window close')
         self.close()        
     
         
@@ -113,7 +113,7 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.set_read_only()  
         self.set_read_only_style()  
         
-    def on_model_changed(self,target):
+    def on_model_changed_hop(self,target):
         '''
         This function is called by the model when it changes
         due to the fact that it is subscribed as callback
@@ -124,14 +124,14 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
             self.refresh_hop_list_widget()    
         
     def refresh_hop_list_widget(self):
-        print('HopDialog : Refreshing hop_list_widget')           
+        #print('HopDialog : Refreshing hop_list_widget')           
         self.hop_list_widget.clear()       
         self.hop_key_list.sort()  
         for key in self.hop_key_list:
             self.hop_list_widget.addItem(key)
             
         if self.current_hop:
-            print('HopDialog : current_hop is set and equal to: '+self.current_hop)
+            #print('HopDialog : current_hop is set and equal to: '+self.current_hop)
             item=self.hop_list_widget.findItems(self.current_hop,QtCore.Qt.MatchExactly)
             self.hop_list_widget.setCurrentItem(item[0]) 
         else:
@@ -172,7 +172,7 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
     def showEvent(self,ev):
         self.set_translatable_textes()
         self.hop_form_list=['',self.tr('Pellets'),self.tr('Leaves'),self.tr('Cones')]
-        print (self.hop_form_list)
+        #print (self.hop_form_list)
         
         for f in self.hop_form_list:
             self.form_list.addItem(f) 
@@ -206,11 +206,11 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         
     def delete_hop(self):
         hopT=self.model.get_hop(self.hop_list_widget.currentItem().text())
-        print ('this is the hop I got')
-        print(hopT)
+        #print ('this is the hop I got')
+        #print(hopT)
         # malt=self.malt_key_list[str(self.malt_list_widget.currentItem().text())]
         self.current_hop=None
-        print(hopT.name)
+        #print(hopT.name)
         self.model.remove_hop(hopT.name)
         
     
@@ -219,7 +219,7 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
     
 
     def selection_changed(self):
-        print('HopDialog : selection changed')
+        #print('HopDialog : selection changed')
         self.load_selected()
         
     def set_translatable_textes(self):

@@ -161,6 +161,7 @@ class Utils(QWidget):
         return result        
     
     def clearLayout(self, layout):
+        print('clearing '+str(layout))
         if layout:
             while layout.count():
                 item = layout.takeAt(0)

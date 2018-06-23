@@ -39,15 +39,14 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
     def __init__(self,model,controller,util):
         QWidget.__init__(self,None,QtCore.Qt.WindowStaysOnTopHint)
         self.setupUi(self)
-        print('YeastDialog: creating a YeastDialog object')
+        #print('YeastDialog: creating a YeastDialog object')
         self.model = model
         self.controller=controller
         self.util=util
         self.current_yeast=None # the yeast currently selected
         
-        # register function with model for future model update announcements
-        #self.model.subscribe_model_changed(['yeast'],self.on_model_changed)
-        self.model.subscribe_model_changed(['yeast'],self.on_model_changed)
+        'register function with model for future model update announcements'
+        self.model.subscribe_model_changed(['yeast'],self.on_model_has_changed_yeast)
         
         self.add_button.hide()
         self.set_read_only()
@@ -116,7 +115,7 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
                     
     
     def closeEvent(self,event):
-        print('YeastDialog : Yeast Window close')
+        #print('YeastDialog : Yeast Window close')
         self.close()
             
 
@@ -258,7 +257,7 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         self.set_translatable_textes()
         self.yeast_attenuation_list=['',self.tr('Low'),self.tr('Medium'),self.tr('High')]
         self.yeast_form_list=['',self.tr('Dry'),self.tr('Liquid')]
-        print (self.yeast_attenuation_list)
+        #print (self.yeast_attenuation_list)
         
         for f in self.yeast_form_list:
             self.form_combo.addItem(f)
@@ -271,14 +270,14 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         
             
     def refresh_yeast_list_widget(self):
-        print('YeastDialog : Refreshing yeast_list_widget')           
+        #print('YeastDialog : Refreshing yeast_list_widget')           
         self.yeast_list_widget.clear()       
         self.yeast_key_list.sort()  
         for key in self.yeast_key_list:
             self.yeast_list_widget.addItem(key)
             
         if self.current_yeast:
-            #print('YeastDialog : current_yeast is set and equal to: '+self.current_yeast)
+            ##print('YeastDialog : current_yeast is set and equal to: '+self.current_yeast)
             item=self.yeast_list_widget.findItems(self.current_yeast,QtCore.Qt.MatchExactly)
             self.yeast_list_widget.setCurrentItem(item[0]) 
         else:
@@ -286,23 +285,27 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
             
         self.set_read_only() 
           
-        
+    def on_model_has_changed_yeast(self,target):
+        if target == 'yeast':
+            self.yeast_key_list=self.model.yeast_list   
+            self.refresh_yeast_list_widget()
+            
   
-               
+    '''           
     def on_model_changed(self,target):
-        print('in on model changed')
-        print('target is '+target)
+        #print('in on model changed')
+        #print('target is '+target)
         frame = inspect.currentframe()
         args, _, _, values = inspect.getargvalues(frame)
         
         for i in args:
-            print ("    %s = %s" % (i, values[i]))
+            #print ("    %s = %s" % (i, values[i]))
         
-        exit()
-        #if target == 'yeast':
-        #    self.yeast_key_list=self.model.yeast_list
-        #    self.refresh_yeast_list_widget()           
-     
+        
+        if target == 'yeast':
+            self.yeast_key_list=self.model.yeast_list
+            self.refresh_yeast_list_widget()           
+     '''
         
     def save_yeast(self):
         'ask the model to save or update the yeast that is defined by the GUI'
