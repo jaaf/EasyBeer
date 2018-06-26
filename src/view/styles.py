@@ -21,7 +21,10 @@ Created on 22 nov. 2017
 
 @author: jaaf
 '''
-'Ces variables seront initialisées soit à partir de la base de données, soit à partir des valeurs par défaut dans view.constants '
+
+'These variables are initialized either from the database, or from the default values in view.constant'
+
+'Each fied_color is a list of 2 values one for backgroud and one for text color'
 field_colors={
     'editable': '',
     'calculated': '',
@@ -30,7 +33,7 @@ field_colors={
     'min_max_advised': '',
     'optional_editable':''
 }
-
+'Each field_style is a complete style for use in setStyleSheet functions'
 field_styles={
     'editable': '',
     'calculated': '',

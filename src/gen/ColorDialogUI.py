@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'designer/colordialog.ui'
+# Form implementation generated from reading ui file 'colordialog.ui'
 #
-# Created by: PyQt5 UI code generator 5.9
+# Created by: PyQt5 UI code generator 5.10
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,17 +12,17 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(845, 699)
-        self.label = QtWidgets.QLabel(Dialog)
-        self.label.setGeometry(QtCore.QRect(30, 40, 421, 41))
-        self.label.setObjectName("label")
-        self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(630, 600, 92, 36))
+        self.label_custom = QtWidgets.QLabel(Dialog)
+        self.label_custom.setGeometry(QtCore.QRect(30, 40, 421, 41))
+        self.label_custom.setObjectName("label_custom")
+        self.close_button = QtWidgets.QPushButton(Dialog)
+        self.close_button.setGeometry(QtCore.QRect(630, 600, 92, 36))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
         font.setWeight(75)
-        self.pushButton.setFont(font)
-        self.pushButton.setObjectName("pushButton")
+        self.close_button.setFont(font)
+        self.close_button.setObjectName("close_button")
         self.layoutWidget = QtWidgets.QWidget(Dialog)
         self.layoutWidget.setGeometry(QtCore.QRect(20, 100, 743, 436))
         self.layoutWidget.setObjectName("layoutWidget")
@@ -47,10 +47,10 @@ class Ui_Dialog(object):
         self.pushButton_6.setObjectName("pushButton_6")
         self.gridLayout.addWidget(self.pushButton_6, 1, 1, 1, 1)
         self.horizontalLayout.addLayout(self.gridLayout)
-        self.lineEdit = QtWidgets.QLineEdit(self.layoutWidget)
-        self.lineEdit.setStyleSheet("")
-        self.lineEdit.setObjectName("lineEdit")
-        self.horizontalLayout.addWidget(self.lineEdit)
+        self.lineEdit_1 = QtWidgets.QLineEdit(self.layoutWidget)
+        self.lineEdit_1.setStyleSheet("")
+        self.lineEdit_1.setObjectName("lineEdit_1")
+        self.horizontalLayout.addWidget(self.lineEdit_1)
         self.field_layout.addLayout(self.horizontalLayout)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -140,6 +140,9 @@ class Ui_Dialog(object):
         self.lineEdit_5.setObjectName("lineEdit_5")
         self.horizontalLayout_5.addWidget(self.lineEdit_5)
         self.field_layout.addLayout(self.horizontalLayout_5)
+        self.info_edit = QtWidgets.QTextEdit(Dialog)
+        self.info_edit.setGeometry(QtCore.QRect(20, 560, 581, 101))
+        self.info_edit.setObjectName("info_edit")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -147,13 +150,13 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:24pt; font-weight:600;\">Customize your colors</span></p></body></html>"))
-        self.pushButton.setText(_translate("Dialog", "Close"))
+        self.label_custom.setText(_translate("Dialog", "<html><head/><body><p><span style=\" font-size:24pt; font-weight:600;\">Customize your colors</span></p></body></html>"))
+        self.close_button.setText(_translate("Dialog", "Close"))
         self.label_1.setText(_translate("Dialog", "Background Color for Editable field"))
         self.pushButton_1.setText(_translate("Dialog", "Change"))
         self.label_6.setText(_translate("Dialog", "Text Color for Editable field"))
         self.pushButton_6.setText(_translate("Dialog", "Change"))
-        self.lineEdit.setText(_translate("Dialog", "Sample"))
+        self.lineEdit_1.setText(_translate("Dialog", "Sample"))
         self.label_2.setText(_translate("Dialog", "Background Color for Calculated Field (non editable)"))
         self.pushButton_2.setText(_translate("Dialog", "Change"))
         self.label_7.setText(_translate("Dialog", "Background Color for Calculated Field (non editable)"))

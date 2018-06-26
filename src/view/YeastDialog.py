@@ -50,7 +50,7 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         
         self.add_button.hide()
         self.set_read_only()
-        self.set_connections()
+        self.init_dialog_and_connections()
              
         self.yeast_key_list=self.model.yeast_list        
           
@@ -193,7 +193,7 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
     
   
         
-    def set_connections(self):
+    def init_dialog_and_connections(self):
         #make the controls on the form active
         self.yeast_list_widget.currentItemChanged.connect(self.selection_changed) 
         self.add_button.clicked.connect(self.save_yeast)

@@ -40,7 +40,7 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
         self.refresh_rest_list_widget()
         self.owner.model.subscribe_model_changed(['rest'],self.on_model_changed_rest) 
         
-        self.set_connections()  
+        self.init_dialog_and_connections()  
         self.init_styles()
         
     def add_rest(self):
@@ -150,7 +150,7 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
         #print(name)
    
         
-    def set_connections(self):
+    def init_dialog_and_connections(self):
         self.add_button.clicked.connect(self.add_rest)
         self.rest_list_widget.currentItemChanged.connect(self.selection_changed_rest)
         self.select_guidance_help_button.clicked.connect(self.explain_rest_selection)

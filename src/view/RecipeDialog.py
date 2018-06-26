@@ -52,7 +52,7 @@ class customLabel(QLabel):
         self.setStyleSheet(vcst.CUSTOM_LABEL_STYLE)
 
     def mousePressEvent(self,event):
-        print('MousePressEvent')
+        #print('MousePressEvent')
         self.clicked.emit()
 
 
@@ -93,6 +93,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.list_malt_in_mash=[]
         self.list_hop_in_recipe=[]
         self.recipe_add_button.hide()
+        self.recipe_update_button.hide()
         self.targeted_original_gravity_edit.setAccessibleName('Targeted Original Gravity')
         
         self.malt_for_mash_label.setMaximumSize(300,30)
@@ -104,13 +105,13 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.adjuncts_list_label.setMaximumSize(300,30)
         self.adjuncts_list_label.setMinimumSize(300,30)
         
-        self.set_connections()
+        self.init_dialog_and_connections()
 
         
     def save_hop(self,hop_type,usage=None,duration=None,hop_rate=None):  
         
  
-        #print('RecipeDialog : Adding a hop')
+        ##print('RecipeDialog : Adding a hop')
         hopT=hop_type
         hl=QHBoxLayout()
         
@@ -380,39 +381,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         hop_rate_unit_label=QLabel('g/l')
         hop_rate_unit_label.setAccessibleName('hop_rate_unit')
         layout.addWidget(hop_rate_unit_label)
-        if value: hop_rate_edit.setText(str(value))
-           
-    '''
-    def check_aroma_state(self):
-        print('RecipeDialog : checking aroma state')   
-        current_hop_layout=None
-        widget_aroma=None
-        s = self.sender()
-        for i in range(self.hop_layout.count()):
-            current_hop_layout= self.hop_layout.itemAt(i).layout()
-        
-            widget_aroma=self.util.get_by_name_recursive(current_hop_layout,'aroma')
-            if widget_aroma:
-                if widget_aroma == s:
-                    break    
-             
-        if widget_aroma: 
-            aroma_layout=self.util.get_containing_layout(current_hop_layout, 'aroma')
-            if not aroma_layout: return
-            if widget_aroma.isChecked():
-                self.add_hop_rate(aroma_layout)
-            else:
-                hop_rate_edit=self.util.get_by_name(aroma_layout,'hop_rate')
-                if hop_rate_edit:
-                    aroma_layout.removeWidget(hop_rate_edit)
-                    hop_rate_edit.deleteLater()
-                    hop_rate_edit=None
-                hop_rate_unit_label=self.util.get_by_name(aroma_layout,'hop_rate_unit')
-                if hop_rate_unit_label:
-                    aroma_layout.removeWidget(hop_rate_unit_label)
-                    hop_rate_unit_label.deleteLater()
-                    hop_rate_unit_label=None  
-    '''              
+        if value: hop_rate_edit.setText(str(value))            
                                
     def clear_edits(self):
         self.recipe_name_edit.setText('')
@@ -441,8 +410,10 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                          
                          
     def edit_recipe(self):
-        self.recipe_add_button.setText(self.tr('Update recipe'))  
-        self.recipe_add_button.show()
+        self.recipe_add_button.setText(self.tr('Add this recipe'))  
+        
+        self.recipe_add_button.hide()
+        self.recipe_update_button.show()
         self.recipe_delete_button.setEnabled(False)
         self.recipe_new_button.setEnabled(False)
         self.unset_ro_and_color()
@@ -460,7 +431,6 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
            
             
     def load_selected_recipe(self):
-        print('loading selected recipe')
         if self.recipe_list_widget.currentItem():
             recipe=self.model.get_recipe(str(self.recipe_list_widget.currentItem().text()))        
             self.clear_edits()
@@ -507,6 +477,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.util.clearLayout(self.rest_layout)
         self.util.clearLayout(self.hop_layout)
         self.recipe_add_button.show()
+        self.recipe_update_button.hide()
         self.unset_ro_and_color()
         self.clear_edits() 
         self.rest_list=[]
@@ -521,7 +492,126 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         if target == 'recipe':
             self.recipe_key_list=self.model.recipe_list 
             self.refresh_recipe_list_widget()         
+    
+    def prepare_a_recipe_to_save(self):
+        """" Read the GUI to prepare a recipe for adding or updating it into the database
+        """
+        util=self.util
+        'Malts in mash'
+        self.list_malt_in_mash =[]
+        sum_percentage=0
+        for i in range(self.malt_layout.count()):
+            item =self.malt_layout.itemAt(i)
+            
+            if item:
+                w_hidden_name=self.util.get_by_name(item.layout(),'hidden_name')
+                t=w_hidden_name.text()
+                w_percentage=self.util.get_by_name(item.layout(),'percentage')
+                p=util.check_input(w_percentage, False,self.tr('Percentage'),False,0,100)
+                if not p:
+                    print('return at 1 in prepare_a_recipe_to_save')
+                    return
+                sum_percentage=sum_percentage+p           
+                malt_in_mash=MaltInMash(t,p)
+                self.list_malt_in_mash.append(malt_in_mash)
+                
+        if sum_percentage != 100 :
+            self.alerte_sum_percentage(sum_percentage) 
+            return  
+        name=util.check_input(self.recipe_name_edit,True,self.tr('Repipe name'))
+        if not name:
+            print('return at 2 in prepare_a_recipe_to_save')
+            return
         
+        'gravity, boiling time and bitterness'
+        gravity=util.check_input(self.targeted_original_gravity_edit,False,self.tr('Targeted Original Gravity'),False,1.030,1.140)
+        if not gravity: return 
+        
+        bitterness=util.check_input(self.targeted_bitterness_edit,False,self.tr('Targeted bitterness'),False,0, 1000)
+        if not bitterness: 
+            print('return at 3 in prepare_a_recipe_to_save')
+            return
+        
+        boiling_time = util.check_input(self.boiling_time_edit,False,self.tr('Boiling Time'),False, 30,200)
+        if not boiling_time: return
+        
+        'Rests'
+        self.rest_list=[]
+        for i in range(self.rest_layout.count()):
+            item=self.rest_layout.itemAt(i)#get a row item
+            if item:
+                w_purpose=self.util.get_by_name(item.layout(),'purpose')#the purpose widget
+                purpose=util.check_input(w_purpose,True,self.tr('Rest purpose'))
+                if not purpose: return
+                
+                w_duration=self.util.get_by_name(item.layout(),'duration') 
+                duration=util.check_input(w_duration,False,self.tr('Rest duration'),False,0,200)
+                if not duration: return
+                
+                w_temperature=self.util.get_by_name(item.layout(),'temperature')
+                temperature=util.check_input(w_temperature,False,self.tr('Rest temperature'),False,0,100)
+                if not temperature: return
+                
+                rest=RestInRecipe(purpose, duration,temperature)
+                self.rest_list.append(rest)
+
+                   
+        'Hops in recipe'
+        #print('reaching hops in recipe')
+        self.list_hop_in_recipe=[]
+        for i in range(self.hop_layout.count()):
+            item=self.hop_layout.itemAt(i)
+            if item:
+                tx=item.layout().itemAt(0).widget().text() 
+                #aromatic_checkbox=self.util.get_by_name_recursive(item.layout(), 'aroma')
+              
+                hop_rate_edit=self.util.get_by_name_recursive(item.layout(), 'hop_rate')
+                if not hop_rate_edit: 
+                    self.alerte(self.tr('Hop rate is not accessible'))
+                    return
+                hop_rate=util.check_input(hop_rate_edit,False,self.tr('Hop rate'),False, 0,100)
+   
+                'in the database we store the key name, not the translated string'
+                'This way of doing things allows to change the language even after hops have been stored in the database'
+                usage=self.util.get_usage_key(item.layout().itemAt(2).widget().currentText())
+                if not usage : return
+                
+                if usage == vcst.HOP_BOILING_HOPPING:
+                    duration=util.check_input(item.layout().itemAt(3).widget(),False,self.tr('Hop Duration'),False,0,1000)  
+                    if not duration: return
+                    hir=HopInRecipe(tx,usage,duration,hop_rate)
+                else:
+                    duration=None
+                    hir=HopInRecipe(tx,usage,duration,hop_rate)
+                      
+                self.list_hop_in_recipe.append(hir)    
+   
+                
+        'Yeast in recipe'
+        yeast_name_edit=self.util.get_by_name_recursive(self.yeast_layout,'name')
+      
+        if not yeast_name_edit: 
+            self.alerte('You must select a yeast')
+        else: yeast_name= yeast_name_edit.text()
+        w=self.util.get_by_name_recursive(self.yeast_layout, 'rate')
+        if not w: return 
+        pitching_rate=util.check_input(w,False,self.tr('Pitching Rate'),False, 0,1)
+        if not pitching_rate: return
+        yir=YeastInRecipe(yeast_name,pitching_rate)
+        fermentation_explanation=self.fermentation_explain_edit.toPlainText()
+                    
+               
+        'use previous to make a Recipe object'
+        recipe=Recipe(name,self.list_malt_in_mash,self.rest_list,\
+                      self.list_hop_in_recipe,gravity,bitterness,boiling_time,yir,fermentation_explanation)
+        self.current_recipe=recipe.name
+        #last add it to the database
+        self.malt_chooser.close()
+        self.hop_chooser.close()
+        self.rest_dialog.close()
+        #self.adjunct_chooser.close()
+        self.yeast_chooser.close()
+        return recipe    
         
     def refresh_recipe_list_widget(self,select=None):
         self.recipe_list_widget.clear()
@@ -576,123 +666,10 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
          
     
     def save_recipe(self):
-        """" Add or update a recipe to the shelve database by reading the GUI content
-        """
-        util=self.util
-        'Malts in mash'
-        self.list_malt_in_mash =[]
-        sum_percentage=0
-        for i in range(self.malt_layout.count()):
-            item =self.malt_layout.itemAt(i)
-            
-            if item:
-                w_hidden_name=self.util.get_by_name(item.layout(),'hidden_name')
-                t=w_hidden_name.text()
-                w_percentage=self.util.get_by_name(item.layout(),'percentage')
-                p=util.check_input(w_percentage, False,self.tr('Percentage'),False,0,100)
-                if not p:
-                    print('return 1')
-                    return
-                sum_percentage=sum_percentage+p           
-                malt_in_mash=MaltInMash(t,p)
-                self.list_malt_in_mash.append(malt_in_mash)
-                
-        if sum_percentage != 100 :
-            self.alerte_sum_percentage(sum_percentage) 
-            return  
-        name=util.check_input(self.recipe_name_edit,True,self.tr('Repipe name'))
-        if not name:
-            print('return 2')
-            return
+        recipe=self.prepare_a_recipe_to_save()
+        if not recipe: return #the dialog may have aborted because on field was let empty
         
-        'gravity, boiling time and bitterness'
-        gravity=util.check_input(self.targeted_original_gravity_edit,False,self.tr('Targeted Original Gravity'),False,1.030,1.140)
-        if not gravity: return 
-        
-        bitterness=util.check_input(self.targeted_bitterness_edit,False,self.tr('Targeted bitterness'),False,0, 1000)
-        if not bitterness: 
-            print('return 3')
-            return
-        
-        boiling_time = util.check_input(self.boiling_time_edit,False,self.tr('Boiling Time'),False, 30,200)
-        if not boiling_time: return
-        
-        'Rests'
-        self.rest_list=[]
-        for i in range(self.rest_layout.count()):
-            item=self.rest_layout.itemAt(i)#get a row item
-            if item:
-                w_purpose=self.util.get_by_name(item.layout(),'purpose')#the purpose widget
-                purpose=util.check_input(w_purpose,True,self.tr('Rest purpose'))
-                if not purpose: return
-                
-                w_duration=self.util.get_by_name(item.layout(),'duration') 
-                duration=util.check_input(w_duration,False,self.tr('Rest duration'),False,0,200)
-                if not duration: return
-                
-                w_temperature=self.util.get_by_name(item.layout(),'temperature')
-                temperature=util.check_input(w_temperature,False,self.tr('Rest temperature'),False,0,100)
-                if not temperature: return
-                
-                rest=RestInRecipe(purpose, duration,temperature)
-                self.rest_list.append(rest)
-
-                   
-        'Hops in recipe'
-        print('reaching hops in recipe')
-        self.list_hop_in_recipe=[]
-        for i in range(self.hop_layout.count()):
-            item=self.hop_layout.itemAt(i)
-            if item:
-                tx=item.layout().itemAt(0).widget().text() 
-                #aromatic_checkbox=self.util.get_by_name_recursive(item.layout(), 'aroma')
-              
-                hop_rate_edit=self.util.get_by_name_recursive(item.layout(), 'hop_rate')
-                if not hop_rate_edit: 
-                    self.alerte(self.tr('Hop rate is not accessible'))
-                    return
-                hop_rate=util.check_input(hop_rate_edit,False,self.tr('Hop rate'),False, 0,100)
-   
-                'in the database we store the key name, not the translated string'
-                'This way of doing things allows to change the language even after hops have been stored in the database'
-                usage=self.util.get_usage_key(item.layout().itemAt(2).widget().currentText())
-                if not usage : return
-                
-                if usage == vcst.HOP_BOILING_HOPPING:
-                    duration=util.check_input(item.layout().itemAt(3).widget(),False,self.tr('Hop Duration'),False,0,1000)  
-                    if not duration: return
-                    hir=HopInRecipe(tx,usage,duration,hop_rate)
-                else:
-                    duration=None
-                    hir=HopInRecipe(tx,usage,duration,hop_rate)
-                      
-                self.list_hop_in_recipe.append(hir)    
-   
-                
-        'Yeast in recipe'
-        yeast_name_edit=self.util.get_by_name_recursive(self.yeast_layout,'name')
-      
-        if not yeast_name_edit: 
-            self.alerte('You must select a yeast')
-        else: yeast_name= yeast_name_edit.text()
-        w=self.util.get_by_name_recursive(self.yeast_layout, 'rate')
-        if not w: return 
-        pitching_rate=util.check_input(w,False,self.tr('Pitching Rate'),False, 0,1)
-        if not pitching_rate: return
-        yir=YeastInRecipe(yeast_name,pitching_rate)
-        fermentation_explanation=self.fermentation_explain_edit.toPlainText()
-                    
-               
-        'use previous to make a Recipe object'
-        recipe=Recipe(name,self.list_malt_in_mash,self.rest_list,\
-                      self.list_hop_in_recipe,gravity,bitterness,boiling_time,yir,fermentation_explanation)
-        self.current_recipe=recipe.name
-        #last add it to the database
-        self.malt_chooser.close()
-        self.hop_chooser.close()
-        self.rest_dialog.close()
-        #self.adjunct_chooser.close()
-        self.yeast_chooser.close()
+        'use the model to save the recipe'
         self.model.add_recipe(recipe)
         item=self.recipe_list_widget.findItems(recipe.name,QtCore.Qt.MatchExactly)
         self.recipe_list_widget.setCurrentItem(item[0])     
@@ -708,12 +685,13 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.load_selected_recipe()            
         
         
-    def set_connections(self):
+    def init_dialog_and_connections(self):
         self.recipe_edit_button.clicked.connect(self.edit_recipe)
         self.recipe_new_button.clicked.connect(self.new_recipe)
         self.recipe_delete_button.clicked.connect(self.delete_recipe)
         self.recipe_list_widget.currentItemChanged.connect(self.selection_changed_recipe)
-        self.recipe_add_button.clicked.connect(self.save_recipe)   
+        self.recipe_add_button.clicked.connect(self.save_recipe)  
+        self.recipe_update_button.clicked.connect(self.update_recipe) 
          
         
     def set_ro_and_color(self):
@@ -873,9 +851,9 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.util.clearLayout(self.hop_layout)
         for h in recipe.hops_in_recipe:
             hop=self.model.get_hop(h.hop)
-            print (str(h.hop))
-            print(str(h.usage))
-            print(str(h.hop_rate))   
+            #print (str(h.hop))
+            #print(str(h.usage))
+            #print(str(h.hop_rate))   
             self.save_hop(hop, h.usage, h.duration,h.hop_rate)     
                
     def update_yeast_view(self,recipe):
@@ -883,6 +861,20 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         yir=recipe.yeast_in_recipe
         yeast=self.model.get_yeast(yir.yeast)
         self.set_yeast_view(yeast,yir.pitching_rate)
+        
+    def update_recipe(self):
+        boiling_time = self.util.check_input(self.boiling_time_edit,False,self.tr('Boiling Time'),False, 30,200)
+        
+        recipe=self.prepare_a_recipe_to_save()
+        
+        'use the model to save the recipe'
+        self.model.update_recipe(recipe)
+        item=self.recipe_list_widget.findItems(recipe.name,QtCore.Qt.MatchExactly)
+        self.recipe_list_widget.setCurrentItem(item[0])     
+        self.set_ro_and_color()  
+        self.recipe_add_button.hide() 
+        self.recipe_delete_button.setEnabled(True)
+        self.recipe_new_button.setEnabled(True)    
             
     def update_rest_view_disabled(self,recipe,in_mem=True): 
         if in_mem: self.rest_list=recipe.mash_rests       

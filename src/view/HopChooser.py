@@ -36,7 +36,7 @@ class HopChooser(QWidget,HopChooserUI.Ui_Form ):
         for key in self.hop_key_list:
             self.hop_list_widget.addItem(key)  
         self.owner.model.subscribe_model_changed(['hop'],self.on_model_changed_hop_chooser)     
-        self.set_connections()  
+        self.init_dialog_and_connections()  
         
         
     def save_hop(self):
@@ -63,7 +63,7 @@ class HopChooser(QWidget,HopChooserUI.Ui_Form ):
         print('selection changed')
         self.load_selected_hop()     
         
-    def set_connections(self):
+    def init_dialog_and_connections(self):
         self.hop_add_button.clicked.connect(self.save_hop)    
         self.hop_list_widget.currentItemChanged.connect(self.selection_changed_hop)
         self.hop_list_widget.currentItemChanged.connect(self.selection_changed_hop)

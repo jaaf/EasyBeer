@@ -43,7 +43,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         
         self.add_button.hide()
         self.set_read_only()
-        self.set_connections()
+        self.init_dialog_and_connections()
              
         self.malt_key_list=self.model.malt_list        
           
@@ -181,7 +181,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.set_translatable_texts()   
   
         
-    def set_connections(self):
+    def init_dialog_and_connections(self):
         self.malt_list_widget.currentItemChanged.connect(self.selection_changed) 
         self.add_button.clicked.connect(self.save_malt)
         self.edit_button.clicked.connect(self.edit)

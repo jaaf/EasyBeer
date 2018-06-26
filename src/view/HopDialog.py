@@ -49,7 +49,7 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         
         self.add_button.hide()
         self.set_read_only()
-        self.set_connections()
+        self.init_dialog_and_connections()
              
         self.hop_key_list=self.model.hop_list        
           
@@ -140,7 +140,7 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.set_read_only()  
   
         
-    def set_connections(self):
+    def init_dialog_and_connections(self):
         self.hop_list_widget.currentItemChanged.connect(self.selection_changed) 
         self.add_button.clicked.connect(self.save_hop)
         self.edit_button.clicked.connect(self.edit)

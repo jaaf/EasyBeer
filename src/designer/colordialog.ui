@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="label_custom">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -26,7 +26,7 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;Customize your colors&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="close_button">
    <property name="geometry">
     <rect>
      <x>630</x>
@@ -305,6 +305,16 @@
      </layout>
     </item>
    </layout>
+  </widget>
+  <widget class="QTextEdit" name="info_edit">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>560</y>
+     <width>581</width>
+     <height>101</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>

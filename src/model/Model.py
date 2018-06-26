@@ -258,12 +258,22 @@ class Model(object):
         return session
         
     
-    def get_styles(self,category):
+    def get_style(self,category):
+        'return a style given its category'
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        c.execute("""select * from styles where category=:category""",{'category':category})
+        s=c.fetchone()
+        'this is a specific case where the object returned excludes the key'
+        if s: style=pickle.loads(s[1])
+        else:  style=None
+        return style
+        '''
         self.style_base=shelve.open(os.path.join(self.database_path,'style.db'))#(mcst.STYLE_DB)
         styles=self.style_base[category]
         self.style_base.close()
         return styles
-    
+        '''
     
         
     def save_malt(self,malt):
@@ -339,6 +349,7 @@ class Model(object):
         self.announce_model_changed('yeast')
         
     def add_recipe(self,recipe):
+       
         con=lite.connect('easybeer.db')
         c=con.cursor()
         mim=pickle.dumps(recipe.malts_in_mash)
@@ -347,12 +358,31 @@ class Model(object):
         yir=pickle.dumps(recipe.yeast_in_recipe)
         try:
             'recipes table already exists as created in self.update_from_db'
-            c.execute("insert into recipes values (?,?,?,?,?,?,?,?,?)", (recipe.name,mim,mr,hir,recipe.targeted_original_gravity,recipe.targeted_bitterness,recipe.boiling_time,yir,recipe.fermentation_explanation))
-            #c.execute("insert into recipes values (:name,:malts_in_mash,:mash_rests,:hops_in_recipe,:targeted_original_gravity,:targeted_bitterness,:boiling_time,:yeasts_in_recipe,:fermentation_explanation)",
-            #      {'name':recipe.name, 'malts_in_mash':mim, 'mash_rests':mr,'hops_in_recipe':hir,'targeted_original_gravity':recipe.targeted_original_gravity,'targeted_bitterness':recipe.targeted_bitterness,'boiling_time':recipe.boiling_time,'yeast_in_recipe':yir,'fermentation_explanation':str(recipe.fermentation_explanation)})
+            
+            c.execute("insert into recipes values (\
+            :name,\
+            :malts_in_mash,\
+            :mash_rests,\
+            :hops_in_recipe,\
+            :targeted_original_gravity,\
+            :targeted_bitterness,\
+            :boiling_time,\
+            :yeast_in_recipe,\
+            :fermentation_explanation)",
+            {'name':recipe.name, 
+             'malts_in_mash':mim,
+             'mash_rests':mr,
+             'hops_in_recipe':hir,
+             'targeted_original_gravity':recipe.targeted_original_gravity,
+             'targeted_bitterness':recipe.targeted_bitterness,
+             'boiling_time':recipe.boiling_time,
+             'yeast_in_recipe':yir,
+             'fermentation_explanation':recipe.fermentation_explanation
+            })
+            
             con.commit()   
         except Error as e :
-            #print('this is an error during insertion')
+            print('this is an error during insertion of a new recipe')
             print(e)   
         c.close()
         con.close()
@@ -373,6 +403,45 @@ class Model(object):
         con.close()
         self.update_from_db('equipment')
         self.announce_model_changed('equipment')
+        
+        
+    def update_recipe(self,recipe): 
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        mim=pickle.dumps(recipe.malts_in_mash)
+        hir=pickle.dumps(recipe.hops_in_recipe)
+        mr=pickle.dumps(recipe.mash_rests)
+        yir=pickle.dumps(recipe.yeast_in_recipe)
+        try:
+            'recipes table already exists as created in self.update_from_db'
+            
+            c.execute("update recipes set  \
+            malts_in_mash=:malts_in_mash,\
+            mash_rests=:mash_rests,\
+            hops_in_recipe=:hops_in_recipe,\
+            targeted_original_gravity=:targeted_original_gravity,\
+            targeted_bitterness=:targeted_bitterness,\
+            boiling_time=:boiling_time,\
+            yeast_in_recipe=:yeast_in_recipe,\
+            fermentation_explanation=:fermentation_explanation where name=:name",
+            {'name':recipe.name,
+             'malts_in_mash':mim,
+             'mash_rests':mr,
+             'hops_in_recipe':hir,
+             'targeted_original_gravity':recipe.targeted_original_gravity,
+             'targeted_bitterness':recipe.targeted_bitterness,
+             'boiling_time':recipe.boiling_time,
+             'yeast_in_recipe':yir,
+             'fermentation_explanation':str(recipe.fermentation_explanation)
+             })
+            con.commit()   
+        except Error as e :
+            print('this is an error during updating of recipe ')
+            print(e)   
+        c.close()
+        con.close()
+        self.update_from_db('recipe')
+        self.announce_model_changed('recipe')
         
     def save_session(self,session):
         'save or update a session'
@@ -442,13 +511,24 @@ class Model(object):
 
         
     def save_style(self,category, value):
-        #print('save or update a style')
-        self.style_base=shelve.open(os.path.join(self.database_path,'style.db'))#(mcst.STYLE_DB)
-        self.style_base[category]=value
-        self.style_base.close()
-        self.update_from_db('style')  
-        self.announce_model_changed('style')      
-            
+        print('in save_style')
+        print(category)
+        print(value)
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        'value is a list and needs pickling'
+        v=pickle.dumps(value)
+        try:
+            c.execute("insert into  styles values (:category,:cols)",(category,v))
+            con.commit()
+        except Error as e:
+            print('There was an error while inserting new style')
+            print(e)
+        c.close()
+        con.close()
+        self.update_from_db('style')
+        self.announce_model_changed('style')
+   
         
     def is_used(self,malt_name):
         recipe_base=shelve.open(os.path.join(self.database_path,'recipe.db'))#(mcst.RECIPE_DB)
@@ -631,10 +711,17 @@ class Model(object):
            
         
         def f_style():
+            c.execute("""select category from styles""")
+            sts=list(c.fetchall())
+            self.__style_list=list()
+            for st in sts:
+                self.__style_list.append(st[0])
+            self.__style_list.sort()    
+            '''   
             self.style_base=shelve.open(os.path.join(self.database_path,'style.db'))#(mcst.STYLE_DB)
             self.__style_list=list(self.style_base.keys())
             self.style_base.close()  
-            
+            '''
      
         con=lite.connect("easybeer.db")
         c=con.cursor()
@@ -683,6 +770,9 @@ class Model(object):
             feedback_original_gravity real ,\
             feedback_fermentor_volume real)"""
             c.execute(sql)
+            
+            sql="""create table if not exists styles (category text primary key not null, cols text) """
+            c.execute(sql)
         
             con.commit()
            
@@ -701,4 +791,25 @@ class Model(object):
             'style': f_style
             }
         switch_options[target]()
+        
+        
+        
+    def update_style(self,category, value):
+        print('in save_style')
+        print(category)
+        print(value)
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        'value is a list and needs pickling'
+        v=pickle.dumps(value)
+        try:
+            c.execute("update styles set cols = :cols  where category=:category",{'category':category,'cols':v})
+            con.commit()
+        except Error as e:
+            print('There was an error while updating new style')
+            print(e)
+        c.close()
+        con.close()
+        self.update_from_db('style')
+        self.announce_model_changed('style')
         

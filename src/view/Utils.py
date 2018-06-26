@@ -80,14 +80,15 @@ class Utils(QWidget):
         '''    
        
         if isinstance(w,QComboBox):
-            t=w.currentText()   
+            t=w.currentText()  
+            
         else: 
             t=w.text()
-        print (t)  
+         
             
         #case nothing entered    
         if acceptNone and not t:
-            print('None accepted')
+            #print('None accepted')
             return '_undeclared_'    
         
         #case of string
@@ -99,33 +100,26 @@ class Utils(QWidget):
         #case on numerical value
         elif ((not flag_txt) and t):
             try:
-                print('value before float transformation '+str(t))
                 value=float(t)
-                print('value converted '+str(value))
             except :
                 tx=self.tr('Value for '+info+self.tr('was not convertible to float.Please check your input.'))  
                 w.setStyleSheet(vcst.EDIT_ALERTE_STYLE)
                 self.alerte_bad_input(tx)
                 return None  
             
-            print('ready to check value '+str(value))
             if isinstance(value, float):#if value and value >=0.0:
-                print('value is good')
                 if value <min_value or value>max_value:
                     tx=self.tr('Value for ')+info+self.tr(', is not valid. It should be between ')+str(min_value)+ \
                     self.tr(' and ')+str(max_value)
                     w.setStyleSheet(vcst.EDIT_ALERTE_STYLE)
                     self.alerte_bad_input(tx)
-                    print('returning None')
                     return None
                 
-                print('testing calculated_value')
+                #print('testing calculated_value')
                 if calculated_value: w.setStyleSheet(sty.field_styles['calculated'])
                 else: w.setStyleSheet(sty.field_styles['editable'])
-                print('returning '+str(value))
                 return float(w.text())#why not return(value)
-            
-            print('before EE '+str(value))
+    
             tx=self.tr('Input for ')+info+ self.tr(' is not a readable value')+str(value)
             w.setStyleSheet(vcst.EDIT_ALERTE_STYLE)
             self.alerte_bad_input(tx)
@@ -148,7 +142,7 @@ class Utils(QWidget):
 
 
 
-    #list all widgets included in a layout recursively
+    'list all widgets included in a layout recursively'
     def get_included_widgets(self,layout):
         result=[]
         for i in range(layout.count()): 
@@ -161,7 +155,6 @@ class Utils(QWidget):
         return result        
     
     def clearLayout(self, layout):
-        print('clearing '+str(layout))
         if layout:
             while layout.count():
                 item = layout.takeAt(0)
@@ -173,7 +166,7 @@ class Utils(QWidget):
                 layout.removeItem(item) 
 
     def get_by_name(self,layout,name):
-        'return the widgt which name is given in first level'
+        'return the widget which name is given in first level'
         for i in range(layout.count()):
             try:
                 if layout.itemAt(i).widget().accessibleName()==name:

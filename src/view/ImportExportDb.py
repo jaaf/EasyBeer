@@ -42,7 +42,7 @@ class ImportExportDb(QWidget,ImportExportDbUI.Ui_Form ):
         self.fileDialog=QFileDialog()
         self.set_initial_display_attributes()
         self.set_translatable_textes()
-        self.set_connections()
+        self.init_dialog_and_connections()
         
     def set_translatable_textes(self):
         self.explain_text_edit.setText(self.tr(
@@ -65,7 +65,7 @@ class ImportExportDb(QWidget,ImportExportDbUI.Ui_Form ):
         
  
         
-    def set_connections(self):
+    def init_dialog_and_connections(self):
         self.proceed_export_button.clicked.connect(self.export_db)
         self.proceed_import_button.clicked.connect(self.import_db)
         self.select_export_folder_button.clicked.connect(self.navigate_export)

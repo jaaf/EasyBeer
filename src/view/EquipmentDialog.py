@@ -50,7 +50,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         #print('subscribing update from model')
         self.model.subscribe_model_changed(['equipment'],self.on_model_changed_equipment)
     
-        self.set_connections()
+        self.init_dialog_and_connections()
     
     def add_equipment(self):
         equipment=self.read_input()
@@ -304,7 +304,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.fermentor_dead_space_edit.setStyleSheet(sty.field_styles['editable']) 
         
 
-    def set_connections(self):
+    def init_dialog_and_connections(self):
         self.add_button.clicked.connect(self.add_equipment)
         self.type_ask_button.clicked.connect(self.explain_type)
         self.edit_button.clicked.connect(self.edit_equipment)

@@ -36,7 +36,7 @@ class MaltChooser(QWidget,MaltChooserUI.Ui_Form ):
         for key in self.malt_key_list:
             self.malt_list_widget.addItem(key)  
         self.owner.model.subscribe_model_changed(['malt'],self.on_model_changed_malt_chooser)
-        self.set_connections() 
+        self.init_dialog_and_connections() 
         self.set_ro() 
         
     def add_malt_view(self):
@@ -77,7 +77,7 @@ class MaltChooser(QWidget,MaltChooserUI.Ui_Form ):
         print('selection changed')
         self.load_selected_malt()     
         
-    def set_connections(self):
+    def init_dialog_and_connections(self):
         self.add_button.clicked.connect(self.add_malt_view)    
         self.close_button.clicked.connect(self.close)
         self.malt_list_widget.currentItemChanged.connect(self.selection_changed_malt)

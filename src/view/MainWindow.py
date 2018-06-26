@@ -119,7 +119,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.set_tooltips()
         self.set_subscriptions()
         'set the way various controls respond'
-        self.set_connections()
+        self.init_dialog_and_connections()
         self.targeted_original_gravity =None
         self.brewing_efficiency=None   
         self.init_session_combo()
@@ -923,7 +923,8 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                 if index >= 0:
                     self.equipment_combo.setCurrentIndex(index) 
         if target == 'style':
-            self.set_active_colors()           
+            self.set_active_colors()
+            self.maltDialog = MaltDialog(self.model,self.controller,self.util)        
                     
                     
     def remove_session(self):
@@ -1140,7 +1141,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         if index >= 0:
             combo.setCurrentIndex(index)
             
-    def set_connections(self):
+    def init_dialog_and_connections(self):
         self.actionEdit_Malt_Database.triggered.connect(self.show_malt_dialog)
         self.actionEdit_Hop_Database.triggered.connect(self.show_hop_dialog)
         self.actionEdit_Rest_Database.triggered.connect(self.show_rest_dialog_create)
@@ -1227,11 +1228,12 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.yeastDialog.show()
         
     def set_active_colors(self):
-        #print('setting active colors')
+        'This function is called at init time of mainwindow and also on model changed'
         self.active_colors={}
+        'if style in db then use it, otherwise use default'
         for key in vcst.FIELD_DEFAULT_COLORS:
             if key in self.style_key_list:
-                self.active_colors[key]=self.model.get_styles(key)
+                self.active_colors[key]=self.model.get_style(key)
             else:
                 self.active_colors[key]=vcst.FIELD_DEFAULT_COLORS[key]            
                 

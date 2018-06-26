@@ -45,7 +45,7 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         
         self.add_button.hide()
         self.set_ro()
-        self.set_connections()
+        self.init_dialog_and_connections()
              
         self.rest_key_list=self.model.rest_list        
           
@@ -173,7 +173,7 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.add_button.hide()
         
         
-    def set_connections(self):
+    def init_dialog_and_connections(self):
         self.add_button.clicked.connect(self.save_rest)
         self.edit_button.clicked.connect(self.edit_rest)
         self.new_button.clicked.connect(self.create_rest)

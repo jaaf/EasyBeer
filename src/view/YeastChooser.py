@@ -36,7 +36,7 @@ class YeastChooser(QWidget,YeastChooserUI.Ui_Form ):
         for key in self.yeast_key_list:
             self.yeast_list_widget.addItem(key)  
         self.owner.model.subscribe_model_changed(['yeast'],self.on_model_changed_yeast_chooser)    
-        self.set_connections()  
+        self.init_dialog_and_connections()  
      
         
         
@@ -84,7 +84,7 @@ class YeastChooser(QWidget,YeastChooserUI.Ui_Form ):
         print('selection changed')
         self.load_selected_yeast()     
         
-    def set_connections(self):
+    def init_dialog_and_connections(self):
         self.add_button.clicked.connect(self.add_yeast_view)    
         self.yeast_list_widget.currentItemChanged.connect(self.selection_changed_yeast)
         self.close_button.clicked.connect(self.close)
