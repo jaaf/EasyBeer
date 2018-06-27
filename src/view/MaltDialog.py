@@ -80,7 +80,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.model.update_malt(maltT)
         self.set_read_only()
         self.set_read_only_style()
-        self.add_button.hide()
+        self.update_button.hide()
         self.cancel_button.hide()
         
             
@@ -102,7 +102,9 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.set_editable_style()
         self.add_button.show()
         self.cancel_button.show()
-        
+        self.edit_button.hide()
+        self.delete_button.hide()
+        self.new_button.hide()
         
         
         
@@ -124,6 +126,9 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.update_button.show()
         self.set_editable()
         self.set_editable_style()
+        self.edit_button.hide()
+        self.delete_button.hide()
+        self.new_button.hide()
                 
     
     def closeEvent(self,event):
@@ -210,7 +215,6 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.add_button.hide()
         self.update_button.hide()
         self.cancel_button.hide()
-
         self.load_selected()
         self.edit_button.show()
         self.delete_button.show()
@@ -267,6 +271,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         'because selection_changed show them'
         self.edit_button.hide()
         self.delete_button.hide()
+        self.new_button.show()
         
     def set_translatable_texts(self):    
         self.setWindowTitle(self.tr('Malt Database Edition'))

@@ -82,7 +82,8 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
     
         
     def create(self):
-        self.add_button.setText(self.tr('Add new'))
+        self.update_button.hide()
+        self.hop_list_widget.clear()
         self.set_editable()
         self.set_editable_style()
         self.clear_edits()
@@ -90,6 +91,7 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.cancel_button.show()
         self.edit_button.hide()
         self.delete_button.hide()
+        self.new_button.hide()
         
     def edit(self):
         
@@ -97,6 +99,9 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.set_editable_style()
         self.update_button.show() 
         self.cancel_button.show()
+        self.edit_button.hide()
+        self.delete_button.hide()
+        self.new_button.hide()
         
     def read_input(self):
         name=self.util.check_input(self.name_edit,True,self.tr('Name'),False)
@@ -139,7 +144,8 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.refresh_hop_list_widget()   
         'as selection_changed shows them'
         self.edit_button.hide()
-        self.delete_button.hide()     
+        self.delete_button.hide()
+        self.new_button.show()     
         
     def refresh_hop_list_widget(self):
         #print('HopDialog : Refreshing hop_list_widget') 
@@ -219,6 +225,7 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
     def save_hop(self):
         'add the hop that is defined by the GUI'
         hopT=self.read_input()
+        if not hopT: return
         self.current_hop=hopT.name # in order to be able to select it back on refresh
         self.model.save_hop(hopT)
         self.set_read_only()
@@ -238,7 +245,14 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
     
     def update_hop(self):
         print('updating hop')
-        self.util.alerte('updating hop')     
+        hopT=self.read_input()
+        if not hopT:return
+        self.current_hop=hopT.name # in order to be able to select it back on refresh
+        self.model.update_hop(hopT)
+        self.set_read_only()
+        self.set_read_only_style()
+        self.update_button.hide() 
+        self.cancel_button.hide() 
         
     
 

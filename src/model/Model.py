@@ -300,7 +300,7 @@ class Model(object):
         try:
             'hops table already exists as created in self.update_from_db'
             c.execute("insert into hops values (:name,:alpha_acid,:form)",
-                  {'name':hop.name, 'alpha_acid':hop.alpha_acid, 'form':hop.form})
+                  {'name':hop.name, 'alpha_acid':hop.alpha_acid,'form':hop.form})
             con.commit()
             c.execute("select * from hops")    
         except Error as e :
@@ -338,6 +338,25 @@ class Model(object):
             c.execute("insert into yeasts values (:name,:maker,:max_allowed_temperature,:min_allowed_temperature,:max_advised_temperature, :min_allowed_temperature, :form, :attenuation, :floculation)",
                  {'name':yeast.name, 'maker':yeast.maker, 'max_allowed_temperature':yeast.max_allowed_temperature, 'min_allowed_temperature':yeast.min_allowed_temperature,'max_advised_temperature':yeast.max_advised_temperature,'min_advised_temperature':yeast.max_advised_temperature, 'form':yeast.form, 'attenuation':yeast.attenuation, 'floculation':yeast.floculation})
             #c.execute("insert into yeasts values (?,?,?,?,?,?,?,?,?)",{yeast.name,yeast.maker,yeast.max_allowed_temperature,yeast.min_allowed_temperature,yeast.max_advised_temperature,yeast.min_advised_temperature,yeast.form,yeast.attenuation,yeast.floculation})
+            con.commit()
+            #c.execute("select * from yeasts")    
+        except Error as e :
+            print(e)   
+        c.close()
+        con.close()
+        self.update_from_db('yeast') #reread the actual key state of db
+        self.announce_model_changed('yeast')
+        
+    def update_yeast(self,yeast):
+        #print('saving yeast with sqlite')
+        con = lite.connect('easybeer.db')
+        c = con.cursor()
+        try:
+            'yeasts table already exists as created in self.update_from_db'
+            c.execute("update yeasts set maker=:maker,max_allowed_temperature=:max_allowed_temperature,min_allowed_temperature=:min_allowed_temperature,\
+            max_advised_temperature=:max_advised_temperature, min_advised_temperature=:min_advised_temperature, form=:form, attenuation=:attenuation,\
+            floculation= :floculation where name=:name",
+                 {'name':yeast.name, 'maker':yeast.maker, 'max_allowed_temperature':yeast.max_allowed_temperature, 'min_allowed_temperature':yeast.min_allowed_temperature,'max_advised_temperature':yeast.max_advised_temperature,'min_advised_temperature':yeast.max_advised_temperature, 'form':yeast.form, 'attenuation':yeast.attenuation, 'floculation':yeast.floculation})
             con.commit()
             #c.execute("select * from yeasts")    
         except Error as e :
@@ -421,6 +440,24 @@ class Model(object):
         con.close()
         self.update_from_db('malt') #reread the actual key state of db
         self.announce_model_changed('malt')    
+        
+    def update_hop(self,hop):
+        print('updating a hop in model')
+        con = lite.connect('easybeer.db')
+        c = con.cursor()
+        try:
+             
+            'hops table already exists as created in self.update_from_db'
+            c.execute("update hops set alpha_acid=:alpha_acid,form=:form",{'name':hop.name, 'alpha_acid':hop.alpha_acid, 'form':hop.form})
+            con.commit()
+            c.execute("select * from hops")    
+        except Error as e :
+            print('there was an error while updating the malt')
+            print(e)   
+        c.close()
+        con.close()
+        self.update_from_db('malt') #reread the actual key state of db
+        self.announce_model_changed('malt')      
         
     def update_recipe(self,recipe): 
         con=lite.connect('easybeer.db')

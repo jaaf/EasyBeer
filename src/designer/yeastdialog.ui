@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>998</width>
-    <height>599</height>
+    <width>996</width>
+    <height>497</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="close_button">
    <property name="geometry">
     <rect>
-     <x>830</x>
-     <y>530</y>
+     <x>840</x>
+     <y>440</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -38,8 +38,8 @@
     <rect>
      <x>520</x>
      <y>11</y>
-     <width>620</width>
-     <height>540</height>
+     <width>466</width>
+     <height>411</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -496,37 +496,93 @@
      </spacer>
     </item>
     <item>
-     <widget class="QPushButton" name="add_button">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>300</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>100</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-        <weight>75</weight>
-        <italic>false</italic>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Add </string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_9">
+      <item>
+       <widget class="QPushButton" name="cancel_button">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Cancel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="update_button">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Update this yeast</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="add_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <italic>false</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Add </string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -536,7 +592,7 @@
      <x>10</x>
      <y>10</y>
      <width>481</width>
-     <height>491</height>
+     <height>411</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -560,7 +616,7 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>400</height>
+        <height>300</height>
        </size>
       </property>
      </widget>
@@ -582,6 +638,12 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="edit_button">
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -596,6 +658,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="delete_button">
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -610,6 +678,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="new_button">
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -629,6 +703,9 @@
   <zorder>layoutWidget</zorder>
   <zorder>layoutWidget</zorder>
   <zorder>close_button</zorder>
+  <zorder>add_button</zorder>
+  <zorder>update_button</zorder>
+  <zorder>cancel_button</zorder>
  </widget>
  <resources/>
  <connections/>

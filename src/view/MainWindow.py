@@ -523,6 +523,10 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
     def closeEvent(self,ev):
         self.recipeDialog.close()
         self.equipmentDialog.close()
+        self.maltDialog.close()
+        self.yeastDialog.close()
+        self.hopDialog.close()
+        self.restDialog.close()
      
     def create_icons(self):
         icon = QtGui.QIcon()
