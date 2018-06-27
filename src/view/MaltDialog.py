@@ -37,11 +37,15 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.controller=controller
         self.util=util
         self.current_malt=None # the malt currently selected
+        self.edit_mode=False
+        self.create_mode=False
         
         # register function with model for future model update announcements
         self.model.subscribe_model_changed(['malt'],self.on_model_changed_malt)
         
         self.add_button.hide()
+        self.update_button.hide()
+        self.cancel_button.hide()
         self.set_read_only()
         self.init_dialog_and_connections()
              
@@ -49,10 +53,15 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
           
         self.refresh_malt_list_widget()  
         self.detail_label.setText(self.tr('Selected Malt Details'))
+        self.add_button.setStyleSheet('background-color:lightgreen')
+        self.update_button.setStyleSheet('background-color:lightgreen')
+        self.cancel_button.setStyleSheet('background-color:pink')
+        
 
         
     def save_malt(self):
         'save or update the malt that is defined by the GUI'
+        self.create_mode=False
         maltT=self.read_input()
         if not maltT: return
         self.current_malt=maltT.name # in order to be able to select it back on refresh
@@ -60,6 +69,19 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.set_read_only()
         self.set_read_only_style()
         self.add_button.hide()
+        self.cancel_button.hide()
+        
+    def update_malt(self):
+        'save or update the malt that is defined by the GUI'
+        self.edit_mode=False
+        maltT=self.read_input()
+        if not maltT: return
+        self.current_malt=maltT.name # in order to be able to select it back on refresh
+        self.model.update_malt(maltT)
+        self.set_read_only()
+        self.set_read_only_style()
+        self.add_button.hide()
+        self.cancel_button.hide()
         
             
     def clear_edits(self):
@@ -71,12 +93,17 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.kolbach_min.setText('')
         
     def create(self):
-        self.add_button.setText(self.tr('Add this new malt'))
+        self.create_mode=True
+
+        self.update_button.hide()
+        self.malt_list_widget.clear()
         self.clear_edits()
         self.set_editable()
         self.set_editable_style()
+        self.add_button.show()
+        self.cancel_button.show()
         
-        self.add_button.show() 
+        
         
         
     def delete_malt(self):
@@ -91,10 +118,12 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
   
         
     def edit(self):
-        self.add_button.setText(self.tr('Update this malt'))
+        self.edit_mode=True
+        self.add_button.hide()
+        self.cancel_button.show()
+        self.update_button.show()
         self.set_editable()
         self.set_editable_style()
-        self.add_button.show()   
                 
     
     def closeEvent(self,event):
@@ -114,16 +143,17 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         color= self.util.check_input(self.color_edit,False,self.tr('Color'),False,0,100)
         if not color: return
         kolbach_min=self.util.check_input(self.kolbach_min,False,self.tr('Kolbach Index Min'),True,0,100)
-        if not kolbach_min and not (kolbach_min == '_undeclared_'): return
-        else: pass
+        #if not kolbach_min and not (kolbach_min == '_undeclared_'): return
+        #else: pass
         kolbach_max=self.util.check_input(self.kolbach_max,False,self.tr('Kolbach Index Max'),True,0,100)
-        if not kolbach_max and not (kolbach_max == '_undeclared_'): return
-        else: pass
+        #if not kolbach_max and not (kolbach_max == '_undeclared_'): return
+        #else: pass
         
         
         return Malt(str(name),maker,max_yield,color,kolbach_min,kolbach_max)  
     
     def load_selected(self):
+
         self.clear_edits()
         if self.malt_list_widget.currentItem():
             maltT=self.model.get_malt(str(self.malt_list_widget.currentItem().text()))
@@ -155,10 +185,13 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         
             self.malt_key_list=self.model.malt_list 
             self.refresh_malt_list_widget()  
+            
         
         
     def refresh_malt_list_widget(self):
-        #print('MaltDialog : Refreshing malt_list_widget')           
+        #print('MaltDialog : Refreshing malt_list_widget') 
+        self.edit_button.hide()          
+        self.delete_button.hide()
         self.malt_list_widget.clear()       
         self.malt_key_list.sort()  
         for key in self.malt_key_list:
@@ -174,7 +207,13 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
     def selection_changed(self):
         #print('MaltDialog : selection changed')
         ##print(self.malt_list_widget.currentItem().text())
+        self.add_button.hide()
+        self.update_button.hide()
+        self.cancel_button.hide()
+
         self.load_selected()
+        self.edit_button.show()
+        self.delete_button.show()
             
         
     def showEvent(self,e):
@@ -184,10 +223,13 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
     def init_dialog_and_connections(self):
         self.malt_list_widget.currentItemChanged.connect(self.selection_changed) 
         self.add_button.clicked.connect(self.save_malt)
+        self.update_button.clicked.connect(self.update_malt)
         self.edit_button.clicked.connect(self.edit)
+        
         self.new_button.clicked.connect(self.create)
         self.delete_button.clicked.connect(self.delete_malt)
-        self.close_button.clicked.connect(self.close)    
+        self.close_button.clicked.connect(self.close)  
+        self.cancel_button.clicked.connect(self.restart)  
           
      
     def set_editable(self):
@@ -218,9 +260,16 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.kolbach_min.setStyleSheet(sty.field_styles['read_only'])
         self.kolbach_max.setStyleSheet(sty.field_styles['read_only'])
         
+    def restart(self):
+        'after canceling an update or a creation'  
+        self.selection_changed()  
+        self.refresh_malt_list_widget()
+        
     def set_translatable_texts(self):    
         self.setWindowTitle(self.tr('Malt Database Edition'))
         self.add_button.setText(self.tr('Add this malt'))
+        self.update_button.setText(self.tr('Update this malt'))
+        self.cancel_button.setText(self.tr('Cancel'))
         self.edit_button.setText(self.tr('Edit'))
         self.delete_button.setText(self.tr('Delete'))
         self.new_button.setText(self.tr('New'))

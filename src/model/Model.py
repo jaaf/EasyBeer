@@ -277,7 +277,6 @@ class Model(object):
     
         
     def save_malt(self,malt):
-        #print('saving malt with sqlite')
         con = lite.connect('easybeer.db')
         c = con.cursor()
         try:
@@ -404,6 +403,24 @@ class Model(object):
         self.update_from_db('equipment')
         self.announce_model_changed('equipment')
         
+        
+    def update_malt(self,malt):
+        print('updating a malt in model')
+        con = lite.connect('easybeer.db')
+        c = con.cursor()
+        try:
+            'malts table already exists as created in self.update_from_db'
+            c.execute("update malts set maker=:maker,max_yield=:max_yield,color=:color,kolbach_min=:kolbach_min, kolbach_max=:kolbach_max where name=:name",
+                  {'name':malt.name, 'maker':malt.maker, 'max_yield':malt.max_yield, 'color':malt.color, 'kolbach_min':malt.kolbach_min,'kolbach_max':malt.kolbach_max})
+            con.commit()
+            #c.execute("select * from malts")    
+        except Error as e :
+            print('there was an error while updating the malt')
+            print(e)   
+        c.close()
+        con.close()
+        self.update_from_db('malt') #reread the actual key state of db
+        self.announce_model_changed('malt')    
         
     def update_recipe(self,recipe): 
         con=lite.connect('easybeer.db')

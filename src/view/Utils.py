@@ -89,7 +89,7 @@ class Utils(QWidget):
         #case nothing entered    
         if acceptNone and not t:
             #print('None accepted')
-            return '_undeclared_'    
+            return ''    
         
         #case of string
         if flag_txt and t:
