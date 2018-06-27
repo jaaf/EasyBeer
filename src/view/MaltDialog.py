@@ -264,6 +264,9 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         'after canceling an update or a creation'  
         self.selection_changed()  
         self.refresh_malt_list_widget()
+        'because selection_changed show them'
+        self.edit_button.hide()
+        self.delete_button.hide()
         
     def set_translatable_texts(self):    
         self.setWindowTitle(self.tr('Malt Database Edition'))

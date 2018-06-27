@@ -48,12 +48,18 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.model.subscribe_model_changed(['hop'],self.on_model_changed_hop)
         
         self.add_button.hide()
+        self.update_button.hide()
+        self.cancel_button.hide()
         self.set_read_only()
         self.init_dialog_and_connections()
              
         self.hop_key_list=self.model.hop_list        
           
         self.refresh_hop_list_widget()  
+        
+        self.add_button.setStyleSheet('background-color:lightgreen')
+        self.update_button.setStyleSheet('background-color:lightgreen')
+        self.cancel_button.setStyleSheet('background-color:pink')
     
     def alerte_empty_name(self):
         msg = QMessageBox()
@@ -81,12 +87,16 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.set_editable_style()
         self.clear_edits()
         self.add_button.show() 
+        self.cancel_button.show()
+        self.edit_button.hide()
+        self.delete_button.hide()
         
     def edit(self):
-        self.add_button.setText(self.tr('Update'))
+        
         self.set_editable()
         self.set_editable_style()
-        self.add_button.show() 
+        self.update_button.show() 
+        self.cancel_button.show()
         
     def read_input(self):
         name=self.util.check_input(self.name_edit,True,self.tr('Name'),False)
@@ -122,9 +132,19 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         if target == 'hop':
             self.hop_key_list=self.model.hop_list 
             self.refresh_hop_list_widget()    
+            
+    def restart(self):
+        'after canceling an update or a creation'  
+        self.selection_changed()  
+        self.refresh_hop_list_widget()   
+        'as selection_changed shows them'
+        self.edit_button.hide()
+        self.delete_button.hide()     
         
     def refresh_hop_list_widget(self):
-        #print('HopDialog : Refreshing hop_list_widget')           
+        #print('HopDialog : Refreshing hop_list_widget') 
+        self.edit_button.hide() 
+        self.delete_button.hide()         
         self.hop_list_widget.clear()       
         self.hop_key_list.sort()  
         for key in self.hop_key_list:
@@ -143,6 +163,8 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
     def init_dialog_and_connections(self):
         self.hop_list_widget.currentItemChanged.connect(self.selection_changed) 
         self.add_button.clicked.connect(self.save_hop)
+        self.update_button.clicked.connect(self.update_hop)
+        self.cancel_button.clicked.connect(self.restart)
         self.edit_button.clicked.connect(self.edit)
         self.new_button.clicked.connect(self.create)
         self.delete_button.clicked.connect(self.delete_hop)
@@ -214,19 +236,28 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.model.remove_hop(hopT.name)
         
     
-         
+    def update_hop(self):
+        print('updating hop')
+        self.util.alerte('updating hop')     
         
     
 
     def selection_changed(self):
         #print('HopDialog : selection changed')
+        self.add_button.hide()
+        self.update_button.hide()
+        self.cancel_button.hide()
         self.load_selected()
+        self.edit_button.show()
+        self.delete_button.show()
         
     def set_translatable_textes(self):
         self.setWindowTitle(self.tr('Hop Database Edition'))
         self.list_label.setText(self.tr('Hop List'))
         self.detail_label.setText(self.tr('Selected Hop Details'))
         self.add_button.setText(self.tr('Add this hop'))
+        self.cancel_button.setText(self.tr('Cancel'))
+        self.update_button.setText(self.tr('Update this hop'))
         self.name_label.setText(self.tr('Name'))
         self.alpha_acid_label.setText(self.tr('Alpha Acids'))
         self.form_label.setText(self.tr('Form'))
