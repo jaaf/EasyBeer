@@ -423,6 +423,30 @@ class Model(object):
         self.announce_model_changed('equipment')
         
         
+    def update_equipment(self,equipment):
+        eq=equipment
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        try:
+            c.execute("update equipments set brewing_efficiency=:brewing_efficiency,boiler_size=:boiler_size,\
+            boiler_dead_space=:boiler_dead_space,boiler_evaporation_rate=:boiler_evaporation_rate,\
+            fermentor_size=:fermentor_size,fermentor_dead_space=:fermentor_dead_space,type=:type,\
+            mash_tun_size=:mash_tun_size, mash_tun_dead_space=:mash_tun_dead_space,mash_tun_heat_losses=:mash_tun_heat_losses where \
+            name=:name",
+            {'name':eq.name,'brewing_efficiency':eq.brewing_efficiency,'boiler_size':eq.boiler_size,
+             'boiler_dead_space':eq.boiler_dead_space,'boiler_evaporation_rate':eq.boiler_evaporation_rate,
+             'fermentor_size':eq.fermentor_size,'fermentor_dead_space':eq.fermentor_dead_space,'type':eq.type,
+             'mash_tun_size':eq.mash_tun_size,'mash_tun_dead_space':eq.mash_tun_dead_space,'mash_tun_heat_losses':eq.mash_tun_heat_losses})
+            con.commit()
+        except Error as e:
+            #print('There was an error while inserting new equipment')
+            print('There was an error while updating equipment')
+            print(e)
+        c.close()
+        con.close()
+        self.update_from_db('equipment')
+        self.announce_model_changed('equipment')    
+        
     def update_malt(self,malt):
         print('updating a malt in model')
         con = lite.connect('easybeer.db')

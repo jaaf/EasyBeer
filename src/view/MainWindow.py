@@ -526,7 +526,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.maltDialog.close()
         self.yeastDialog.close()
         self.hopDialog.close()
-        self.restDialog.close()
+        self.restDialogCreate.close()
      
     def create_icons(self):
         icon = QtGui.QIcon()

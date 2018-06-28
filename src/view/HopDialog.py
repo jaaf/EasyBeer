@@ -18,13 +18,9 @@
 #Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QMessageBox
-
+from PyQt5.QtWidgets import  QWidget, QMessageBox
 from gen import HopDialogUI
-
 from model.Hop import Hop
-
-import view.constants as vcst
 import view.styles as sty
 
 
@@ -43,20 +39,15 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.controller=controller
         self.util=util
         self.current_hop=None # the hop currently selected
-        
-        # register function with model for future model update announcements
-        self.model.subscribe_model_changed(['hop'],self.on_model_changed_hop)
-        
+        ' register function with model for future model update announcements'
+        self.model.subscribe_model_changed(['hop'],self.on_model_changed_hop) 
         self.add_button.hide()
         self.update_button.hide()
         self.cancel_button.hide()
         self.set_read_only()
-        self.init_dialog_and_connections()
-             
-        self.hop_key_list=self.model.hop_list        
-          
-        self.refresh_hop_list_widget()  
-        
+        self.init_dialog_and_connections()         
+        self.hop_key_list=self.model.hop_list             
+        self.refresh_hop_list_widget()     
         self.add_button.setStyleSheet('background-color:lightgreen')
         self.update_button.setStyleSheet('background-color:lightgreen')
         self.cancel_button.setStyleSheet('background-color:pink')
@@ -69,32 +60,37 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         msg.setStandardButtons(QMessageBox.Ok)
         msg.exec_()
 
-            
+
+    def cancel(self):
+        'after canceling an update or a creation'  
+        self.current_hop=None
+        self.selection_changed()  
+        self.refresh_hop_list_widget()   
+        'as selection_changed shows them'
+        self.edit_button.hide()
+        self.delete_button.hide()
+        self.new_button.show()
+        
+                
     def clear_edits(self):
         self.name_edit.setText('')  
         self.alpha_acid_edit.setText('')
         idx =self.form_list.findText('')
         self.form_list.setCurrentIndex(idx)
         
+        
     def closeEvent(self,event):
-        #print('HopDialog : Mass Window close')
         self.close()        
     
+    
+    def delete_hop(self):
+        hopT=self.model.get_hop(self.hop_list_widget.currentItem().text())
+        self.current_hop=None
+        self.model.remove_hop(hopT.name)
         
-    def create(self):
-        self.update_button.hide()
-        self.hop_list_widget.clear()
-        self.set_editable()
-        self.set_editable_style()
-        self.clear_edits()
-        self.add_button.show() 
-        self.cancel_button.show()
-        self.edit_button.hide()
-        self.delete_button.hide()
-        self.new_button.hide()
+    
         
     def edit(self):
-        
         self.set_editable()
         self.set_editable_style()
         self.update_button.show() 
@@ -103,15 +99,16 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.delete_button.hide()
         self.new_button.hide()
         
-    def read_input(self):
-        name=self.util.check_input(self.name_edit,True,self.tr('Name'),False)
-        if not name: return
-        alpha_acid = self.util.check_input(self.alpha_acid_edit,False,self.tr('Alpha Acids'),False,0,100)
-        if not alpha_acid: return
-        form=self.util.check_input(self.form_list,True,self.tr('Form'),False)
-        if not form: return
-        #form=self.form_list.currentText()
-        return Hop(name,alpha_acid,form)
+        
+    def init_dialog_and_connections(self):
+        self.hop_list_widget.currentItemChanged.connect(self.selection_changed) 
+        self.add_button.clicked.connect(self.save_hop)
+        self.update_button.clicked.connect(self.update_hop)
+        self.cancel_button.clicked.connect(self.cancel)
+        self.edit_button.clicked.connect(self.edit)
+        self.new_button.clicked.connect(self.new)
+        self.delete_button.clicked.connect(self.delete_hop)
+        self.close_button.clicked.connect(self.close)
     
     
     def load_selected(self):
@@ -127,6 +124,20 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
                 self.form_list.setCurrentIndex(idx)
         self.set_read_only()  
         self.set_read_only_style()  
+     
+     
+    def new(self):
+        self.update_button.hide()
+        self.hop_list_widget.clear()
+        self.set_editable()
+        self.set_editable_style()
+        self.clear_edits()
+        self.add_button.show() 
+        self.cancel_button.show()
+        self.edit_button.hide()
+        self.delete_button.hide()
+        self.new_button.hide() 
+          
         
     def on_model_changed_hop(self,target):
         '''
@@ -136,47 +147,44 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         '''
         if target == 'hop':
             self.hop_key_list=self.model.hop_list 
-            self.refresh_hop_list_widget()    
+            self.refresh_hop_list_widget()   
             
-    def restart(self):
-        'after canceling an update or a creation'  
-        self.selection_changed()  
-        self.refresh_hop_list_widget()   
-        'as selection_changed shows them'
-        self.edit_button.hide()
-        self.delete_button.hide()
-        self.new_button.show()     
+    def read_input(self):
+        name=self.util.check_input(self.name_edit,True,self.tr('Name'),False)
+        if not name: return
+        alpha_acid = self.util.check_input(self.alpha_acid_edit,False,self.tr('Alpha Acids'),False,0,100)
+        if not alpha_acid: return
+        form=self.util.check_input(self.form_list,True,self.tr('Form'),False)
+        if not form: return
+        return Hop(name,alpha_acid,form)          
+           
         
-    def refresh_hop_list_widget(self):
-        #print('HopDialog : Refreshing hop_list_widget') 
+    def refresh_hop_list_widget(self): 
         self.edit_button.hide() 
         self.delete_button.hide()         
         self.hop_list_widget.clear()       
         self.hop_key_list.sort()  
         for key in self.hop_key_list:
-            self.hop_list_widget.addItem(key)
-            
+            self.hop_list_widget.addItem(key)        
         if self.current_hop:
-            #print('HopDialog : current_hop is set and equal to: '+self.current_hop)
             item=self.hop_list_widget.findItems(self.current_hop,QtCore.Qt.MatchExactly)
             self.hop_list_widget.setCurrentItem(item[0]) 
         else:
-            self.clear_edits()    
-            
-        self.set_read_only()  
-  
+            self.clear_edits()          
+        self.set_read_only()      
+     
+    
+    def save_hop(self):
+        'add the hop that is defined by the GUI'
+        hopT=self.read_input()
+        if not hopT: return
+        self.current_hop=hopT.name # in order to be able to select it back on refresh
+        self.model.save_hop(hopT)
+        self.set_read_only()
+        self.set_read_only_style()
+        self.add_button.hide()
         
-    def init_dialog_and_connections(self):
-        self.hop_list_widget.currentItemChanged.connect(self.selection_changed) 
-        self.add_button.clicked.connect(self.save_hop)
-        self.update_button.clicked.connect(self.update_hop)
-        self.cancel_button.clicked.connect(self.restart)
-        self.edit_button.clicked.connect(self.edit)
-        self.new_button.clicked.connect(self.create)
-        self.delete_button.clicked.connect(self.delete_hop)
-        self.close_button.clicked.connect(self.close)    
-     
-     
+         
     def set_editable(self):
         self.name_edit.setReadOnly(False)
         self.alpha_acid_edit.setReadOnly(False)
@@ -195,24 +203,8 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.name_edit.setStyleSheet(sty.field_styles['read_only']) 
         self.alpha_acid_edit.setStyleSheet(sty.field_styles['read_only']) 
         self.form_list.setStyleSheet(sty.field_styles['read_only'])
-        
-     
-    def showEvent(self,ev):
-        self.set_translatable_textes()
-        self.hop_form_list=['',self.tr('Pellets'),self.tr('Leaves'),self.tr('Cones')]
-        #print (self.hop_form_list)
-        
-        for f in self.hop_form_list:
-            self.form_list.addItem(f) 
-        
-            
-    
           
-        
-    
-      
-                
-            
+           
     def set_read_only(self):
         self.name_edit.setReadOnly(True)
         self.alpha_acid_edit.setReadOnly(True)
@@ -220,50 +212,16 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.form_list.setEnabled(False)
         self.set_read_only_style()
         
-     
-        
-    def save_hop(self):
-        'add the hop that is defined by the GUI'
-        hopT=self.read_input()
-        if not hopT: return
-        self.current_hop=hopT.name # in order to be able to select it back on refresh
-        self.model.save_hop(hopT)
-        self.set_read_only()
-        self.set_read_only_style()
-        self.add_button.hide()
-        
-        
-    def delete_hop(self):
-        hopT=self.model.get_hop(self.hop_list_widget.currentItem().text())
-        #print ('this is the hop I got')
-        #print(hopT)
-        # malt=self.malt_key_list[str(self.malt_list_widget.currentItem().text())]
-        self.current_hop=None
-        #print(hopT.name)
-        self.model.remove_hop(hopT.name)
-        
-    
-    def update_hop(self):
-        print('updating hop')
-        hopT=self.read_input()
-        if not hopT:return
-        self.current_hop=hopT.name # in order to be able to select it back on refresh
-        self.model.update_hop(hopT)
-        self.set_read_only()
-        self.set_read_only_style()
-        self.update_button.hide() 
-        self.cancel_button.hide() 
-        
-    
 
     def selection_changed(self):
-        #print('HopDialog : selection changed')
+        print('HopDialog : selection changed')
         self.add_button.hide()
         self.update_button.hide()
         self.cancel_button.hide()
         self.load_selected()
         self.edit_button.show()
         self.delete_button.show()
+        self.new_button.show()
         
     def set_translatable_textes(self):
         self.setWindowTitle(self.tr('Hop Database Edition'))
@@ -279,4 +237,24 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.edit_button.setText(self.tr('Edit'))
         self.delete_button.setText(self.tr('Delete'))
         self.new_button.setText(self.tr('New'))
+        
+        
+    def showEvent(self,ev):
+        self.set_translatable_textes()
+        self.hop_form_list=['',self.tr('Pellets'),self.tr('Leaves'),self.tr('Cones')]    
+        for f in self.hop_form_list:
+            self.form_list.addItem(f)    
+        
+        
+    def update_hop(self):
+        print('updating hop')
+        hopT=self.read_input()
+        if not hopT:return
+        self.current_hop=hopT.name # in order to be able to select it back on refresh
+        self.model.update_hop(hopT)
+        self.set_read_only()
+        self.set_read_only_style()
+        self.update_button.hide() 
+        self.cancel_button.hide()   
+        self.selection_changed()  
         

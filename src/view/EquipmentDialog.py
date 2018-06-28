@@ -38,6 +38,8 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.current_equipment=None
         
         self.add_button.hide()
+        self.update_button.hide()
+        self.cancel_button.hide()
         self.set_ro()
 
         #get the list of malts from db and load into the malt_list widget
@@ -51,6 +53,9 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.model.subscribe_model_changed(['equipment'],self.on_model_changed_equipment)
     
         self.init_dialog_and_connections()
+        self.add_button.setStyleSheet('background-color:lightgreen')
+        self.update_button.setStyleSheet('background-color:lightgreen')
+        self.cancel_button.setStyleSheet('background-color:pink')
     
     def add_equipment(self):
         equipment=self.read_input()
@@ -72,6 +77,19 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.set_ro()
         self.unset_color()
         self.add_button.hide()
+        self.cancel_button.hide()
+        
+    def update_equipment(self):
+        'save or update the malt that is defined by the GUI'
+        
+        equipment=self.read_input()
+        if not equipment: return
+        self.current_equipment=equipment.name # in order to be able to select it back on refresh
+        self.model.update_equipment(equipment)
+        self.set_ro()
+        self.unset_color()
+        self.update_button.hide()
+        self.cancel_button.hide()    
         
     def alerte(self,texte):
         msg = QMessageBox()
@@ -147,10 +165,14 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.refresh_equipment_list_widget()         
         
     def edit_equipment(self):
-        self.add_button.setText(self.tr('Update'))
+        self.add_button.hide()
+        self.cancel_button.show()
+        self.update_button.show()
         self.unset_ro()
         self.set_color()
-        self.add_button.show()   
+        self.edit_button.hide()
+        self.delete_button.hide()
+        self.new_button.hide()   
         
     def on_model_changed_equipment(self,target):
         '''
@@ -217,10 +239,16 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             
                        
     def new_equipment(self):
-        self.add_button.setText(self.tr('Add new'))
+        self.update_button.hide()
         self.unset_ro()
-        self.add_button.show() 
-        self.clear_edits()        
+         
+        self.clear_edits() 
+        self.equipment_list_widget.clear() 
+        self.cancel_button.show()
+        self.add_button.show()
+        self.edit_button.hide()
+        self.delete_button.hide()
+        self.new_button.hide()      
       
             
     def read_input(self):
@@ -279,6 +307,8 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
     
         
     def refresh_equipment_list_widget(self):
+        self.edit_button.hide()          
+        self.delete_button.hide()
         self.equipment_list_widget.clear()
         for key in self.equipment_key_list:
             self.equipment_list_widget.addItem(key)
@@ -287,9 +317,23 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             item=self.equipment_list_widget.findItems(self.current_equipment,QtCore.Qt.MatchExactly)
             self.equipment_list_widget.setCurrentItem(item[0]) 
             
+    def cancel(self):
+        'after canceling an update or a creation'  
+        self.selection_changed()  
+        self.refresh_equipment_list_widget()
+        'because selection_changed show them'
+        self.edit_button.hide()
+        self.delete_button.hide()
+        self.new_button.show()        
+            
     def selection_changed(self):
         #print('selection changed')
+        self.add_button.hide()
+        self.update_button.hide()
+        self.cancel_button.hide()
         self.load_selected()
+        self.edit_button.show()
+        self.delete_button.show()
             
     def set_color(self):
         self.name_edit.setStyleSheet(sty.field_styles['editable']) 
@@ -314,6 +358,8 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.basic_type_radiobutton.toggled.connect(self.basic_type_radiobutton_toggled)
         self.all_in_one_type_radiobutton.toggled.connect(self.all_in_one_type_radiobutton_toggled) 
         self.equipment_list_widget.currentItemChanged.connect(self.selection_changed) 
+        self.cancel_button.clicked.connect(self.cancel)  
+        self.update_button.clicked.connect(self.update_equipment)
         
         
     def set_labels(self):
@@ -342,6 +388,9 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.boiler_groupbox.setTitle(self.tr('Boiler'))
         self.fermentor_groupbox.setTitle(self.tr('Fermentor'))
         self.general_groupbox.setTitle(self.tr('General'))
+        self.update_button.setText(self.tr('Update Equipment'))
+        self.cancel_button.setText(self.tr('Cancel'))
+        self.add_button.setText(self.tr('Add Equipment'))
              
         
     def set_ro(self):

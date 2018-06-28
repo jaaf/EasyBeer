@@ -372,6 +372,20 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
+              <widget class="QPushButton" name="recipe_cancel_button">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Cancel</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <spacer name="horizontalSpacer_11">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -386,6 +400,13 @@
              </item>
              <item>
               <widget class="QPushButton" name="recipe_update_button">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="text">
                 <string>Update this recipe</string>
                </property>
@@ -925,6 +946,26 @@
         </layout>
        </item>
        <item>
+        <widget class="QPushButton" name="recipe_close_button">
+         <property name="maximumSize">
+          <size>
+           <width>150</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Close</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -932,7 +973,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>321</height>
+           <height>40</height>
           </size>
          </property>
         </spacer>

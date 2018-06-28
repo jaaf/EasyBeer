@@ -41,7 +41,7 @@ class HopChooser(QWidget,HopChooserUI.Ui_Form ):
         
     def save_hop(self):
         hopT=self.owner.model.get_hop(str(self.hop_list_widget.currentItem().text()))
-        self.owner.save_hop(hopT)  
+        self.owner.set_hop_view(hopT)  
         self.hide()    
     
    

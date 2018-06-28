@@ -18,15 +18,12 @@
 #Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QMessageBox
+from PyQt5.QtWidgets import  QWidget, QMessageBox
 
 from gen import YeastDialogUI
-
 from model.Yeast import Yeast
-
-import view.constants as vcst
 import view.styles as sty
-import inspect
+
 
 
 #from PyQt4.QtGui import QStandardItemModel,QStandardItem,QItemSelectionModel
@@ -39,48 +36,70 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
     def __init__(self,model,controller,util):
         QWidget.__init__(self,None,QtCore.Qt.WindowStaysOnTopHint)
         self.setupUi(self)
-        #print('YeastDialog: creating a YeastDialog object')
         self.model = model
         self.controller=controller
         self.util=util
         self.current_yeast=None # the yeast currently selected
-        
         'register function with model for future model update announcements'
-        self.model.subscribe_model_changed(['yeast'],self.on_model_has_changed_yeast)
-        
+        self.model.subscribe_model_changed(['yeast'],self.on_model_has_changed_yeast)    
         self.add_button.hide()
         self.set_read_only()
-        self.init_dialog_and_connections()
-             
-        self.yeast_key_list=self.model.yeast_list        
-          
+        self.init_dialog_and_connections()        
+        self.yeast_key_list=self.model.yeast_list             
         self.refresh_yeast_list_widget()  
         self.add_button.setStyleSheet('background-color:lightgreen')
         self.update_button.setStyleSheet('background-color:lightgreen')
         self.cancel_button.setStyleSheet('background-color:pink')
 
-            
+     
+    def alerte_empty_name(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText("Name cannot be empty")
+        msg.setWindowTitle("Warning Empty Name")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
+
+ 
+    def cancel(self):
+        'after canceling an update or a creation'  
+        self.current_yeast=None
+        self.selection_changed()  
+        self.refresh_yeast_list_widget()   
+        'as selection_changed shows them'
+        self.edit_button.hide()
+        self.delete_button.hide() 
+        self.new_button.show()  
+        
+                
     def clear_edits(self):
-        #whenever the user wants to create a new yeast
+        #whenever the user wants to new a new yeast
         self.name_edit.setText('')  
         self.maker_edit.setText('')
         self.max_allowed_temperature_edit.setText('')
         self.min_allowed_temperature_edit.setText('')
         self.max_advised_temperature_edit.setText('')
         self.min_advised_temperature_edit.setText('')
-        
         idx =self.form_combo.findText('')
-        self.form_combo.setCurrentIndex(idx)
-        
+        self.form_combo.setCurrentIndex(idx)    
         idx =self.attenuation_combo.findText('')
-        self.attenuation_combo.setCurrentIndex(idx)
-        
+        self.attenuation_combo.setCurrentIndex(idx)    
         idx =self.floculation_combo.findText('')
         self.floculation_combo.setCurrentIndex(idx)
+        
+    
+    def closeEvent(self,event):
+        self.close()
+    
+    def delete_yeast(self):
+        'ask the model to delete the current yeast'
+        yeastT=self.model.get_yeast(str(self.yeast_list_widget.currentItem().text()))
+        self.current_yeast=None
+        self.model.remove_yeast(str(yeastT.name))
+        self.add_button.hide()
+        self.cancel_button.hide()        
     
     def edit(self):
-        #the user has asked for edition of the current yeast
-        
         self.set_editable()
         self.set_editable_style()
         self.add_button.hide()
@@ -108,36 +127,20 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
                    (.030) /(.040) = 75%
         '''    
         self.util.alerte(message,QMessageBox.Information,self.tr('Info : What is attenuation?'))   
+     
+     
+    def init_dialog_and_connections(self):
+        #make the controls on the form active
+        self.yeast_list_widget.currentItemChanged.connect(self.selection_changed) 
+        self.add_button.clicked.connect(self.save_yeast)
+        self.update_button.clicked.connect(self.update_yeast)
+        self.cancel_button.clicked.connect(self.cancel)
+        self.attenuation_help_button.clicked.connect(self.explain_attenuation)
+        self.edit_button.clicked.connect(self.edit)
+        self.new_button.clicked.connect(self.new)
+        self.delete_button.clicked.connect(self.delete_yeast)
+        self.close_button.clicked.connect(self.close)    
         
-        
-    def create(self):
-        #the user has asked for creation of a new yeast record
-        self.update_button.hide()
-        self.yeast_list_widget.clear()
-        self.set_editable()
-        self.set_editable_style()
-        self.clear_edits()
-        self.cancel_button.show()
-        self.add_button.show() 
-        self.edit_button.hide()
-        self.delete_button.hide()
-        self.new_button.hide()
-        
-        
-    def selection_changed(self):
-        self.add_button.hide()
-        self.update_button.hide()
-        self.cancel_button.hide()
-        self.load_selected()
-        self.edit_button.show()
-        self.delete_button.show()
-                    
-    
-    def closeEvent(self,event):
-        #print('YeastDialog : Yeast Window close')
-        self.close()
-            
-
     
     def load_selected(self):
         #load the selected yeast
@@ -174,13 +177,33 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
             if hasattr(yeastT,'floculation'):
                 idx=self.floculation_combo.findText(yeastT.floculation)  
                 self.floculation_combo.setCurrentIndex(idx)  
-                
-
+                        
         self.set_read_only()  
-        self.set_read_only_style()   
+        self.set_read_only_style() 
         
+            
+    def new(self):
+        #the user has asked for creation of a new yeast record
+        self.update_button.hide()
+        self.yeast_list_widget.clear()
+        self.set_editable()
+        self.set_editable_style()
+        self.clear_edits()
+        self.cancel_button.show()
+        self.add_button.show() 
+        self.edit_button.hide()
+        self.delete_button.hide()
+        self.new_button.hide()
+                
+    
+    def on_model_has_changed_yeast(self,target):
+        if target == 'yeast':
+            self.yeast_key_list=self.model.yeast_list   
+            self.refresh_yeast_list_widget()
+            
+         
     def read_input(self):
-        #read the inputs of the dialog to create a yeast object
+        #read the inputs of the dialog to new a yeast object
         name=self.util.check_input(self.name_edit,True,self.tr('Name'),False)
         if not name: return
         
@@ -211,26 +234,38 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         return Yeast(name,maker,max_allowed_temperature,min_allowed_temperature,max_advised_temperature,min_advised_temperature,form,attenuation,floculation)
     
   
-        
-    def init_dialog_and_connections(self):
-        #make the controls on the form active
-        self.yeast_list_widget.currentItemChanged.connect(self.selection_changed) 
-        self.add_button.clicked.connect(self.save_yeast)
-        self.update_button.clicked.connect(self.update_yeast)
-        self.cancel_button.clicked.connect(self.restart)
-        self.attenuation_help_button.clicked.connect(self.explain_attenuation)
-        self.edit_button.clicked.connect(self.edit)
-        self.new_button.clicked.connect(self.create)
-        self.delete_button.clicked.connect(self.delete_yeast)
-        self.close_button.clicked.connect(self.close)    
+    def refresh_yeast_list_widget(self):   
+        self.edit_button.hide()          
+        self.delete_button.hide()        
+        self.yeast_list_widget.clear()       
+        self.yeast_key_list.sort()  
+        for key in self.yeast_key_list:
+            self.yeast_list_widget.addItem(key)    
+        if self.current_yeast:
+            item=self.yeast_list_widget.findItems(self.current_yeast,QtCore.Qt.MatchExactly)
+            self.yeast_list_widget.setCurrentItem(item[0]) 
+        else:
+            self.clear_edits()        
+        self.set_read_only()   
+       
      
-    def restart(self):
-        'after canceling an update or a creation'  
-        self.selection_changed()  
-        self.refresh_yeast_list_widget()   
-        'as selection_changed shows them'
-        self.edit_button.hide()
-        self.delete_button.hide() 
+    def save_yeast(self):
+        'ask the model to save or update the yeast that is defined by the GUI'
+        'then set all inputs readonly'
+        yeastT=self.read_input()
+        self.current_yeast=yeastT.name # in order to be able to select it back on refresh
+        self.model.save_yeast(yeastT)
+        self.set_read_only()
+        self.set_read_only_style()
+        self.add_button.hide()
+         
+    def selection_changed(self):
+        self.add_button.hide()
+        self.update_button.hide()
+        self.cancel_button.hide()
+        self.load_selected()
+        self.edit_button.show()
+        self.delete_button.show()
         self.new_button.show()
      
     def set_editable(self):
@@ -267,7 +302,8 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         self.form_combo.setEnabled(False)
         self.attenuation_combo.setEnabled(False)
         self.floculation_combo.setEnabled(False)
-        self.set_read_only_style()        
+        self.set_read_only_style()  
+              
 
     def set_read_only_style(self):
         self.name_edit.setStyleSheet(sty.field_styles['read_only']) 
@@ -279,6 +315,7 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         self.form_combo.setStyleSheet(sty.field_styles['read_only'])
         self.attenuation_combo.setStyleSheet(sty.field_styles['read_only'])
         self.floculation_combo.setStyleSheet(sty.field_styles['read_only'])
+    
         
      
     def showEvent(self,ev):
@@ -286,67 +323,14 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         self.set_translatable_textes()
         self.yeast_attenuation_list=['',self.tr('Low'),self.tr('Medium'),self.tr('High')]
         self.yeast_form_list=['',self.tr('Dry'),self.tr('Liquid')]
-        #print (self.yeast_attenuation_list)
-        
         for f in self.yeast_form_list:
             self.form_combo.addItem(f)
-        
         for a in self.yeast_attenuation_list:
-            self.attenuation_combo.addItem(a)
-            
+            self.attenuation_combo.addItem(a)   
         for f in self.yeast_attenuation_list:#list is common to attenuation and floculation
             self.floculation_combo.addItem(f) 
         
             
-    def refresh_yeast_list_widget(self):
-        #print('YeastDialog : Refreshing yeast_list_widget')   
-        self.edit_button.hide()          
-        self.delete_button.hide()        
-        self.yeast_list_widget.clear()       
-        self.yeast_key_list.sort()  
-        for key in self.yeast_key_list:
-            self.yeast_list_widget.addItem(key)
-            
-        if self.current_yeast:
-            ##print('YeastDialog : current_yeast is set and equal to: '+self.current_yeast)
-            item=self.yeast_list_widget.findItems(self.current_yeast,QtCore.Qt.MatchExactly)
-            self.yeast_list_widget.setCurrentItem(item[0]) 
-        else:
-            self.clear_edits()    
-            
-        self.set_read_only() 
-          
-    def on_model_has_changed_yeast(self,target):
-        if target == 'yeast':
-            self.yeast_key_list=self.model.yeast_list   
-            self.refresh_yeast_list_widget()
-            
-  
-    '''           
-    def on_model_changed(self,target):
-        #print('in on model changed')
-        #print('target is '+target)
-        frame = inspect.currentframe()
-        args, _, _, values = inspect.getargvalues(frame)
-        
-        for i in args:
-            #print ("    %s = %s" % (i, values[i]))
-        
-        
-        if target == 'yeast':
-            self.yeast_key_list=self.model.yeast_list
-            self.refresh_yeast_list_widget()           
-     '''
-        
-    def save_yeast(self):
-        'ask the model to save or update the yeast that is defined by the GUI'
-        'then set all inputs readonly'
-        yeastT=self.read_input()
-        self.current_yeast=yeastT.name # in order to be able to select it back on refresh
-        self.model.save_yeast(yeastT)
-        self.set_read_only()
-        self.set_read_only_style()
-        self.add_button.hide()
         
     def update_yeast(self):
         'ask the model to save or update the yeast that is defined by the GUI'
@@ -359,23 +343,10 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         self.add_button.hide()    
         
         
-    def delete_yeast(self):
-        'ask the model to delete the current yeast'
-        yeastT=self.model.get_yeast(str(self.yeast_list_widget.currentItem().text()))
-        self.current_yeast=None
-        self.model.remove_yeast(str(yeastT.name))
-        self.add_button.hide()
-        self.cancel_button.hide()
+    
               
         
-    def alerte_empty_name(self):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
-        msg.setText("Name cannot be empty")
-        msg.setWindowTitle("Warning Empty Name")
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec_()
-
+    
     def set_translatable_textes(self):
         #this is called once the dialog has been fully created (showEvent)
         self.setWindowTitle(self.tr('Yeast Database Edition'))

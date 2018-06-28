@@ -68,34 +68,23 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.model = model
         self.controller=controller
         self.util=util
-        #self.add_subdialog_buttons()
-     
         self.current_recipe=None # the recipe currently selected
-        #self.set_ro_and_color()
-        self.current_recipe=None
-        
         #get the list of malts from db and load into the malt_list widget
         self.malt_key_list=self.model.malt_list 
         self.recipe_key_list=self.model.recipe_list
-        
         # register function with model for future model update announcements
         self.set_subscriptions()
-        
-      
         self.malt_type_list=[]
         self.rest_list=[]
         self.malt_chooser=MaltChooser(self)
         self.hop_chooser=HopChooser(self)
         self.yeast_chooser=YeastChooser(self)
-        self.rest_dialog=RestDialog(self)     
-        
+        self.rest_dialog=RestDialog(self)         
         self.refresh_recipe_list_widget()          
         self.list_malt_in_mash=[]
-        self.list_hop_in_recipe=[]
-        self.recipe_add_button.hide()
-        self.recipe_update_button.hide()
+        self.list_hop_in_recipe=[]   
         self.targeted_original_gravity_edit.setAccessibleName('Targeted Original Gravity')
-        
+        self.add_subdialog_buttons()   
         self.malt_for_mash_label.setMaximumSize(300,30)
         self.malt_for_mash_label.setMinimumSize(300,30)
         self.mash_rests_label.setMaximumSize(300,30)
@@ -104,68 +93,19 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.hop_list_label.setMinimumSize(300,30)
         self.adjuncts_list_label.setMaximumSize(300,30)
         self.adjuncts_list_label.setMinimumSize(300,30)
-        
+        self.recipe_add_button.hide()
+        self.recipe_update_button.hide()
+        self.recipe_cancel_button.hide()
+        self.recipe_add_button.setStyleSheet('background-color:lightgreen')
+        self.recipe_update_button.setStyleSheet('background-color:lightgreen')
+        self.recipe_cancel_button.setStyleSheet('background-color:pink')   
         self.init_dialog_and_connections()
+        self.recipe_edit_button.hide()
+        self.recipe_delete_button.hide()
+        self.recipe_new_button.show()
 
         
-    def save_hop(self,hop_type,usage=None,duration=None,hop_rate=None):  
         
- 
-        ##print('RecipeDialog : Adding a hop')
-        hopT=hop_type
-        hl=QHBoxLayout()
-        
-        name_edit=QLineEdit()
-        name_edit.setAccessibleName('name')
-        name_edit.setMinimumSize(400,30)
-        name_edit.setText(hopT.name)
-        hl.addWidget(name_edit)
-        
-        info_label=QLabel()
-        info_label.setMinimumSize(400,30)
-        info_label.setAccessibleName('info')
-        info= ' – '+hopT.form + ' – ' +str(hopT.alpha_acid)+ ' % AA'
-        info_label.setText(info) 
-        hl.addWidget(info_label)
-
-        usage_combo=QComboBox()
-        usage_combo.setAccessibleName('usage')
-        usage_combo.setStyleSheet(sty.field_styles['editable'])
-        usage_combo.setMinimumWidth(150)
-        hl.addWidget(usage_combo)
-        
-        'in the menu view we use the val i.e. the translated string'
-        for key,val in self.util.hop_usage_dic.items():
-            usage_combo.addItem(val)
-        try:        
-            index = usage_combo.findText(self.util.hop_usage_dic[usage])
-        except:
-            index=0  
-        if index and index >= 0:
-            usage_combo.setCurrentIndex(index) 
-        usage_combo.currentIndexChanged.connect(self.show_hide_hop_duration)    
-            
-        duration_edit=QLineEdit()   
-        duration_edit.setAccessibleName('duration')
-        hl.addWidget(duration_edit)
-        duration_edit.setStyleSheet(sty.field_styles['editable'])
-        duration_edit.setMaximumSize(40,30)
-        if duration:
-            duration_edit.setText(str(duration))      
-       
-        hl.addWidget(QLabel('min'))#4for unit
-        hl.addStretch()
-        
-
-        self.add_hop_rate(hl,hop_rate)
-        delete_button=QPushButton('X')
-        delete_button.setAccessibleName('delete_button')
-        delete_button.setMaximumSize(20,30)
-        delete_button.setStyleSheet(vcst.BUTTON_DELETE_STYLE)  
-        delete_button.clicked.connect(self.remove_hop) 
-        hl.addWidget(delete_button)
-        
-        self.hop_layout.addLayout(hl)    
                
     def add_malt_view(self,malt_type,percent=None):
         maltT=malt_type    
@@ -197,7 +137,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         delete_button.setMaximumSize(20,30)
         delete_button.setStyleSheet(vcst.BUTTON_DELETE_STYLE) 
         hl.addWidget(delete_button)
-        delete_button.clicked.connect(self.remove_malt) 
+        delete_button.clicked.connect(self.remove_malt_view) 
         
         hidden_name=QLineEdit(maltT.name)
         hidden_name.setAccessibleName('hidden_name')
@@ -414,10 +354,13 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         
         self.recipe_add_button.hide()
         self.recipe_update_button.show()
-        self.recipe_delete_button.setEnabled(False)
-        self.recipe_new_button.setEnabled(False)
+        self.recipe_cancel_button.show()
+        self.recipe_delete_button.hide()
+        self.recipe_new_button.hide()
+        self.recipe_edit_button.hide()
         self.unset_ro_and_color()
         self.update_rest_view(self.current_recipe, False)
+        
                                  
 
     def hop_chooser_show(self):
@@ -476,11 +419,28 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.util.clearLayout(self.malt_layout)
         self.util.clearLayout(self.rest_layout)
         self.util.clearLayout(self.hop_layout)
+        self.recipe_list_widget.clear()
+        
         self.recipe_add_button.show()
         self.recipe_update_button.hide()
+        self.recipe_cancel_button.show()
+        self.recipe_edit_button.hide()
+        self.recipe_delete_button.hide()
+        self.recipe_new_button.hide()
         self.unset_ro_and_color()
         self.clear_edits() 
         self.rest_list=[]
+        
+    def cancel(self):
+        'after canceling an update or a creation'  
+        'to prevent reselect after cancellation or creation'
+        self.current_recipe=None
+        self.selection_changed_recipe()  
+        self.refresh_recipe_list_widget()
+        'because selection_changed show them'
+        self.recipe_edit_button.hide()
+        self.recipe_delete_button.hide()
+        self.recipe_new_button.show()    
         
         
     def on_model_changed_recipe(self,target):
@@ -623,7 +583,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             self.recipe_list_widget.setCurrentItem(item[0])      
     
             
-    def remove_malt(self):
+    def remove_malt_view(self):
+        'remove a malt view from the GUI after the user used the Delete button'
         s= self.sender()
         for i in range(self.malt_layout.count()):
             item =self.malt_layout.itemAt(i)
@@ -634,7 +595,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                     return   
             
                 
-    def remove_rest(self):
+    def remove_rest_view(self):
         
         s=self.sender()
         for i in range(self.rest_layout.count()):
@@ -647,7 +608,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                     return   
            
                 
-    def remove_hop(self):
+    def remove_hop_view(self):
+        'remove a hop view from the GUI after the user used Delete button in it'
         s=self.sender()
         for i in range(self.hop_layout.count()):
             item = self.hop_layout.itemAt(i)
@@ -665,10 +627,67 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.rest_dialog.window().raise_()
          
     
+    def set_hop_view(self,hop_type,usage=None,duration=None,hop_rate=None): 
+        'prepare a hop view from the data loaded and add it to the hop layout' 
+        hopT=hop_type
+        hl=QHBoxLayout()
+        
+        name_edit=QLineEdit()
+        name_edit.setAccessibleName('name')
+        name_edit.setMinimumSize(400,30)
+        name_edit.setText(hopT.name)
+        hl.addWidget(name_edit)
+        
+        info_label=QLabel()
+        info_label.setMinimumSize(400,30)
+        info_label.setAccessibleName('info')
+        info= ' – '+hopT.form + ' – ' +str(hopT.alpha_acid)+ ' % AA'
+        info_label.setText(info) 
+        hl.addWidget(info_label)
+
+        usage_combo=QComboBox()
+        usage_combo.setAccessibleName('usage')
+        usage_combo.setStyleSheet(sty.field_styles['editable'])
+        usage_combo.setMinimumWidth(150)
+        hl.addWidget(usage_combo)
+        
+        'in the menu view we use the val i.e. the translated string'
+        for key,val in self.util.hop_usage_dic.items():
+            usage_combo.addItem(val)
+        try:        
+            index = usage_combo.findText(self.util.hop_usage_dic[usage])
+        except:
+            index=0  
+        if index and index >= 0:
+            usage_combo.setCurrentIndex(index) 
+        usage_combo.currentIndexChanged.connect(self.show_hide_hop_duration)    
+            
+        duration_edit=QLineEdit()   
+        duration_edit.setAccessibleName('duration')
+        hl.addWidget(duration_edit)
+        duration_edit.setStyleSheet(sty.field_styles['editable'])
+        duration_edit.setMaximumSize(40,30)
+        if duration:
+            duration_edit.setText(str(duration))      
+       
+        hl.addWidget(QLabel('min'))#4for unit
+        hl.addStretch()
+        
+
+        self.add_hop_rate(hl,hop_rate)
+        delete_button=QPushButton('X')
+        delete_button.setAccessibleName('delete_button')
+        delete_button.setMaximumSize(20,30)
+        delete_button.setStyleSheet(vcst.BUTTON_DELETE_STYLE)  
+        delete_button.clicked.connect(self.remove_hop_view) 
+        hl.addWidget(delete_button)
+        
+        self.hop_layout.addLayout(hl)
+        
+        
     def save_recipe(self):
         recipe=self.prepare_a_recipe_to_save()
-        if not recipe: return #the dialog may have aborted because on field was let empty
-        
+        if not recipe: return #the dialog may have aborted because on field was let empty  
         'use the model to save the recipe'
         self.model.add_recipe(recipe)
         item=self.recipe_list_widget.findItems(recipe.name,QtCore.Qt.MatchExactly)
@@ -682,7 +701,12 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
     def selection_changed_recipe(self):
         #print('RecipeDialog : Recipe selection changed') 
         self.recipe_add_button.hide()
-        self.load_selected_recipe()            
+        self.recipe_update_button.hide()
+        self.recipe_cancel_button.hide()
+        self.load_selected_recipe() 
+        self.recipe_edit_button.show()
+        self.recipe_delete_button.show() 
+        self.recipe_new_button.show()          
         
         
     def init_dialog_and_connections(self):
@@ -692,6 +716,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.recipe_list_widget.currentItemChanged.connect(self.selection_changed_recipe)
         self.recipe_add_button.clicked.connect(self.save_recipe)  
         self.recipe_update_button.clicked.connect(self.update_recipe) 
+        self.recipe_cancel_button.clicked.connect(self.cancel)
+        self.recipe_close_button.clicked.connect(self.close)
          
         
     def set_ro_and_color(self):
@@ -763,13 +789,11 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.adjuncts_list_label.setText(self.tr('Adjuncts'))
         self.mash_rests_label.setText(self.tr('Mash Rests'))
         self.add_subdialog_buttons()
+        self.recipe_close_button.setText(self.tr('Close'))
 
         
    
-    def showEvent(self,e):   
-     
-
-        self.selection_changed_recipe()    
+    def showEvent(self,e):  
         self.set_translatable_textes()
         #self.add_subdialog_buttons#already done, just to refresh translation
         self.set_ro_and_color()
@@ -854,7 +878,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             #print (str(h.hop))
             #print(str(h.usage))
             #print(str(h.hop_rate))   
-            self.save_hop(hop, h.usage, h.duration,h.hop_rate)     
+            self.set_hop_view(hop, h.usage, h.duration,h.hop_rate)     
                
     def update_yeast_view(self,recipe):
         self.util.clearLayout(self.yeast_layout)
@@ -881,7 +905,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.util.clearLayout(self.rest_layout)
         for r in self.rest_list:
             rest_view=self.util.create_rest_view(r.purpose,r.duration,r.temperature,in_mem,recipe) 
-            rest_view.itemAt(5).widget().clicked.connect(self.remove_rest)  
+            rest_view.itemAt(5).widget().clicked.connect(self.remove_rest_view)  
             self.rest_layout.addLayout(rest_view)     
                 
     def update_rest_view(self,recipe,in_mem=True):
@@ -935,7 +959,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             delete_button.setAccessibleName('delete_button')
             delete_button.setStyleSheet(vcst.BUTTON_DELETE_STYLE)
             delete_button.setMaximumSize(20,30)
-            delete_button.clicked.connect(self.remove_rest) 
+            delete_button.clicked.connect(self.remove_rest_view) 
             hl.addWidget(delete_button)
             if in_mem:
                 delete_button.hide()
