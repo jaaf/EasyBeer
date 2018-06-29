@@ -75,6 +75,6 @@ TITLE_SLANTED_FONT_L=QFont('Free Sans',11,QFont.Normal,True)
 TITLE_FONT_W=QFont('Helvetica',11,QFont.Bold)
 BUTTON_FONT_W=QFont('Helvetica',10,QFont.DemiBold)
 FIELD_LABEL_FONT_W=QFont('Helvetica',10,QFont.Normal)
-TITLE_SLANTED_FONT_W=QFont('Helvetica',10,QFont.Normal,True)
+TITLE_SLANTED_FONT_W=QFont('Helvetica',11,QFont.Normal,True)
 
 
