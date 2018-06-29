@@ -6,9 +6,17 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>920</width>
-    <height>443</height>
+    <width>833</width>
+    <height>416</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>FreeSans</family>
+    <pointsize>10</pointsize>
+    <weight>50</weight>
+    <bold>false</bold>
+   </font>
   </property>
   <property name="windowTitle">
    <string/>
@@ -16,15 +24,16 @@
   <widget class="QPushButton" name="close_button">
    <property name="geometry">
     <rect>
-     <x>770</x>
-     <y>390</y>
+     <x>10</x>
+     <y>370</y>
      <width>141</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>FreeSans</family>
+     <pointsize>10</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
@@ -36,10 +45,10 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>132</y>
-     <width>401</width>
-     <height>291</height>
+     <x>10</x>
+     <y>92</y>
+     <width>341</width>
+     <height>271</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -68,7 +77,8 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>FreeSans</family>
+          <pointsize>10</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -88,7 +98,8 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>FreeSans</family>
+          <pointsize>10</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -108,7 +119,8 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>FreeSans</family>
+          <pointsize>10</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -125,17 +137,18 @@
   <widget class="QLabel" name="malt_list_label">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>40</y>
+     <x>20</x>
+     <y>0</y>
      <width>271</width>
      <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <family>FreeSans</family>
+     <pointsize>12</pointsize>
      <weight>75</weight>
-     <italic>true</italic>
+     <italic>false</italic>
      <bold>true</bold>
     </font>
    </property>
@@ -146,20 +159,20 @@
   <widget class="QListWidget" name="malt_list_widget">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>80</y>
-     <width>401</width>
-     <height>291</height>
+     <x>10</x>
+     <y>40</y>
+     <width>341</width>
+     <height>261</height>
     </rect>
    </property>
   </widget>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>30</y>
-     <width>441</width>
-     <height>341</height>
+     <x>370</x>
+     <y>20</y>
+     <width>454</width>
+     <height>345</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -167,9 +180,10 @@
      <widget class="QLabel" name="detail_label">
       <property name="font">
        <font>
-        <pointsize>16</pointsize>
+        <family>FreeSans</family>
+        <pointsize>12</pointsize>
         <weight>75</weight>
-        <italic>true</italic>
+        <italic>false</italic>
         <bold>true</bold>
        </font>
       </property>
@@ -184,10 +198,10 @@
        <widget class="QLabel" name="name_label">
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
-          <weight>75</weight>
-          <italic>false</italic>
-          <bold>true</bold>
+          <family>FreeSans</family>
+          <pointsize>10</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
@@ -211,9 +225,10 @@
      <widget class="QLabel" name="maker_label">
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
+        <family>FreeSans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
@@ -239,10 +254,11 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
-          <weight>75</weight>
+          <family>FreeSans</family>
+          <pointsize>10</pointsize>
+          <weight>50</weight>
           <italic>false</italic>
-          <bold>true</bold>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
@@ -268,6 +284,14 @@
       </item>
       <item>
        <widget class="QLabel" name="max_yield_unti_label">
+        <property name="font">
+         <font>
+          <family>FreeSans</family>
+          <pointsize>10</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
         <property name="text">
          <string>%</string>
         </property>
@@ -287,10 +311,11 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
-          <weight>75</weight>
+          <family>FreeSans</family>
+          <pointsize>10</pointsize>
+          <weight>50</weight>
           <italic>false</italic>
-          <bold>true</bold>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
@@ -316,6 +341,14 @@
       </item>
       <item>
        <widget class="QLabel" name="color_unit_label">
+        <property name="font">
+         <font>
+          <family>FreeSans</family>
+          <pointsize>10</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
         <property name="text">
          <string>EBC</string>
         </property>
@@ -329,9 +362,10 @@
        <widget class="QLabel" name="kolbach_index_label">
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
+          <family>FreeSans</family>
+          <pointsize>10</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
@@ -348,6 +382,14 @@
             <width>50</width>
             <height>50</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
           </property>
           <property name="text">
            <string>Min</string>
@@ -381,6 +423,14 @@
             <width>50</width>
             <height>50</height>
            </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
           </property>
           <property name="text">
            <string>Max</string>
@@ -436,15 +486,16 @@
        <widget class="QPushButton" name="cancel_button">
         <property name="minimumSize">
          <size>
-          <width>150</width>
+          <width>100</width>
           <height>0</height>
          </size>
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
+          <family>Arial Black</family>
+          <pointsize>10</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
@@ -469,13 +520,14 @@
        <widget class="QPushButton" name="update_button">
         <property name="minimumSize">
          <size>
-          <width>150</width>
+          <width>100</width>
           <height>0</height>
          </size>
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>DejaVu Sans</family>
+          <pointsize>10</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -508,21 +560,20 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>150</width>
+          <width>100</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>10</width>
+          <width>100</width>
           <height>16777215</height>
          </size>
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>FreeSans</family>
           <weight>75</weight>
-          <italic>false</italic>
           <bold>true</bold>
          </font>
         </property>

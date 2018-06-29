@@ -100,7 +100,7 @@ class MaltChooser(QWidget,MaltChooserUI.Ui_Form ):
         self.kolbach_min.setStyleSheet(sty.field_styles['read_only'])         
                 
     def set_translatable_text(self):
-        self.add_button.setText(self.tr('Add this malt'))    
+        self.add_button.setText(self.tr('Add this malt'))   
         self.close_button.setText(self.tr('Close'))
         self.name_label.setText(self.tr('Name'))
         self.color_label.setText(self.tr('Color'))

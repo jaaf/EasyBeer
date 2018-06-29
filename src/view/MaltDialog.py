@@ -22,6 +22,7 @@ from gen import MaltDialogUI
 from model.Malt import Malt
 import view.constants as vcst
 import view.styles as sty
+import platform
 
 class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
     """
@@ -42,10 +43,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.init_dialog_and_connections()         
         self.malt_key_list=self.model.malt_list             
         self.refresh_malt_list_widget()  
-        self.detail_label.setText(self.tr('Selected Malt Details'))
-        self.add_button.setStyleSheet('background-color:lightgreen')
-        self.update_button.setStyleSheet('background-color:lightgreen')
-        self.cancel_button.setStyleSheet('background-color:pink')
+
         
         
     def cancel(self):
@@ -240,6 +238,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
     def set_translatable_texts(self):    
         self.setWindowTitle(self.tr('Malt Database Edition'))
         self.add_button.setText(self.tr('Add this malt'))
+        
         self.update_button.setText(self.tr('Update this malt'))
         self.cancel_button.setText(self.tr('Cancel'))
         self.edit_button.setText(self.tr('Edit'))
@@ -255,6 +254,41 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.kolbach_max_label.setText('Max')
         self.kolbach_index_label.setText('Kolbach Index')
         self.close_button.setText(self.tr('Close'))
+     
+    def set_fonts(self):
+        if platform=='win32':
+            self.add_button.setStyleSheet('background-color:lightgreen;font-family:'+vcst.BUTTON_FONT_W)
+            self.update_button.setStyleSheet('background-color:lightgreen;font-family:'+vcst.BUTTON_FONT_W)
+            self.cancel_button.setStyleSheet('background-color:pink:ont-family'+vcst.BUTTON_FONT_W)
+            self.edit_button.setSyleSheet(vcst.BUTTON_FONT_W)
+            self.delete_button.setStyleSheet(vcst.BUTTON_FONT_W)
+            self.new_button.setStyleSheet(vcst.BUTTON_FONT_W)
+            self.malt_list_label.setStyleSheet(vcst.FIELD_LABEL_FONT_W)
+            self.detail_labell.setStyleSheet(vcst.TITLE_FONT_W)
+            self.name_label.setStyleSheet(vcst.FIELD_LABEL_FONT_W)
+            self.maker_label.setStyleSheet(vcst.FIELD_LABEL_FONT_W)
+            self.max_yield_label.setStyleSheet(vcst.FIELD_LABEL_FONT_W)
+            self.color_label.setStyleSheet(vcst.FIELD_LABEL_FONT_W)
+            self.kolbach_index_label.setStyleSheet(vcst.FIELD_LABEL_FONT_W)
+            self.kolbach_max_label.setStyleSheet(vcst.FIELD_LABEL_FONT_W)
+            self.kolbach_min_label.setStyleSheet(vcst.FIELD_LABEL_FONT_W)
+        elif platform=='linux':
+            self.add_button.setStyleSheet('background-color:lightgreen;font-family:'+vcst.BUTTON_FONT_L)
+            self.update_button.setStyleSheet('background-color:lightgreen;font-family:'+vcst.BUTTON_FONT_L)
+            self.cancel_button.setStyleSheet('background-color:pink:ont-family'+vcst.BUTTON_FONT_L)
+            self.edit_button.setSyleSheet(vcst.BUTTON_FONT_L)
+            self.delete_button.setStyleSheet(vcst.BUTTON_FONT_L)
+            self.new_button.setStyleSheet(vcst.BUTTON_FONT_L)
+            self.malt_list_label.setStyleSheet(vcst.FIELD_LABEL_FONT_L)
+            self.detail_labell.setStyleSheet(vcst.TITLE_FONT_L)
+            self.name_label.setStyleSheet(vcst.FIELD_LABEL_FONT_L)
+            self.maker_label.setStyleSheet(vcst.FIELD_LABEL_FONT_L)
+            self.max_yield_label.setStyleSheet(vcst.FIELD_LABEL_FONT_L)
+            self.color_label.setStyleSheet(vcst.FIELD_LABEL_FONT_L)
+            self.kolbach_index_label.setStyleSheet(vcst.FIELD_LABEL_FONT_L)
+            self.kolbach_max_label.setStyleSheet(vcst.FIELD_LABEL_FONT_L)
+            self.kolbach_min_label.setStyleSheet(vcst.FIELD_LABEL_FONT_L)
+                    
                          
             
     def set_read_only(self):

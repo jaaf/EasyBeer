@@ -528,9 +528,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.hopDialog.close()
         self.restDialogCreate.close()
      
-    def create_icons(self):
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap((":/icons/assets/logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)    
+    
         
     def edit_session(self):
         if self.session_combo.currentText():

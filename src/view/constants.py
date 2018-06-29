@@ -60,3 +60,13 @@ HOP_DRY_HOPPING='Dry'
 
 QUESTION_BUTTON_MAX_WIDTH=30
 
+TITLE_FONT_L='Free Sans Bold 12'
+BUTTON_FONT_L='Free Sans Bold 10'
+FIELD_LABEL_FONT_L='Free Sans 10'
+
+TITLE_FONT_W='Verdana Bold 12'
+BUTTON_FONT_W='Verdana Bold 10'
+FIELD_LABEL_FONT_W='Verdana 10'
+
+
+
