@@ -64,9 +64,9 @@ TITLE_FONT_L='Free Sans Bold 12'
 BUTTON_FONT_L='Free Sans Bold 10'
 FIELD_LABEL_FONT_L='Free Sans 10'
 
-TITLE_FONT_W='Verdana Bold 12'
-BUTTON_FONT_W='Verdana Bold 10'
-FIELD_LABEL_FONT_W='Verdana 10'
+TITLE_FONT_W='Arial Bold 12'
+BUTTON_FONT_W='Arial Bold 10'
+FIELD_LABEL_FONT_W='Arial 10'
 
 
 
