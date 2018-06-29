@@ -72,9 +72,9 @@ TITLE_SLANTED_FONT_L=QFont('Free Sans',11,QFont.Normal,True)
 
 
 'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
-TITLE_FONT_W=QFont('Arial',11,QFont.Bold)
-BUTTON_FONT_W=QFont('Arial',10,QFont.DemiBold)
-FIELD_LABEL_FONT_W=QFont('Arial',10,QFont.Normal)
-TITLE_SLANTED_FONT_W=QFont('Arial',11,QFont.Normal,True)
+TITLE_FONT_W=QFont('Helvetica',11,QFont.Bold)
+BUTTON_FONT_W=QFont('Helvetica',10,QFont.DemiBold)
+FIELD_LABEL_FONT_W=QFont('Helvetica',10,QFont.Normal)
+TITLE_SLANTED_FONT_W=QFont('Helvetica',10,QFont.Normal,True)
 
 
