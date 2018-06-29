@@ -26,6 +26,7 @@ from model.Equipment import Equipment
 
 import view.styles as sty
 import view.constants as vcst
+import platform
 
 class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
    

@@ -303,6 +303,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
                 
     def showEvent(self,e):
         self.set_translatable_texts()   
+        self.set_fonts()
         
      
     def update_malt(self):
