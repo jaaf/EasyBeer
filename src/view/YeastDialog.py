@@ -23,6 +23,8 @@ from PyQt5.QtWidgets import  QWidget, QMessageBox
 from gen import YeastDialogUI
 from model.Yeast import Yeast
 import view.styles as sty
+import platform
+import view.constants as vcst
 
 
 
@@ -321,6 +323,7 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
     def showEvent(self,ev):
         #must wait for the dialog to be created in order to do this stuff
         self.set_translatable_textes()
+        self.set_fonts()
         self.yeast_attenuation_list=['',self.tr('Low'),self.tr('Medium'),self.tr('High')]
         self.yeast_form_list=['',self.tr('Dry'),self.tr('Liquid')]
         for f in self.yeast_form_list:
@@ -367,3 +370,46 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         self.delete_button.setText(self.tr('Delete'))
         self.new_button.setText(self.tr('New'))
         
+        
+    def set_fonts(self):
+        pf=platform.system()
+        if pf=='Windows':
+        #this is called once the dialog has been fully created (showEvent)
+            self.setWindowTitle(self.tr('Yeast Database Edition'))
+            self.yeast_list_label.setFont(vcst.TITLE_FONT_W)
+            self.detail_label.setFont(vcst.TITLE_FONT_W)
+            self.add_button.setFont(vcst.BUTTON_FONT_W)
+            self.name_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.maker_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.max_allowed_temperature_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.min_allowed_temperature_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.max_advised_temperature_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.min_advised_temperature_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.form_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.attenuation_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.floculation_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.close_button.setFont(vcst.BUTTON_FONT_W)
+            self.edit_button.setFont(vcst.BUTTON_FONT_W)
+            self.delete_button.setFont(vcst.BUTTON_FONT_W)
+            self.new_button.setFont(vcst.BUTTON_FONT_W)
+        elif pf=='Linux':
+            self.setWindowTitle(self.tr('Yeast Database Edition'))
+            self.yeast_list_label.setFont(vcst.TITLE_FONT_L)
+            self.detail_label.setFont(vcst.TITLE_FONT_L)
+            self.add_button.setFont(vcst.BUTTON_FONT_L)
+            self.name_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.maker_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.max_allowed_temperature_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.min_allowed_temperature_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.max_advised_temperature_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.min_advised_temperature_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.form_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.attenuation_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.floculation_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.close_button.setFont(vcst.BUTTON_FONT_L)
+            self.edit_button.setFont(vcst.BUTTON_FONT_L)
+            self.delete_button.setFont(vcst.BUTTON_FONT_L)
+            self.new_button.setFont(vcst.BUTTON_FONT_W)
+            
+            
+                    

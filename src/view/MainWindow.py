@@ -1538,7 +1538,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             self.mash_sparge_water_volume_label.setFont(vcst.FIELD_LABEL_FONT_W)
             self.mash_sparge_water_volume_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
         
-            self.boil_label.setFont(vcst.TITLE_FONT_W)
+            self.boil_label.setFont(vcst.BIG_TITLE_FONT_W)
             self.hop_label.setFont(vcst.TITLE_FONT_W)
             self.ibu_bar_label.setFont(vcst.FIELD_LABEL_FONT_W)
             self.hop_calculate_button.setFont(vcst.FIELD_LABEL_FONT_W)
@@ -1546,7 +1546,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             self.adjunct_label.setFont(vcst.TITLE_FONT_W)
         
             self.pitching_label.setFont(vcst.BIG_TITLE_FONT_W)
-            self.yeast_label.setFont(vcst.BIG_TITLE_FONT_W)
+            self.yeast_label.setFont(vcst.TITLE_FONT_W)
             self.pitching_rate_bar_label.setFont(vcst.FIELD_LABEL_FONT_W)
         
             self.feedback_label.setFont(vcst.VERY_BIG_TITLE_FONT_W)
@@ -1617,7 +1617,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             self.mash_sparge_water_volume_label.setFont(vcst.FIELD_LABEL_FONT_L)
             self.mash_sparge_water_volume_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
         
-            self.boil_label.setFont(vcst.TITLE_FONT_L)
+            self.boil_label.setFont(vcst.BIG_TITLE_FONT_L)
             self.hop_label.setFont(vcst.TITLE_FONT_L)
             self.ibu_bar_label.setFont(vcst.FIELD_LABEL_FONT_L)
             self.hop_calculate_button.setFont(vcst.FIELD_LABEL_FONT_L)
@@ -1625,7 +1625,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             self.adjunct_label.setFont(vcst.TITLE_FONT_L)
         
             self.pitching_label.setFont(vcst.BIG_TITLE_FONT_L)
-            self.yeast_label.setFont(vcst.BIG_TITLE_FONT_L)
+            self.yeast_label.setFont(vcst.TITLE_FONT_L)
             self.pitching_rate_bar_label.setFont(vcst.FIELD_LABEL_FONT_L)
         
             self.feedback_label.setFont(vcst.VERY_BIG_TITLE_FONT_L)

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>971</width>
-    <height>364</height>
+    <width>862</width>
+    <height>339</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,7 @@
   <widget class="QLabel" name="list_label">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>40</x>
      <y>20</y>
      <width>451</width>
      <height>41</height>
@@ -24,9 +24,10 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <family>FreeSans</family>
+     <pointsize>11</pointsize>
      <weight>75</weight>
-     <italic>true</italic>
+     <italic>false</italic>
      <bold>true</bold>
     </font>
    </property>
@@ -39,7 +40,7 @@
     <rect>
      <x>10</x>
      <y>60</y>
-     <width>466</width>
+     <width>401</width>
      <height>261</height>
     </rect>
    </property>
@@ -66,7 +67,7 @@
        <widget class="QPushButton" name="edit_button">
         <property name="minimumSize">
          <size>
-          <width>150</width>
+          <width>120</width>
           <height>0</height>
          </size>
         </property>
@@ -78,7 +79,8 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>FreeSans</family>
+          <pointsize>10</pointsize>
           <weight>75</weight>
           <italic>false</italic>
           <bold>true</bold>
@@ -93,7 +95,7 @@
        <widget class="QPushButton" name="delete_button">
         <property name="minimumSize">
          <size>
-          <width>150</width>
+          <width>120</width>
           <height>0</height>
          </size>
         </property>
@@ -105,7 +107,8 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>FreeSans</family>
+          <pointsize>10</pointsize>
           <weight>75</weight>
           <italic>false</italic>
           <bold>true</bold>
@@ -120,7 +123,7 @@
        <widget class="QPushButton" name="new_button">
         <property name="minimumSize">
          <size>
-          <width>150</width>
+          <width>120</width>
           <height>0</height>
          </size>
         </property>
@@ -132,7 +135,8 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <family>FreeSans</family>
+          <pointsize>10</pointsize>
           <weight>75</weight>
           <italic>false</italic>
           <bold>true</bold>
@@ -150,7 +154,7 @@
   <widget class="QLabel" name="detail_label">
    <property name="geometry">
     <rect>
-     <x>530</x>
+     <x>440</x>
      <y>20</y>
      <width>411</width>
      <height>41</height>
@@ -158,9 +162,10 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <family>FreeSans</family>
+     <pointsize>11</pointsize>
      <weight>75</weight>
-     <italic>true</italic>
+     <italic>false</italic>
      <bold>true</bold>
     </font>
    </property>
@@ -171,16 +176,18 @@
   <widget class="QPushButton" name="close_button">
    <property name="geometry">
     <rect>
-     <x>810</x>
-     <y>310</y>
+     <x>660</x>
+     <y>290</y>
      <width>131</width>
      <height>31</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>12</pointsize>
+     <family>FreeSans</family>
+     <pointsize>10</pointsize>
      <weight>75</weight>
+     <italic>false</italic>
      <bold>true</bold>
     </font>
    </property>
@@ -191,7 +198,7 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>530</x>
+     <x>440</x>
      <y>60</y>
      <width>411</width>
      <height>161</height>
@@ -208,9 +215,10 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
+        <family>FreeSans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
@@ -244,9 +252,10 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
+        <family>FreeSans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
@@ -280,9 +289,10 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
+        <family>FreeSans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
@@ -303,9 +313,10 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
+        <family>FreeSans</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="text">
@@ -318,10 +329,10 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>530</x>
+     <x>440</x>
      <y>240</y>
      <width>411</width>
      <height>39</height>
@@ -332,8 +343,10 @@
      <widget class="QPushButton" name="cancel_button">
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <family>FreeSans</family>
+        <pointsize>10</pointsize>
         <weight>75</weight>
+        <italic>false</italic>
         <bold>true</bold>
        </font>
       </property>
@@ -346,8 +359,10 @@
      <widget class="QPushButton" name="update_button">
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <family>FreeSans</family>
+        <pointsize>10</pointsize>
         <weight>75</weight>
+        <italic>false</italic>
         <bold>true</bold>
        </font>
       </property>
@@ -366,7 +381,8 @@
       </property>
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <family>FreeSans</family>
+        <pointsize>10</pointsize>
         <weight>75</weight>
         <italic>false</italic>
         <bold>true</bold>

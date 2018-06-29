@@ -22,6 +22,8 @@ from PyQt5.QtWidgets import  QWidget, QMessageBox
 from gen import HopDialogUI
 from model.Hop import Hop
 import view.styles as sty
+import platform
+import view.constants as vcst
 
 
 #from PyQt4.QtGui import QStandardItemModel,QStandardItem,QItemSelectionModel
@@ -239,8 +241,41 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.new_button.setText(self.tr('New'))
         
         
+    def set_fonts(self):
+        pf=platform.system()    
+        if pf=='Windows':
+            self.setWindowTitle(self.tr('Hop Database Edition'))
+            self.list_label.setFont(vcst.TITLE_FONT_W)
+            self.detail_label.setFont(vcst.TITLE_FONT_W)
+            self.add_button.setFont(vcst.BUTTON_FONT_W)
+            self.cancel_button.setFont(vcst.BUTTON_FONT_W)
+            self.update_button.setFont(vcst.BUTTON_FONT_W)
+            self.name_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.alpha_acid_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.form_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.close_button.setFont(vcst.BUTTON_FONT_W)
+            self.edit_button.setFont(vcst.BUTTON_FONT_W)
+            self.delete_button.setFont(vcst.BUTTON_FONT_W)
+            self.new_button.setFont(vcst.BUTTON_FONT_W)
+        elif pf=='Linux':
+            self.setWindowTitle(self.tr('Hop Database Edition'))
+            self.list_label.setFont(vcst.TITLE_FONT_L)
+            self.detail_label.setFont(vcst.TITLE_FONT_L)
+            self.add_button.setFont(vcst.BUTTON_FONT_L)
+            self.cancel_button.setFont(vcst.BUTTON_FONT_L)
+            self.update_button.setFont(vcst.BUTTON_FONT_L)
+            self.name_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.alpha_acid_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.form_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.close_button.setFont(vcst.BUTTON_FONT_L)
+            self.edit_button.setFont(vcst.BUTTON_FONT_L)
+            self.delete_button.setFont(vcst.BUTTON_FONT_L)
+            self.new_button.setFont(vcst.BUTTON_FONT_L)
+                
+        
     def showEvent(self,ev):
         self.set_translatable_textes()
+        self.set_fonts()
         self.hop_form_list=['',self.tr('Pellets'),self.tr('Leaves'),self.tr('Cones')]    
         for f in self.hop_form_list:
             self.form_list.addItem(f)    

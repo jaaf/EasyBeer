@@ -106,7 +106,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
             self.add_button.setFont(vcst.BUTTON_FONT_W)
             self.update_button.setFont(vcst.BUTTON_FONT_W)
             self.cancel_button.setFont(vcst.BUTTON_FONT_W)
-            self.edit_button.setSyleSheet(vcst.BUTTON_FONT_W)
+            self.edit_button.setFont(vcst.BUTTON_FONT_W)
             self.delete_button.setFont(vcst.BUTTON_FONT_W)
             self.new_button.setFont(vcst.BUTTON_FONT_W)
             self.malt_list_label.setFont(vcst.TITLE_FONT_W)
