@@ -115,6 +115,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             self.mash_tun_dead_space_edit.hide()
               
             self.mash_tun_groupbox.hide()
+            self.set_fonts()
             
     def basic_type_radiobutton_toggled(self):
         if self.basic_type_radiobutton.isChecked():
@@ -137,6 +138,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             self.mash_tun_size_edit.setText('')
             self.mash_tun_dead_space_edit.setText('')
             self.mash_tun_heat_losses_edit.setText('')    
+            self.set_fonts()
                                                                      
                     
     def clear_edits(self):
