@@ -52,11 +52,9 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         # register function with model for future model update announcements
         #print('subscribing update from model')
         self.model.subscribe_model_changed(['equipment'],self.on_model_changed_equipment)
-    
         self.init_dialog_and_connections()
-        self.add_button.setStyleSheet('background-color:lightgreen')
-        self.update_button.setStyleSheet('background-color:lightgreen')
-        self.cancel_button.setStyleSheet('background-color:pink')
+    
+        
     
     def add_equipment(self):
         equipment=self.read_input()
@@ -392,6 +390,78 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.update_button.setText(self.tr('Update Equipment'))
         self.cancel_button.setText(self.tr('Cancel'))
         self.add_button.setText(self.tr('Add Equipment'))
+        
+    def set_fonts(self):
+        pf=platform.system()
+        print ('the platform is '+pf)
+        self.add_button.setStyleSheet('background-color:lightgreen;')
+        self.update_button.setStyleSheet('background-color:lightgreen;')
+        self.cancel_button.setStyleSheet('background-color:pink;')  
+        
+        if pf=='Win32':
+            self.add_button.setFont(vcst.BUTTON_FONT_W)
+            self.update_button.setFont(vcst.BUTTON_FONT_W)
+            self.cancel_button.setFont(vcst.BUTTON_FONT_W)   
+            self.equipment_list_label.setFont(vcst.BUTTON_FONT_W)
+            self.equipment_properties_label.setFont(vcst.TITLE_FONT_W)
+            self.type_guidance_label.setFont(vcst.TITLE_SLANTED_FONT_W)
+            self.basic_type_radiobutton.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.all_in_one_type_radiobutton.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.brewing_efficiency_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.mash_tun_size_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.mash_tun_size_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.mash_tun_dead_space_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.mash_tun_dead_space_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.mash_tun_heat_losses_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.mash_tun_heat_losses_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.boiler_size_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.boiler_size_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.boiler_dead_space_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.boiler_dead_space_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.fermentor_size_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.fermentor_size_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.fermentor_dead_space_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.fermentor_dead_space_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.name_label.setFont(vcst.TITLE_FONT_W)
+            self.mash_tun_groupbox.setFont(vcst.TITLE_FONT_W)
+            self.boiler_groupbox.setFont(vcst.TITLE_FONT_W)
+            self.fermentor_groupbox.setFont(vcst.TITLE_FONT_W)
+            self.general_groupbox.setFont(vcst.TITLE_FONT_W)
+            self.equipment_list_widget.setFont(vcst.FIELD_LABEL_FONT_W)
+            
+        elif pf=='Linux':
+            
+            self.add_button.setFont(vcst.BUTTON_FONT_L)
+            self.update_button.setFont(vcst.BUTTON_FONT_L)
+            self.cancel_button.setFont(vcst.BUTTON_FONT_L)   
+            self.equipment_list_label.setFont(vcst.BUTTON_FONT_L)
+            self.equipment_properties_label.setFont(vcst.TITLE_FONT_L)
+            self.type_guidance_label.setFont(vcst.TITLE_SLANTED_FONT_L)
+            self.basic_type_radiobutton.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.all_in_one_type_radiobutton.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.brewing_efficiency_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.mash_tun_size_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.mash_tun_size_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.mash_tun_dead_space_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.mash_tun_dead_space_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.mash_tun_heat_losses_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.mash_tun_heat_losses_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.boiler_size_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.boiler_size_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.boiler_dead_space_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.boiler_dead_space_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.fermentor_size_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.fermentor_size_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.fermentor_dead_space_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.fermentor_dead_space_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.name_label.setFont(vcst.TITLE_FONT_L)
+            self.mash_tun_groupbox.setFont(vcst.TITLE_FONT_L)
+            self.boiler_groupbox.setFont(vcst.TITLE_FONT_L)
+            self.fermentor_groupbox.setFont(vcst.TITLE_FONT_L)
+            self.general_groupbox.setFont(vcst.TITLE_FONT_L)
+            self.equipment_list_widget.setFont(vcst.FIELD_LABEL_FONT_L)
+      
+               
              
         
     def set_ro(self):
@@ -410,6 +480,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         
     def showEvent(self,ev):
         self.set_labels()    
+        self.set_fonts()
         
         
     def unset_color(self):

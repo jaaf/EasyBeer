@@ -21,6 +21,8 @@ Created on 15 juin 2017
 
 @author: jaaf
 '''
+from PyQt5.QtGui import QFont
+
 
 FIELD_DEFAULT_COLORS={
     'editable': ['#F3D3E9','#000000'],
@@ -60,13 +62,19 @@ HOP_DRY_HOPPING='Dry'
 
 QUESTION_BUTTON_MAX_WIDTH=30
 
-TITLE_FONT_L='Free Sans Bold 11'
-BUTTON_FONT_L='Free Sans Bold 10'
-FIELD_LABEL_FONT_L='Free Sans 10'
+'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
+'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
+TITLE_FONT_L=QFont('Free Sans',11,QFont.Bold)
+BUTTON_FONT_L=QFont('Free Sans',10,QFont.DemiBold)
+FIELD_LABEL_FONT_L=QFont('Free Sans',10,QFont.Normal)
+TITLE_SLANTED_FONT_L=QFont('Free Sans',11,QFont.Normal,True)
 
-TITLE_FONT_W='Arial Bold 11'
-BUTTON_FONT_W='Arial Bold 10'
-FIELD_LABEL_FONT_W='Arial 10'
 
+
+'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
+TITLE_FONT_W=QFont('Arial',11,QFont.Bold)
+BUTTON_FONT_W=QFont('Arial',10,QFont.DemiBold)
+FIELD_LABEL_FONT_W=QFont('Arial',10,QFont.Normal)
+TITLE_SLANTED_FONT_W=QFont('Arial',11,QFont.Normal,True)
 
 
