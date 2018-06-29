@@ -43,6 +43,7 @@ from view.ImportExportDb import ImportExportDb
 import sys
 import datetime
 import os
+import platform
 
 from model.Session import Session
 from model.MaltInSession import MaltInSession
@@ -1478,6 +1479,166 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.feedback_fermentor_volume_unit_label_2.setText(self.tr('liters')) 
         self.feedback_save_button.setText(self.tr('Save Feedback'))    
         
+    def set_fonts(self):
+        pf=platform.system()
+        if pf=='Windows':
+            #self.menuFile.setFont(vcst.FIELD_LABEL_FONT_W)
+            #self.menuDatabase.set
+            #self.menuHelp.setTitle(    self.tr( "Help"))
+            #self.menuSettings.setTitle(    self.tr("Settings"))
+            #self.actionEdit_Malt_Database.setFont(vcst.FIELD_LABEL_FONT_W)
+            #self.actionEdit_Hop_Database.setFont(vcst.FIELD_LABEL_FONT_W)
+            #self.actionEdit_Yeast_Database.setFont(vcst.FIELD_LABEL_FONT_W)
+            #self.actionEdit_Recipe_Database.setFont(vcst.FIELD_LABEL_FONT_W)
+            #self.actionEdit_Equipment_Database.setFont(vcst.FIELD_LABEL_FONT_W)
+            #self.actionEdit_Rest_Database.setFont(vcst.FIELD_LABEL_FONT_W)
+            #self.actionCustomize_colors.setFont(vcst.FIELD_LABEL_FONT_W)
+            #self.actionView_Help.setFont(vcst.FIELD_LABEL_FONT_W)
+            #self.menuChoose_Language.setTitle(    self.tr('Choose Language'))
+            #self.actionFrench.setFont(vcst.FIELD_LABEL_FONT_W)
+            #self.actionEnglish.setFont(vcst.FIELD_LABEL_FONT_W)
+            #self.actionJapanese.setFont(vcst.FIELD_LABEL_FONT_W)
+            #self.edit_button.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.delete_button.setFont(vcst.BUTTON_FONT_W)
+            self.new_button.setFont(vcst.BUTTON_FONT_W)
+            self.designation_label.setFont(vcst.FIELD_LABEL_FONT_W)
+        
+            self.current_brewing_session_label.setFont(vcst.VERY_BIG_TITLE_FONT_W) 
+            self.choose_session_label.setFont(vcst.TITLE_SLANTED_FONT_W)
+            self.new_session_label.setFont(vcst.TITLE_SLANTED_FONT_W)
+        
+            self.batch_volume_label.setFont(vcst.FIELD_LABEL_FONT_W)  
+            self.batch_volume_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.grain_temperature_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.grain_temperature_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)  
+            self.add_button.setFont(vcst.BUTTON_FONT_W)
+        
+            self.recipe_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.equipment_label.setFont(vcst.FIELD_LABEL_FONT_W)
+        
+            self.boiling_time_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.boiling_time_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.recipe_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.targeted_original_gravity_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.targeted_bitterness_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.targeted_bitterness_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.brewing_efficiency_label.setFont(vcst.FIELD_LABEL_FONT_W)
+        
+            self.mash_label.setFont(vcst.BIG_TITLE_FONT_W)
+            self.malt_label.setFont(vcst.BUTTON_FONT_W)
+            self.calculate_button.setFont(vcst.BUTTON_FONT_W)
+        
+            self.mash_rest_label.setFont(vcst.TITLE_FONT_W)
+            self.mash_water_volume_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.mash_water_volume_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+        
+            self.strike_temperature_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.strike_temperature_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+        
+            self.mash_sparge_water_volume_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.mash_sparge_water_volume_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
+        
+            self.boil_label.setFont(vcst.TITLE_FONT_W)
+            self.hop_label.setFont(vcst.TITLE_FONT_W)
+            self.ibu_bar_label.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.hop_calculate_button.setFont(vcst.FIELD_LABEL_FONT_W)
+        
+            self.adjunct_label.setFont(vcst.TITLE_FONT_W)
+        
+            self.pitching_label.setFont(vcst.BIG_TITLE_FONT_W)
+            self.yeast_label.setFont(vcst.BIG_TITLE_FONT_W)
+            self.pitching_rate_bar_label.setFont(vcst.FIELD_LABEL_FONT_W)
+        
+            self.feedback_label.setFont(vcst.VERY_BIG_TITLE_FONT_W)
+            self.feedback_water_treatment_label.setFont(vcst.BIG_TITLE_FONT_W)
+            self.feedback_observed_data_label.setFont(vcst.BIG_TITLE_FONT_W)
+            self.feedback_mash_PH_label_2.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.feedback_preboil_volume_label_2.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.feedback_preboil_volume_unit_label_2.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.feedback_original_gravity_label_2.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.feedback_fermentor_volume_label_2.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.feedback_fermentor_volume_unit_label_2.setFont(vcst.FIELD_LABEL_FONT_W) 
+            self.feedback_save_button.setFont(vcst.BUTTON_FONT_W)
+            
+        elif pf=='Linux': 
+               #self.menuFile.setFont(vcst.FIELD_LABEL_FONT_L)
+            #self.menuDatabase.set
+            #self.menuHelp.setTitle(    self.tr( "Help"))
+            #self.menuSettings.setTitle(    self.tr("Settings"))
+            #self.actionEdit_Malt_Database.setFont(vcst.FIELD_LABEL_FONT_L)
+            #self.actionEdit_Hop_Database.setFont(vcst.FIELD_LABEL_FONT_L)
+            #self.actionEdit_Yeast_Database.setFont(vcst.FIELD_LABEL_FONT_L)
+            #self.actionEdit_Recipe_Database.setFont(vcst.FIELD_LABEL_FONT_L)
+            #self.actionEdit_Equipment_Database.setFont(vcst.FIELD_LABEL_FONT_L)
+            #self.actionEdit_Rest_Database.setFont(vcst.FIELD_LABEL_FONT_L)
+            #self.actionCustomize_colors.setFont(vcst.FIELD_LABEL_FONT_L)
+            #self.actionView_Help.setFont(vcst.FIELD_LABEL_FONT_L)
+            #self.menuChoose_Language.setTitle(    self.tr('Choose Language'))
+            #self.actionFrench.setFont(vcst.FIELD_LABEL_FONT_L)
+            #self.actionEnglish.setFont(vcst.FIELD_LABEL_FONT_L)
+            #self.actionJapanese.setFont(vcst.FIELD_LABEL_FONT_L)
+            #self.edit_button.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.delete_button.setFont(vcst.BUTTON_FONT_L)
+            self.new_button.setFont(vcst.BUTTON_FONT_L)
+            self.designation_label.setFont(vcst.FIELD_LABEL_FONT_L)
+        
+            self.current_brewing_session_label.setFont(vcst.VERY_BIG_TITLE_FONT_L) 
+            self.choose_session_label.setFont(vcst.TITLE_SLANTED_FONT_L)
+            self.new_session_label.setFont(vcst.TITLE_SLANTED_FONT_L)
+        
+            self.batch_volume_label.setFont(vcst.FIELD_LABEL_FONT_L)  
+            self.batch_volume_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.grain_temperature_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.grain_temperature_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)  
+            self.add_button.setFont(vcst.BUTTON_FONT_L)
+        
+            self.recipe_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.equipment_label.setFont(vcst.FIELD_LABEL_FONT_L)
+        
+            self.boiling_time_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.boiling_time_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.recipe_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.targeted_original_gravity_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.targeted_bitterness_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.targeted_bitterness_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.brewing_efficiency_label.setFont(vcst.FIELD_LABEL_FONT_L)
+        
+            self.mash_label.setFont(vcst.BIG_TITLE_FONT_L)
+            self.malt_label.setFont(vcst.BUTTON_FONT_L)
+            self.calculate_button.setFont(vcst.BUTTON_FONT_L)
+        
+            self.mash_rest_label.setFont(vcst.TITLE_FONT_L)
+            self.mash_water_volume_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.mash_water_volume_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+        
+            self.strike_temperature_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.strike_temperature_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+        
+            self.mash_sparge_water_volume_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.mash_sparge_water_volume_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
+        
+            self.boil_label.setFont(vcst.TITLE_FONT_L)
+            self.hop_label.setFont(vcst.TITLE_FONT_L)
+            self.ibu_bar_label.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.hop_calculate_button.setFont(vcst.FIELD_LABEL_FONT_L)
+        
+            self.adjunct_label.setFont(vcst.TITLE_FONT_L)
+        
+            self.pitching_label.setFont(vcst.BIG_TITLE_FONT_L)
+            self.yeast_label.setFont(vcst.BIG_TITLE_FONT_L)
+            self.pitching_rate_bar_label.setFont(vcst.FIELD_LABEL_FONT_L)
+        
+            self.feedback_label.setFont(vcst.VERY_BIG_TITLE_FONT_L)
+            self.feedback_water_treatment_label.setFont(vcst.BIG_TITLE_FONT_L)
+            self.feedback_observed_data_label.setFont(vcst.BIG_TITLE_FONT_L)
+            self.feedback_mash_PH_label_2.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.feedback_preboil_volume_label_2.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.feedback_preboil_volume_unit_label_2.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.feedback_original_gravity_label_2.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.feedback_fermentor_volume_label_2.setFont(vcst.FIELD_LABEL_FONT_L)
+            self.feedback_fermentor_volume_unit_label_2.setFont(vcst.FIELD_LABEL_FONT_L) 
+            self.feedback_save_button.setFont(vcst.BUTTON_FONT_L)   
+            
         
     def set_yeast_view(self,yeast_type,rate=None,creation_mode=True):  
         self.util.clearLayout(self.yeast_layout)
@@ -1661,6 +1822,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         
     def showEvent(self,ev):
         self.set_translatable_textes()
+        self.set_fonts()
         mypb=CustomProgressBar()
         mypb.setAccessibleName('ibu')
         mypb.setRange(0,200)

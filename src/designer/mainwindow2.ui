@@ -23,6 +23,12 @@
    <layout class="QVBoxLayout" name="verticalLayout_5">
     <item>
      <widget class="QScrollArea" name="scrollArea">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>6</height>
+       </size>
+      </property>
       <property name="frameShadow">
        <enum>QFrame::Plain</enum>
       </property>
@@ -48,9 +54,11 @@
            <widget class="QLabel" name="choose_session_label">
             <property name="font">
              <font>
-              <pointsize>18</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <family>FreeSans</family>
+              <pointsize>11</pointsize>
+              <weight>50</weight>
+              <italic>true</italic>
+              <bold>false</bold>
              </font>
             </property>
             <property name="text">
@@ -69,6 +77,12 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="font">
+             <font>
+              <family>FreeSans</family>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>Delete</string>
             </property>
@@ -82,9 +96,11 @@
            <widget class="QLabel" name="new_session_label">
             <property name="font">
              <font>
-              <pointsize>18</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <family>FreeSans</family>
+              <pointsize>11</pointsize>
+              <weight>50</weight>
+              <italic>true</italic>
+              <bold>false</bold>
              </font>
             </property>
             <property name="text">
@@ -99,6 +115,12 @@
               <width>150</width>
               <height>16777215</height>
              </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>FreeSans</family>
+              <pointsize>10</pointsize>
+             </font>
             </property>
             <property name="text">
              <string>New</string>
@@ -144,9 +166,10 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>24</pointsize>
+              <family>FreeSans</family>
+              <pointsize>18</pointsize>
               <weight>75</weight>
-              <italic>false</italic>
+              <italic>true</italic>
               <bold>true</bold>
              </font>
             </property>
@@ -205,9 +228,10 @@
              <widget class="QLabel" name="designation_label">
               <property name="font">
                <font>
-                <pointsize>12</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <family>FreeSans</family>
+                <pointsize>10</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="text">
@@ -256,7 +280,8 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
+              <family>FreeSans</family>
+              <pointsize>10</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -303,9 +328,10 @@
            <widget class="QLabel" name="batch_volume_label">
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <family>FreeSans</family>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="text">
@@ -330,9 +356,10 @@
            <widget class="QLabel" name="batch_volume_unit_label">
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <family>FreeSans</family>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="text">
@@ -357,9 +384,10 @@
            <widget class="QLabel" name="grain_temperature_label">
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <family>FreeSans</family>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="text">
@@ -387,9 +415,10 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <family>FreeSans</family>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="text">
@@ -434,9 +463,10 @@
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -483,9 +513,10 @@
                <widget class="QLabel" name="targeted_original_gravity_label">
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -524,9 +555,10 @@
                <widget class="QLabel" name="targeted_bitterness_label">
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -564,9 +596,10 @@
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -591,9 +624,10 @@
                <widget class="QLabel" name="boiling_time_label">
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -631,9 +665,10 @@
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -661,9 +696,10 @@
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -710,9 +746,10 @@
                <widget class="QLabel" name="brewing_efficiency_label">
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -738,9 +775,10 @@
                <widget class="QLabel" name="brewing_efficiency_unit_label">
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -782,10 +820,16 @@
         </item>
         <item>
          <widget class="Line" name="line_8">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>6</height>
+           </size>
+          </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>4</height>
+            <height>6</height>
            </size>
           </property>
           <property name="styleSheet">
@@ -803,9 +847,10 @@
          <widget class="QLabel" name="mash_label">
           <property name="font">
            <font>
-            <pointsize>18</pointsize>
+            <family>FreeSans</family>
+            <pointsize>14</pointsize>
             <weight>75</weight>
-            <italic>true</italic>
+            <italic>false</italic>
             <bold>true</bold>
            </font>
           </property>
@@ -834,7 +879,8 @@
                <widget class="QLabel" name="malt_label">
                 <property name="font">
                  <font>
-                  <pointsize>14</pointsize>
+                  <family>FreeSans</family>
+                  <pointsize>11</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -861,7 +907,8 @@
                <widget class="QPushButton" name="calculate_button">
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -917,7 +964,8 @@
              <widget class="QLabel" name="mash_rest_label">
               <property name="font">
                <font>
-                <pointsize>14</pointsize>
+                <family>FreeSans</family>
+                <pointsize>11</pointsize>
                 <weight>75</weight>
                 <bold>true</bold>
                </font>
@@ -956,9 +1004,10 @@
               </property>
               <property name="font">
                <font>
-                <pointsize>12</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <family>FreeSans</family>
+                <pointsize>10</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="text">
@@ -986,9 +1035,10 @@
              <widget class="QLabel" name="mash_water_volume_unit_label">
               <property name="font">
                <font>
-                <pointsize>12</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <family>FreeSans</family>
+                <pointsize>10</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="text">
@@ -1025,9 +1075,10 @@
               </property>
               <property name="font">
                <font>
-                <pointsize>12</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <family>FreeSans</family>
+                <pointsize>10</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="text">
@@ -1055,9 +1106,10 @@
              <widget class="QLabel" name="strike_temperature_unit_label">
               <property name="font">
                <font>
-                <pointsize>12</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <family>FreeSans</family>
+                <pointsize>10</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="text">
@@ -1082,9 +1134,10 @@
              <widget class="QLabel" name="mash_sparge_water_volume_label">
               <property name="font">
                <font>
-                <pointsize>12</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <family>FreeSans</family>
+                <pointsize>10</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="text">
@@ -1112,9 +1165,10 @@
              <widget class="QLabel" name="mash_sparge_water_volume_unit_label">
               <property name="font">
                <font>
-                <pointsize>12</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <family>FreeSans</family>
+                <pointsize>10</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="text">
@@ -1144,10 +1198,16 @@
         </item>
         <item>
          <widget class="Line" name="line_9">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>6</height>
+           </size>
+          </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>4</height>
+            <height>6</height>
            </size>
           </property>
           <property name="styleSheet">
@@ -1165,9 +1225,10 @@
          <widget class="QLabel" name="boil_label">
           <property name="font">
            <font>
-            <pointsize>18</pointsize>
+            <family>FreeSans</family>
+            <pointsize>14</pointsize>
             <weight>75</weight>
-            <italic>true</italic>
+            <italic>false</italic>
             <bold>true</bold>
            </font>
           </property>
@@ -1189,7 +1250,8 @@
            <widget class="QLabel" name="hop_label">
             <property name="font">
              <font>
-              <pointsize>14</pointsize>
+              <family>FreeSans</family>
+              <pointsize>11</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1216,7 +1278,8 @@
            <widget class="QPushButton" name="hop_calculate_button">
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
+              <family>FreeSans</family>
+              <pointsize>10</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1255,9 +1318,10 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <family>FreeSans</family>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="text">
@@ -1309,7 +1373,8 @@
            <widget class="QLabel" name="adjunct_label">
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
+              <family>FreeSans</family>
+              <pointsize>11</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1339,10 +1404,16 @@
         </item>
         <item>
          <widget class="Line" name="line_10">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>6</height>
+           </size>
+          </property>
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>4</height>
+            <height>6</height>
            </size>
           </property>
           <property name="styleSheet">
@@ -1360,9 +1431,10 @@
          <widget class="QLabel" name="pitching_label">
           <property name="font">
            <font>
-            <pointsize>18</pointsize>
+            <family>FreeSans</family>
+            <pointsize>14</pointsize>
             <weight>75</weight>
-            <italic>true</italic>
+            <italic>false</italic>
             <bold>true</bold>
            </font>
           </property>
@@ -1377,7 +1449,8 @@
            <widget class="QLabel" name="yeast_label">
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
+              <family>FreeSans</family>
+              <pointsize>11</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1416,9 +1489,10 @@
             </property>
             <property name="font">
              <font>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <family>FreeSans</family>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="text">
@@ -1532,8 +1606,8 @@
                 </property>
                 <property name="font">
                  <font>
-                  <family>Cantarell</family>
-                  <pointsize>24</pointsize>
+                  <family>FreeSans</family>
+                  <pointsize>18</pointsize>
                   <weight>75</weight>
                   <italic>true</italic>
                   <bold>true</bold>
@@ -1561,7 +1635,8 @@
                <widget class="QPushButton" name="edit_button">
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -1587,7 +1662,8 @@
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -1619,9 +1695,10 @@
              <widget class="QLabel" name="feedback_water_treatment_label">
               <property name="font">
                <font>
-                <pointsize>18</pointsize>
+                <family>FreeSans</family>
+                <pointsize>14</pointsize>
                 <weight>75</weight>
-                <italic>true</italic>
+                <italic>false</italic>
                 <bold>true</bold>
                </font>
               </property>
@@ -1650,7 +1727,8 @@
               </property>
               <property name="font">
                <font>
-                <pointsize>18</pointsize>
+                <family>FreeSans</family>
+                <pointsize>14</pointsize>
                 <weight>75</weight>
                 <italic>true</italic>
                 <bold>true</bold>
@@ -1679,9 +1757,10 @@
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -1734,9 +1813,10 @@
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -1764,9 +1844,10 @@
                <widget class="QLabel" name="feedback_preboil_volume_unit_label_2">
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -1803,9 +1884,10 @@
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -1858,9 +1940,10 @@
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -1888,9 +1971,10 @@
                <widget class="QLabel" name="feedback_fermentor_volume_unit_label_2">
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>FreeSans</family>
+                  <pointsize>10</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">

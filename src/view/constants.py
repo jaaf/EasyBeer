@@ -64,10 +64,12 @@ QUESTION_BUTTON_MAX_WIDTH=30
 
 'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
 'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
-TITLE_FONT_L=QFont('Free Sans',11,QFont.Bold)
-BUTTON_FONT_L=QFont('Free Sans',10,QFont.DemiBold)
-FIELD_LABEL_FONT_L=QFont('Free Sans',10,QFont.Normal)
-TITLE_SLANTED_FONT_L=QFont('Free Sans',11,QFont.Normal,True)
+TITLE_FONT_L=QFont('FreeSans',11,QFont.Bold)
+BUTTON_FONT_L=QFont('FreeSans',10,QFont.DemiBold)
+FIELD_LABEL_FONT_L=QFont('FreeSans',10,QFont.Normal)
+TITLE_SLANTED_FONT_L=QFont('FreeSans',11,QFont.Normal,True)
+BIG_TITLE_FONT_L=QFont('FreeSans',14,QFont.Bold)
+VERY_BIG_TITLE_FONT_L=QFont('FreeSans',18,QFont.Normal,True)
 
 
 
@@ -76,5 +78,7 @@ TITLE_FONT_W=QFont('Helvetica',11,QFont.Bold)
 BUTTON_FONT_W=QFont('Helvetica',10,QFont.DemiBold)
 FIELD_LABEL_FONT_W=QFont('Helvetica',10,QFont.Normal)
 TITLE_SLANTED_FONT_W=QFont('Helvetica',11,QFont.Normal,True)
+BIG_TITLE_FONT_W=QFont('Helvetica',14,QFont.Bold)
+VERY_BIG_TITLE_FONT_W=QFont('Helvetica',18,QFont.Normal,True)
 
 
