@@ -400,7 +400,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.update_button.setStyleSheet('background-color:lightgreen;')
         self.cancel_button.setStyleSheet('background-color:pink;')  
         
-        if pf=='Win32':
+        if pf=='Windows':
             self.add_button.setFont(vcst.BUTTON_FONT_W)
             self.update_button.setFont(vcst.BUTTON_FONT_W)
             self.cancel_button.setFont(vcst.BUTTON_FONT_W)   
