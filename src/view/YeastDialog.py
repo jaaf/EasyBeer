@@ -353,7 +353,7 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
     def set_translatable_textes(self):
         #this is called once the dialog has been fully created (showEvent)
         self.setWindowTitle(self.tr('Yeast Database Edition'))
-        self.yeast_list_label.setText(self.tr('Yeast List'))
+        #self.yeast_list_label.setText(self.tr('Yeast List'))
         self.detail_label.setText(self.tr('Selected Yeast Details'))
         self.add_button.setText(self.tr('Ajouter cette levure'))
         self.name_label.setText(self.tr('Name'))
@@ -376,7 +376,7 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         if pf=='Windows':
         #this is called once the dialog has been fully created (showEvent)
             self.setWindowTitle(self.tr('Yeast Database Edition'))
-            self.yeast_list_label.setFont(vcst.TITLE_FONT_W)
+            #self.yeast_list_label.setFont(vcst.TITLE_FONT_W)
             self.detail_label.setFont(vcst.TITLE_FONT_W)
             self.add_button.setFont(vcst.BUTTON_FONT_W)
             self.name_label.setFont(vcst.FIELD_LABEL_FONT_W)
@@ -394,7 +394,7 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
             self.new_button.setFont(vcst.BUTTON_FONT_W)
         elif pf=='Linux':
             self.setWindowTitle(self.tr('Yeast Database Edition'))
-            self.yeast_list_label.setFont(vcst.TITLE_FONT_L)
+            #self.yeast_list_label.setFont(vcst.TITLE_FONT_L)
             self.detail_label.setFont(vcst.TITLE_FONT_L)
             self.add_button.setFont(vcst.BUTTON_FONT_L)
             self.name_label.setFont(vcst.FIELD_LABEL_FONT_L)

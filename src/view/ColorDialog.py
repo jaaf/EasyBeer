@@ -25,6 +25,7 @@ from gen import ColorDialogUI
 
 import view.constants as vcst
 import view.styles as sty
+import platform
 
 
 
@@ -44,6 +45,7 @@ class ColorDialog(QWidget,ColorDialogUI.Ui_Dialog ):
         self.init_dialog_and_connections()
         self.set_translatable_texes()
         self.set_sample_colors()
+        self.set_fonts()
 
         
     color_field={
@@ -117,30 +119,79 @@ class ColorDialog(QWidget,ColorDialogUI.Ui_Dialog ):
                  
     def set_translatable_texes(self):
         self.label_1.setText(self.tr('Background Color for Editable fields')) 
-        self.pushButton_1.setText('Change')
+        self.pushButton_1.setText('Change background color')
         self.label_6.setText(self.tr('Text color for Editable fields')) 
-        self.pushButton_6.setText('Change')
+        self.pushButton_6.setText('Change text color')
         self.label_2.setText(self.tr('Background Color for Calculated fields')) 
-        self.pushButton_2.setText('Change')
+        self.pushButton_2.setText('Change background color')
         self.label_7.setText(self.tr('Text color for Calculated fields')) 
-        self.pushButton_7.setText('Change')
+        self.pushButton_7.setText('Change text color')
         self.label_3.setText(self.tr('Background Color for Read Only fields')) 
-        self.pushButton_3.setText('Change')
+        self.pushButton_3.setText('Change background color')
         self.label_8.setText(self.tr('Text color for Read Only fields')) 
-        self.pushButton_8.setText('Change')
+        self.pushButton_8.setText('Change text color')
         self.label_4.setText(self.tr('Background Color for Min Max Allowed Values fields')) 
-        self.pushButton_4.setText('Change')
+        self.pushButton_4.setText('Change background color')
         self.label_9.setText(self.tr('Text color for Min Max Allowed Values fields'))
-        self.pushButton_9.setText('Change')
+        self.pushButton_9.setText('Change text color')
         self.label_5.setText(self.tr('Background Color Min Max Advised Values fields')) 
-        self.pushButton_5.setText('Change')
+        self.pushButton_5.setText('Change background color')
         self.label_10.setText(self.tr('Text color for Min Max Advised Values fields'))
-        self.pushButton_10.setText('Change')  
+        self.pushButton_10.setText('Change text color')  
         self.label_custom.setText(self.tr('Customize your colors'))
         self.info_edit.setText(self.tr('<h2>Warning?</h2> <p>The colors you set in this dialog will be fully applied only after you have restarted the application'))        
         
       
-        
+    def set_fonts(self):
+        pf=platform.system()
+        if pf=='Windows':
+            self.label_1.setFont(vcst.FIELD_LABEL_FONT_W) 
+            self.pushButton_1.setFont(vcst.BUTTON_FONT_W) 
+            self.label_6.setFont(vcst.FIELD_LABEL_FONT_W) 
+            self.pushButton_6.setFont(vcst.BUTTON_FONT_W) 
+            self.label_2.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.pushButton_2.setFont(vcst.BUTTON_FONT_W) 
+            self.label_7.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.pushButton_7.setFont(vcst.BUTTON_FONT_W) 
+            self.label_3.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.pushButton_3.setFont(vcst.BUTTON_FONT_W) 
+            self.label_8.setFont(vcst.FIELD_LABEL_FONT_W) 
+            self.pushButton_8.setFont(vcst.BUTTON_FONT_W) 
+            self.label_4.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.pushButton_4.setFont(vcst.BUTTON_FONT_W) 
+            self.label_9.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.pushButton_9.setFont(vcst.BUTTON_FONT_W) 
+            self.label_5.setFont(vcst.FIELD_LABEL_FONT_W) 
+            self.pushButton_5.setFont(vcst.BUTTON_FONT_W) 
+            self.label_10.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.pushButton_10.setFont(vcst.BUTTON_FONT_W) 
+            self.label_custom.setFont(vcst.TITLE_FONT_W)
+            self.info_edit.setFont(vcst.FIELD_LABEL_FONT_W)  
+            
+        elif pf=='Linux':
+            self.label_1.setFont(vcst.FIELD_LABEL_FONT_W) 
+            self.pushButton_1.setFont(vcst.BUTTON_FONT_W) 
+            self.label_6.setFont(vcst.FIELD_LABEL_FONT_W) 
+            self.pushButton_6.setFont(vcst.BUTTON_FONT_W) 
+            self.label_2.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.pushButton_2.setFont(vcst.BUTTON_FONT_W) 
+            self.label_7.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.pushButton_7.setFont(vcst.BUTTON_FONT_W) 
+            self.label_3.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.pushButton_3.setFont(vcst.BUTTON_FONT_W) 
+            self.label_8.setFont(vcst.FIELD_LABEL_FONT_W) 
+            self.pushButton_8.setFont(vcst.BUTTON_FONT_W) 
+            self.label_4.setFont(vcst.FIELD_LABEL_FONT_W) 
+            self.pushButton_4.setFont(vcst.BUTTON_FONT_W) 
+            self.label_9.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.pushButton_9.setFont(vcst.BUTTON_FONT_W) 
+            self.label_5.setFont(vcst.FIELD_LABEL_FONT_W) 
+            self.pushButton_5.setFont(vcst.BUTTON_FONT_W) 
+            self.label_10.setFont(vcst.FIELD_LABEL_FONT_W)
+            self.pushButton_10.setFont(vcst.BUTTON_FONT_W) 
+            self.label_custom.setFont(vcst.TITLE_FONT_W)
+            self.info_edit.setFont(vcst.FIELD_LABEL_FONT_W)  
+                                
             
                 
                 

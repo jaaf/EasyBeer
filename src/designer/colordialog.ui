@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>845</width>
-    <height>699</height>
+    <width>843</width>
+    <height>633</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,11 +16,19 @@
   <widget class="QLabel" name="label_custom">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>40</y>
+     <x>20</x>
+     <y>10</y>
      <width>421</width>
      <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>FreeSans</family>
+     <weight>75</weight>
+     <italic>false</italic>
+     <bold>true</bold>
+    </font>
    </property>
    <property name="text">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;Customize your colors&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -30,14 +38,15 @@
    <property name="geometry">
     <rect>
      <x>630</x>
-     <y>600</y>
+     <y>560</y>
      <width>92</width>
      <height>36</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>14</pointsize>
+     <family>FreeSans</family>
+     <pointsize>10</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
@@ -50,8 +59,8 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>100</y>
-     <width>743</width>
+     <y>60</y>
+     <width>811</width>
      <height>436</height>
     </rect>
    </property>
@@ -64,9 +73,21 @@
          <widget class="QLabel" name="label_1">
           <property name="minimumSize">
            <size>
-            <width>500</width>
+            <width>300</width>
             <height>0</height>
            </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+           </font>
           </property>
           <property name="text">
            <string>Background Color for Editable field</string>
@@ -75,6 +96,20 @@
         </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="pushButton_1">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Change</string>
           </property>
@@ -82,6 +117,24 @@
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_6">
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Text Color for Editable field</string>
           </property>
@@ -89,6 +142,20 @@
         </item>
         <item row="1" column="1">
          <widget class="QPushButton" name="pushButton_6">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Change</string>
           </property>
@@ -98,6 +165,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_1">
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="styleSheet">
          <string notr="true"/>
         </property>
@@ -112,13 +185,28 @@
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <layout class="QGridLayout" name="gridLayout_2">
+        <property name="horizontalSpacing">
+         <number>5</number>
+        </property>
         <item row="0" column="0">
          <widget class="QLabel" name="label_2">
           <property name="minimumSize">
            <size>
-            <width>500</width>
+            <width>300</width>
             <height>0</height>
            </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+           </font>
           </property>
           <property name="text">
            <string>Background Color for Calculated Field (non editable)</string>
@@ -127,6 +215,20 @@
         </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="pushButton_2">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Change</string>
           </property>
@@ -134,6 +236,24 @@
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_7">
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Background Color for Calculated Field (non editable)</string>
           </property>
@@ -141,6 +261,20 @@
         </item>
         <item row="1" column="1">
          <widget class="QPushButton" name="pushButton_7">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Change</string>
           </property>
@@ -150,6 +284,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_2">
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Sample</string>
         </property>
@@ -165,9 +305,21 @@
          <widget class="QLabel" name="label_3">
           <property name="minimumSize">
            <size>
-            <width>500</width>
+            <width>300</width>
             <height>0</height>
            </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+           </font>
           </property>
           <property name="text">
            <string>Background Color for Read Only Fields </string>
@@ -176,6 +328,20 @@
         </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="pushButton_3">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Change</string>
           </property>
@@ -183,6 +349,24 @@
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_8">
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Text Color for Read Only Fields </string>
           </property>
@@ -190,6 +374,20 @@
         </item>
         <item row="1" column="1">
          <widget class="QPushButton" name="pushButton_8">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Change</string>
           </property>
@@ -199,6 +397,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_3">
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Sample</string>
         </property>
@@ -214,9 +418,21 @@
          <widget class="QLabel" name="label_4">
           <property name="minimumSize">
            <size>
-            <width>500</width>
+            <width>300</width>
             <height>0</height>
            </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+           </font>
           </property>
           <property name="text">
            <string>Background Color for Min/Max Allowed Values</string>
@@ -225,6 +441,20 @@
         </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="pushButton_4">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Change</string>
           </property>
@@ -232,6 +462,24 @@
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_9">
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Text Color for Min/Max Allowed Values</string>
           </property>
@@ -239,6 +487,20 @@
         </item>
         <item row="1" column="1">
          <widget class="QPushButton" name="pushButton_9">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Change</string>
           </property>
@@ -248,6 +510,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_4">
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Sample</string>
         </property>
@@ -263,9 +531,21 @@
          <widget class="QLabel" name="label_5">
           <property name="minimumSize">
            <size>
-            <width>500</width>
+            <width>300</width>
             <height>0</height>
            </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+           </font>
           </property>
           <property name="text">
            <string>Background Color for Min/Max Recommended Values</string>
@@ -274,6 +554,20 @@
         </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="pushButton_5">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Change</string>
           </property>
@@ -281,6 +575,24 @@
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_10">
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Text Color for Min/Max Recommended Values</string>
           </property>
@@ -288,6 +600,20 @@
         </item>
         <item row="1" column="1">
          <widget class="QPushButton" name="pushButton_10">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>FreeSans</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
            <string>Change</string>
           </property>
@@ -297,6 +623,12 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_5">
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
          <string>Sample</string>
         </property>
@@ -310,7 +642,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>560</y>
+     <y>520</y>
      <width>581</width>
      <height>101</height>
     </rect>
