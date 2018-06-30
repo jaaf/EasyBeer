@@ -30,12 +30,16 @@ from model.Rest import Rest
 from model.Recipe import Recipe
 from model.Equipment import Equipment
 from model.Session import Session
+from model.FontSet import FontSet
+import view.constants as vcst
 
 
 
 import shelve, inspect
 from pycparser.c_ast import Switch
 from pip._vendor.requests.sessions import session
+from cgitb import small
+import platform
 #from builtins import property
 
 
@@ -65,6 +69,7 @@ class Model(object):
         self._update_funcs_recipe=[]
         self._update_funcs_equipment=[]
         self._update_funcs_style=[]
+        self._update_funcs_size=[]
         
         'read the keys in all the databases'
         self.update_from_db('malt')
@@ -75,6 +80,7 @@ class Model(object):
         self.update_from_db('equipment')
         self.update_from_db('session')
         self.update_from_db('style')
+        self.update_from_db('fontset')
         
         'containers for callback functions'
         self._target_func={
@@ -85,7 +91,8 @@ class Model(object):
             'recipe':[],
             'equipment':[],
             'session':[],
-            'style':[] 
+            'style':[], 
+            'fontset':[]
             }
         
     def post_init(self):
@@ -96,7 +103,8 @@ class Model(object):
         self.update_from_db('recipe')
         self.update_from_db('equipment')
         self.update_from_db('session')
-        self.update_from_db('style')    
+        self.update_from_db('style')
+        self.update_from_db('fontset')    
 
     def subscribe_model_changed(self,target_list,func):
         for target in target_list:
@@ -182,7 +190,15 @@ class Model(object):
         
     @style_list.setter
     def style_list(self,l):
-        self.__style_list=l    
+        self.__style_list=l  
+        
+    @property
+    def font_set_list(self):
+        return self.__font_set_list
+        
+    @font_set_list.setter
+    def font_set_list(self,s):
+        self.__font_set_list=s          
         
         
     def get_malt(self,key):
@@ -274,7 +290,56 @@ class Model(object):
         self.style_base.close()
         return styles
         '''
-    
+    def get_active_font_set(self):
+        'return a fontset given its category'
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        c.execute("""select * from fontsets where status=:status""",{'status':'active'})
+        fs=c.fetchone()
+        if fs: 
+            return FontSet(fs[0],fs[1])
+        else: return None
+        
+    def set_in_use_fonts(self):
+        font_set=self.get_active_font_set()
+        pf=platform.system()
+        
+        if font_set:
+            def f_tiny():
+                if pf=='Windows':
+                    self.in_use_fonts=vcst.FONT_SET_W_TINY
+                elif pf=='Linux':
+                    self.in_use_fonts=vcst.FONT_SET_L_TINY
+                    
+            def f_small():
+                if pf=='Windows':
+                    self.in_use_fonts=vcst.FONT_SET_W_SMALL
+                elif pf=='Linux':
+                    self.in_use_fonts=vcst.FONT_SET_L_SMALL
+
+            
+            def f_big():
+                if pf=='Windows':
+                    self.in_use_fonts=vcst.FONT_SET_W_BIG
+                elif pf=='Linux':
+                    self.in_use_fonts=vcst.FONT_SET_L_BIG
+                
+            def f_huge():
+                if pf=='Windows':
+                    self.in_use_fonts=vcst.FONT_SET_W_HUGE
+                elif pf=='Linux':
+                    self.in_use_fonts=vcst.FONT_SET_L_HUGE
+                
+            
+            switch_options={
+                'tiny':f_tiny,
+                'small':f_small,
+                'big': f_big,
+                'huge':f_huge     
+                }
+            
+            switch_options[font_set.category] () 
+                
         
     def save_malt(self,malt):
         con = lite.connect('easybeer.db')
@@ -606,6 +671,26 @@ class Model(object):
         con.close()
         self.update_from_db('style')
         self.announce_model_changed('style')
+        
+    def save_font_set(self,font_set):
+        print('in save_font_set')
+        
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        'fonts is a list and needs pickling'
+        
+        try:
+            c.execute("insert into  fontsets values (:category,:fonts)",(font_set.category,font_set.status))
+            con.commit()
+        except Error as e:
+            print('There was an error while inserting new font_set')
+            print(e)
+        c.close()
+        con.close()
+        self.update_from_db('fontset')
+        self.announce_model_changed('fontset')    
+        
+        
    
         
     def is_used(self,malt_name):
@@ -795,11 +880,14 @@ class Model(object):
             for st in sts:
                 self.__style_list.append(st[0])
             self.__style_list.sort()    
-            '''   
-            self.style_base=shelve.open(os.path.join(self.database_path,'style.db'))#(mcst.STYLE_DB)
-            self.__style_list=list(self.style_base.keys())
-            self.style_base.close()  
-            '''
+          
+        def f_fontset():
+            c.execute("""select category from fontsets""")
+            fss=list(c.fetchall())
+            self.__font_set_list=list()
+            for fs in fss:
+                self.__font_set_list.append(fs[0])
+            self.__font_set_list.sort()  
      
         con=lite.connect("easybeer.db")
         c=con.cursor()
@@ -851,6 +939,9 @@ class Model(object):
             
             sql="""create table if not exists styles (category text primary key not null, cols text) """
             c.execute(sql)
+            
+            sql="""create table if not exists fontsets (category text primary key not null, status text) """#fonts is pickled as it is a list
+            c.execute(sql)
         
             con.commit()
            
@@ -866,7 +957,8 @@ class Model(object):
             'recipe': f_recipe,
             'equipment': f_equipment,
             'session': f_session,
-            'style': f_style
+            'style': f_style,
+            'fontset':f_fontset
             }
         switch_options[target]()
         
@@ -890,4 +982,23 @@ class Model(object):
         con.close()
         self.update_from_db('style')
         self.announce_model_changed('style')
+        
+        
+    def update_font_set(self,font_set):
+        print('in update_font_set')
+       
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        'fonts is a list and needs pickling'
+        
+        try:
+            c.execute("update fontsets set status = :status  where category=:category",{'category':font_set.categoy,'status':font_set.status})
+            con.commit()
+        except Error as e:
+            print('There was an error while updating new size')
+            print(e)
+        c.close()
+        con.close()
+        self.update_from_db('fontset')
+        self.announce_model_changed('fontset')
         

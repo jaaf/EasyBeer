@@ -22,6 +22,7 @@ Created on 15 juin 2017
 @author: jaaf
 '''
 from PyQt5.QtGui import QFont
+from model.FontSet import FontSet
 
 
 FIELD_DEFAULT_COLORS={
@@ -62,23 +63,151 @@ HOP_DRY_HOPPING='Dry'
 
 QUESTION_BUTTON_MAX_WIDTH=30
 
-'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
-'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
-TITLE_FONT_L=QFont('FreeSans',11,QFont.Bold)
-BUTTON_FONT_L=QFont('FreeSans',10,QFont.DemiBold)
-FIELD_LABEL_FONT_L=QFont('FreeSans',10,QFont.Normal)
-TITLE_SLANTED_FONT_L=QFont('FreeSans',11,QFont.Normal,True)
-BIG_TITLE_FONT_L=QFont('FreeSans',14,QFont.Bold)
-VERY_BIG_TITLE_FONT_L=QFont('FreeSans',18,QFont.Normal,True)
 
 
+'TINY WINDOWS'
 
 'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
-TITLE_FONT_W=QFont('Helvetica',11,QFont.Bold)
-BUTTON_FONT_W=QFont('Helvetica',10,QFont.DemiBold)
-FIELD_LABEL_FONT_W=QFont('Helvetica',10,QFont.Normal)
-TITLE_SLANTED_FONT_W=QFont('Helvetica',11,QFont.Normal,True)
-BIG_TITLE_FONT_W=QFont('Helvetica',14,QFont.Bold)
-VERY_BIG_TITLE_FONT_W=QFont('Helvetica',18,QFont.Normal,True)
+TITLE_FONT_W_TINY=QFont('Helvetica',11,QFont.Bold)
+BUTTON_FONT_W_TINY=QFont('Helvetica',10,QFont.DemiBold)
+FIELD_LABEL_FONT_W_TINY=QFont('Helvetica',10,QFont.Normal)
+TITLE_SLANTED_FONT_W_TINY=QFont('Helvetica',11,QFont.Normal,True)
+BIG_TITLE_FONT_W_TINY=QFont('Helvetica',14,QFont.Bold)
+VERY_BIG_TITLE_FONT_W_TINY=QFont('Helvetica',18,QFont.Normal,True)
+FONT_SET_W_TINY={'title':TITLE_FONT_W_TINY,
+                 'button':BUTTON_FONT_W_TINY,
+                 'field':FIELD_LABEL_FONT_W_TINY,
+                 'title_slanted':TITLE_SLANTED_FONT_W_TINY,
+                 'big_title':BIG_TITLE_FONT_W_TINY,
+                 'very_big_title':VERY_BIG_TITLE_FONT_W_TINY} 
+
+'TINY LINUX'
+
+'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
+TITLE_FONT_L_TINY=QFont('FreeSans',11,QFont.Bold)
+BUTTON_FONT_L_TINY=QFont('FreeSans',10,QFont.DemiBold)
+FIELD_LABEL_FONT_L_TINY=QFont('FreeSans',10,QFont.Normal)
+TITLE_SLANTED_FONT_L_TINY=QFont('FreeSans',11,QFont.Normal,True)
+BIG_TITLE_FONT_L_TINY=QFont('FreeSans',14,QFont.Bold)
+VERY_BIG_TITLE_FONT_L_TINY=QFont('FreeSans',18,QFont.Normal,True)
+FONT_SET_L_TINY={'title':TITLE_FONT_L_TINY,
+                 'button':BUTTON_FONT_L_TINY,
+                 'field':FIELD_LABEL_FONT_L_TINY,
+                 'title_slanted':TITLE_SLANTED_FONT_L_TINY,
+                 'big_title':BIG_TITLE_FONT_L_TINY,
+                 'very_big_title':VERY_BIG_TITLE_FONT_W_TINY}  
+
+'SMALL WINDOWS'
+
+'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
+TITLE_FONT_W_SMALL=QFont('Helvetica',12,QFont.Bold)
+BUTTON_FONT_W_SMALL=QFont('Helvetica',11,QFont.DemiBold)
+FIELD_LABEL_FONT_W_SMALL=QFont('Helvetica',11,QFont.Normal)
+TITLE_SLANTED_FONT_W_SMALL=QFont('Helvetica',12,QFont.Normal,True)
+BIG_TITLE_FONT_W_SMALL=QFont('Helvetica',16,QFont.Bold)
+VERY_BIG_TITLE_FONT_W_SMALL=QFont('Helvetica',20,QFont.Normal,True)
+FONT_SET_W_SMALL=FontSet('tiny',[TITLE_FONT_W_SMALL,
+                                  BUTTON_FONT_W_SMALL,
+                                  FIELD_LABEL_FONT_W_SMALL,
+                                  TITLE_SLANTED_FONT_W_SMALL,
+                                  BIG_TITLE_FONT_W_SMALL,
+                                  VERY_BIG_TITLE_FONT_W_SMALL]) 
+
+'SMALL LINUX'
+
+'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
+TITLE_FONT_L_SMALL=QFont('FreeSans',12,QFont.Bold)
+BUTTON_FONT_L_SMALL=QFont('FreeSans',11,QFont.DemiBold)
+FIELD_LABEL_FONT_L_SMALL=QFont('FreeSans',11,QFont.Normal)
+TITLE_SLANTED_FONT_L_SMALL=QFont('FreeSans',12,QFont.Normal,True)
+BIG_TITLE_FONT_L_SMALL=QFont('FreeSans',16,QFont.Bold)
+VERY_BIG_TITLE_FONT_L_SMALL=QFont('FreeSans',20,QFont.Normal,True)
+FONT_SET_L_SMALL=FontSet('tiny',[TITLE_FONT_L_SMALL,
+                                  BUTTON_FONT_L_SMALL,
+                                  FIELD_LABEL_FONT_L_SMALL,
+                                  TITLE_SLANTED_FONT_L_SMALL,
+                                  BIG_TITLE_FONT_L_SMALL,
+                                  VERY_BIG_TITLE_FONT_W_SMALL])
+
+'BIG WINDOWS'
 
 
+'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
+TITLE_FONT_W_BIG=QFont('Helvetica',14,QFont.Bold)
+BUTTON_FONT_W_BIG=QFont('Helvetica',12,QFont.DemiBold)
+FIELD_LABEL_FONT_W_BIG=QFont('Helvetica',12,QFont.Normal)
+TITLE_SLANTED_FONT_W_BIG=QFont('Helvetica',13,QFont.Normal,True)
+BIG_TITLE_FONT_W_BIG=QFont('Helvetica',18,QFont.Bold)
+VERY_BIG_TITLE_FONT_W_BIG=QFont('Helvetica',22,QFont.Normal,True)
+FONT_SET_W_BIG=FontSet('tiny',[TITLE_FONT_W_BIG,
+                                  BUTTON_FONT_W_BIG,
+                                  FIELD_LABEL_FONT_W_BIG,
+                                  TITLE_SLANTED_FONT_W_BIG,
+                                  BIG_TITLE_FONT_W_BIG,
+                                  VERY_BIG_TITLE_FONT_W_BIG]) 
+
+'BIG LINUX'
+
+'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
+TITLE_FONT_L_BIG=QFont('FreeSans',14,QFont.Bold)
+BUTTON_FONT_L_BIG=QFont('FreeSans',12,QFont.DemiBold)
+FIELD_LABEL_FONT_L_BIG=QFont('FreeSans',12,QFont.Normal)
+TITLE_SLANTED_FONT_L_BIG=QFont('FreeSans',13,QFont.Normal,True)
+BIG_TITLE_FONT_L_BIG=QFont('FreeSans',18,QFont.Bold)
+VERY_BIG_TITLE_FONT_L_BIG=QFont('FreeSans',22,QFont.Normal,True)
+FONT_SET_L_BIG=FontSet('tiny',[TITLE_FONT_L_BIG,
+                                  BUTTON_FONT_L_BIG,
+                                  FIELD_LABEL_FONT_L_BIG,
+                                  TITLE_SLANTED_FONT_L_BIG,
+                                  BIG_TITLE_FONT_L_BIG,
+                                  VERY_BIG_TITLE_FONT_L_BIG]) 
+
+'HUGE WINDOWS'
+
+'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
+TITLE_FONT_W_HUGE=QFont('Helvetica',16,QFont.Bold)
+BUTTON_FONT_W_HUGE=QFont('Helvetica',14,QFont.DemiBold)
+FIELD_LABEL_FONT_W_HUGE=QFont('Helvetica',14,QFont.Normal)
+TITLE_SLANTED_FONT_W_HUGE=QFont('Helvetica',16,QFont.Normal,True)
+BIG_TITLE_FONT_W_HUGE=QFont('Helvetica',20,QFont.Bold)
+VERY_BIG_TITLE_FONT_W_HUGE=QFont('Helvetica',24,QFont.Normal,True)
+FONT_SET_W_HUGE=FontSet('tiny',[TITLE_FONT_W_HUGE,
+                                  BUTTON_FONT_W_HUGE,
+                                  FIELD_LABEL_FONT_W_HUGE,
+                                  TITLE_SLANTED_FONT_W_HUGE,
+                                  BIG_TITLE_FONT_W_HUGE,
+                                  VERY_BIG_TITLE_FONT_W_HUGE]) 
+
+'HUGE LINUX'
+
+'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
+TITLE_FONT_L_HUGE=QFont('FreeSans',16,QFont.Bold)
+BUTTON_FONT_L_HUGE=QFont('FreeSans',14,QFont.DemiBold)
+FIELD_LABEL_FONT_L_HUGE=QFont('FreeSans',14,QFont.Normal)
+TITLE_SLANTED_FONT_L_HUGE=QFont('FreeSans',16,QFont.Normal,True)
+BIG_TITLE_FONT_L_HUGE=QFont('FreeSans',20,QFont.Bold)
+VERY_BIG_TITLE_FONT_L_HUGE=QFont('FreeSans',24,QFont.Normal,True)
+FONT_SET_L_HUGE=FontSet('tiny',[TITLE_FONT_L_HUGE,
+                                  BUTTON_FONT_L_HUGE,
+                                  FIELD_LABEL_FONT_L_HUGE,
+                                  TITLE_SLANTED_FONT_L_HUGE,
+                                  BIG_TITLE_FONT_L_HUGE,
+                                  VERY_BIG_TITLE_FONT_L_HUGE]) 
+
+
+
+'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
+TITLE_FONT_W=QFont('Helvetica',16,QFont.Bold)
+BUTTON_FONT_W=QFont('Helvetica',14,QFont.DemiBold)
+FIELD_LABEL_FONT_W=QFont('Helvetica',14,QFont.Normal)
+TITLE_SLANTED_FONT_W=QFont('Helvetica',16,QFont.Normal,True)
+BIG_TITLE_FONT_W=QFont('Helvetica',20,QFont.Bold)
+VERY_BIG_TITLE_FONT_W=QFont('Helvetica',24,QFont.Normal,True)
+
+'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
+TITLE_FONT_L=QFont('FreeSans',16,QFont.Bold)
+BUTTON_FONT_L=QFont('FreeSans',14,QFont.DemiBold)
+FIELD_LABEL_FONT_L=QFont('FreeSans',14,QFont.Normal)
+TITLE_SLANTED_FONT_L=QFont('FreeSans',16,QFont.Normal,True)
+BIG_TITLE_FONT_L=QFont('FreeSans',20,QFont.Bold)
+VERY_BIG_TITLE_FONT_L=QFont('FreeSans',24,QFont.Normal,True)
