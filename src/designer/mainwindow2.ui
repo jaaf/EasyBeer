@@ -2031,6 +2031,7 @@
      <string>Settings</string>
     </property>
     <addaction name="actionCustomize_colors"/>
+    <addaction name="actionCustomize_Font_Size"/>
    </widget>
    <widget class="QMenu" name="menuImport_Export">
     <property name="title">
@@ -2122,6 +2123,11 @@
   <action name="actionJapanese">
    <property name="text">
     <string>Japanese</string>
+   </property>
+  </action>
+  <action name="actionCustomize_Font_Size">
+   <property name="text">
+    <string>Customize Font Size</string>
    </property>
   </action>
  </widget>

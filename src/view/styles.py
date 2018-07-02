@@ -22,7 +22,7 @@ Created on 22 nov. 2017
 @author: jaaf
 '''
 
-'These variables are initialized either from the database, or from the default values in view.constant'
+'These variables are initialized either from the database, or from the default values in view.constant - see MainWindow set_active_colors'
 
 'Each fied_color is a list of 2 values one for backgroud and one for text color'
 field_colors={

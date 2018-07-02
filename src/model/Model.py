@@ -40,6 +40,7 @@ from pycparser.c_ast import Switch
 from pip._vendor.requests.sessions import session
 from cgitb import small
 import platform
+
 #from builtins import property
 
 
@@ -94,6 +95,7 @@ class Model(object):
             'style':[], 
             'fontset':[]
             }
+        self.in_use_fonts=None
         
     def post_init(self):
         self.update_from_db('malt')
@@ -283,6 +285,8 @@ class Model(object):
         'this is a specific case where the object returned excludes the key'
         if s: style=pickle.loads(s[1])
         else:  style=None
+        c.close()
+        con.close()
         return style
         '''
         self.style_base=shelve.open(os.path.join(self.database_path,'style.db'))#(mcst.STYLE_DB)
@@ -309,6 +313,7 @@ class Model(object):
                 if pf=='Windows':
                     self.in_use_fonts=vcst.FONT_SET_W_TINY
                 elif pf=='Linux':
+                    print ('setting in_use_fonts linux tiny')
                     self.in_use_fonts=vcst.FONT_SET_L_TINY
                     
             def f_small():
@@ -328,6 +333,7 @@ class Model(object):
                 if pf=='Windows':
                     self.in_use_fonts=vcst.FONT_SET_W_HUGE
                 elif pf=='Linux':
+                    print ('setting in_use_fonts linux huge')
                     self.in_use_fonts=vcst.FONT_SET_L_HUGE
                 
             
@@ -339,7 +345,13 @@ class Model(object):
                 }
             
             switch_options[font_set.category] () 
-                
+            
+        elif pf=='Windows':
+            self.in_use_fonts=vcst.FONT_SET_W_TINY
+        elif pf=='Linux':
+            print ('setting in_use_fonts linux tiny no active')
+            self.in_use_fonts=vcst.FONT_SET_L_TINY
+                    
         
     def save_malt(self,malt):
         con = lite.connect('easybeer.db')
@@ -689,9 +701,20 @@ class Model(object):
         con.close()
         self.update_from_db('fontset')
         self.announce_model_changed('fontset')    
+           
+         
+    def change_active_font_set(self, category):
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        c.execute("""select * from fontsets where status=:status""",{'status':'active'})
+        l=c.fetchall()
+        for f in l: self.update_font_set(FontSet(f[0],'inactive'))
+        self.update_font_set(FontSet(category,'active'))
+        c.close()
+        con.close()
+    
+    
         
-        
-   
         
     def is_used(self,malt_name):
         recipe_base=shelve.open(os.path.join(self.database_path,'recipe.db'))#(mcst.RECIPE_DB)
@@ -986,19 +1009,22 @@ class Model(object):
         
     def update_font_set(self,font_set):
         print('in update_font_set')
+        print(font_set.category+', '+font_set.status)
        
         con=lite.connect('easybeer.db')
         c=con.cursor()
         'fonts is a list and needs pickling'
         
         try:
-            c.execute("update fontsets set status = :status  where category=:category",{'category':font_set.categoy,'status':font_set.status})
+            c.execute("update fontsets set status = :status  where category=:category",{'category':font_set.category,'status':font_set.status})
             con.commit()
         except Error as e:
             print('There was an error while updating new size')
             print(e)
         c.close()
         con.close()
+        'we must change active fonts before announcing the change to the dialogs'
+        self.set_in_use_fonts()
         self.update_from_db('fontset')
         self.announce_model_changed('fontset')
         

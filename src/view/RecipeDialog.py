@@ -50,6 +50,13 @@ class customLabel(QLabel):
         QLabel.__init__(self)
         self.setText(caption)
         self.setStyleSheet(vcst.CUSTOM_LABEL_STYLE)
+        
+    def set_caption(self,caption):
+        self.setText(caption)   
+        
+    def set_font(self,font):
+        print('inside customLabel setFont')
+        self.setFont(font)     
 
     def mousePressEvent(self,event):
         #print('MousePressEvent')
@@ -84,6 +91,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.list_malt_in_mash=[]
         self.list_hop_in_recipe=[]   
         self.targeted_original_gravity_edit.setAccessibleName('Targeted Original Gravity')
+        self.targeted_original_gravity_label.setAccessibleName('Targeted Original Gravity Label')
+        self.targeted_original_gravity_unit_label.setAccessibleName('Targeted Original Gravity Unit Label')
         self.add_subdialog_buttons()   
         self.malt_for_mash_label.setMaximumSize(300,30)
         self.malt_for_mash_label.setMinimumSize(300,30)
@@ -105,7 +114,72 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.recipe_new_button.show()
 
         
+    def add_hop_view(self,hop_type,usage=None,duration=None,hop_rate=None): 
+        'prepare a hop view from the data loaded and add it to the hop layout' 
+        hopT=hop_type
+        hl=QHBoxLayout()
         
+        name_edit=QLineEdit()
+        name_edit.setAccessibleName('name')
+        name_edit.setMinimumSize(400,30)
+        name_edit.setText(hopT.name)
+        hl.addWidget(name_edit)
+        
+        info_label=QLabel()
+        info_label.setMinimumSize(400,30)
+        info_label.setAccessibleName('info')
+        info= ' – '+hopT.form + ' – ' +str(hopT.alpha_acid)+ ' % AA'
+        info_label.setText(info) 
+        hl.addWidget(info_label)
+
+        usage_combo=QComboBox()
+        usage_combo.setAccessibleName('usage')
+        usage_combo.setStyleSheet(sty.field_styles['editable'])
+        usage_combo.setMinimumWidth(150)
+        hl.addWidget(usage_combo)
+        
+        'in the menu view we use the val i.e. the translated string'
+        for key,val in self.util.hop_usage_dic.items():
+            usage_combo.addItem(val)
+        try:        
+            index = usage_combo.findText(self.util.hop_usage_dic[usage])
+        except:
+            index=0  
+        if index and index >= 0:
+            usage_combo.setCurrentIndex(index) 
+        usage_combo.currentIndexChanged.connect(self.show_hide_hop_duration)    
+            
+        duration_edit=QLineEdit()   
+        duration_edit.setAccessibleName('duration')
+        hl.addWidget(duration_edit)
+        duration_edit.setStyleSheet(sty.field_styles['editable'])
+        duration_edit.setMaximumSize(40,30)
+        if duration:
+            duration_edit.setText(str(duration))     
+             
+        duration_unit_label=QLabel() 
+        duration_unit_label.setText('min')
+        duration_unit_label.setAccessibleName('duration_unit')
+        hl.addWidget(duration_unit_label)
+        hl.addStretch()
+        
+
+        self.add_hop_rate(hl,hop_rate)
+        delete_button=QPushButton('X')
+        delete_button.setAccessibleName('delete_button')
+        delete_button.setMaximumSize(20,30)
+        delete_button.setStyleSheet(vcst.BUTTON_DELETE_STYLE)  
+        delete_button.clicked.connect(self.remove_hop_view) 
+        hl.addWidget(delete_button)
+        
+        name_edit.setFont(self.model.in_use_fonts['field'])
+        info_label.setFont(self.model.in_use_fonts['field'])
+        usage_combo.setFont(self.model.in_use_fonts['field'])
+        duration_edit.setFont(self.model.in_use_fonts['field'])
+        
+        
+        self.hop_layout.addLayout(hl)
+            
                
     def add_malt_view(self,malt_type,percent=None):
         maltT=malt_type    
@@ -129,7 +203,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         percentage_unit=QLabel('%')   
         percentage_unit.setAccessibleName('percentage_unit')
         percentage_unit.setMaximumSize(30,30)
-        percentage_unit.setStyleSheet("font-size: 14px;")
+        #percentage_unit.setStyleSheet("font-size: 14px;")
         hl.addWidget(percentage_unit)      
         
         delete_button=QPushButton('X')
@@ -143,6 +217,11 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         hidden_name.setAccessibleName('hidden_name')
         hl.addWidget(hidden_name)
         hidden_name.hide()
+        
+        name_edit.setFont(self.model.in_use_fonts['field'])
+        percentage_edit.setFont(self.model.in_use_fonts['field'])
+        percentage_unit.setFont(self.model.in_use_fonts['field'])
+        
       
         self.malt_layout.addLayout(hl)
     
@@ -190,6 +269,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         
         vl1=QVBoxLayout()
         temp_label=QLabel(self.tr('Temperature range'),alignment=4)
+        temp_label.setAccessibleName('temp_label')
         vl1.addWidget(temp_label)
         hl1=QHBoxLayout()
         min_allowed_temperature_edit=QLineEdit()
@@ -233,6 +313,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         vl2=QVBoxLayout()
         hl2=QHBoxLayout()
         pitch_label=QLabel(self.tr('Pitching rate'),alignment=4)
+        pitch_label.setAccessibleName('pitch_label')
         vl2.addWidget(pitch_label)
         
         rate_edit=QLineEdit()
@@ -245,11 +326,24 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         
         rate_unit=QLabel('billions/°P/liter')   
         rate_unit.setAccessibleName('rate_unit')
-        rate_unit.setMaximumSize(100,30)
-        rate_unit.setStyleSheet("font-size: 14px;")
+        rate_unit.setMaximumSize(150,30)
+        #rate_unit.setStyleSheet("font-size: 14px;")
         hl2.addWidget(rate_unit)  
         vl2.addLayout(hl2)
         hl.addLayout(vl2)
+        
+        maker_edit.setFont(self.model.in_use_fonts['field'])
+        name_edit.setFont(self.model.in_use_fonts['field'])
+        form_edit.setFont(self.model.in_use_fonts['field'])
+        temp_label.setFont(self.model.in_use_fonts['field'])
+        pitch_label.setFont(self.model.in_use_fonts['field'])
+        min_advised_temperature_edit.setFont(self.model.in_use_fonts['field'])
+        min_allowed_temperature_edit.setFont(self.model.in_use_fonts['field'])
+        max_advised_temperature_edit.setFont(self.model.in_use_fonts['field'])
+        max_allowed_temperature_edit.setFont(self.model.in_use_fonts['field'])
+        rate_edit.setFont(self.model.in_use_fonts['field'])
+        rate_unit.setFont(self.model.in_use_fonts['field'])
+        
         
         self.yeast_layout.addLayout(hl)
         
@@ -269,9 +363,11 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         
     def add_subdialog_buttons(self):
         caption=self.tr('+ Add a malt')
-        self.show_malt_chooser_button = customLabel(caption)
+        self.show_malt_chooser_button = customLabel('')
+        self.show_malt_chooser_button.setText('+ Add a malt')
         self.show_malt_chooser_button.clicked.connect(self.malt_chooser_show)
         self.malt_header_layout.insertWidget(1,self.show_malt_chooser_button)
+        
        
         caption=self.tr('+ Add a hop')
         self.show_hop_chooser_button = customLabel(caption)
@@ -292,7 +388,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.show_yeast_chooser_button =customLabel(caption)
         self.show_yeast_chooser_button.clicked.connect(self.yeast_chooser_show)
         self.yeast_header_layout.insertWidget(1,self.show_yeast_chooser_button)
-                
+        
+         
         
     def adjunct_chooser_show(self):
         return
@@ -314,12 +411,14 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         'add an input for hop rate in the layout'
         hop_rate_edit=QLineEdit()
         hop_rate_edit.setAccessibleName('hop_rate')
+        hop_rate_edit.setFont(self.model.in_use_fonts['field'])
         hop_rate_edit.setMaximumSize(50,30)
         hop_rate_edit.setMinimumSize(50,30)
         hop_rate_edit.setStyleSheet(sty.field_styles['editable'])
         layout.addWidget(hop_rate_edit)
         hop_rate_unit_label=QLabel('g/l')
         hop_rate_unit_label.setAccessibleName('hop_rate_unit')
+        hop_rate_unit_label.setFont(self.model.in_use_fonts['field'])
         layout.addWidget(hop_rate_unit_label)
         if value: hop_rate_edit.setText(str(value))            
                                
@@ -451,7 +550,11 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         '''
         if target == 'recipe':
             self.recipe_key_list=self.model.recipe_list 
-            self.refresh_recipe_list_widget()         
+            self.refresh_recipe_list_widget()   
+            
+        if target == 'fontset':
+            if (self.model.in_use_fonts):
+                self.set_fonts()         
     
     def prepare_a_recipe_to_save(self):
         """" Read the GUI to prepare a recipe for adding or updating it into the database
@@ -625,65 +728,125 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
     def rest_dialog_show(self):
         self.rest_dialog.show()
         self.rest_dialog.window().raise_()
-         
-    
-    def set_hop_view(self,hop_type,usage=None,duration=None,hop_rate=None): 
-        'prepare a hop view from the data loaded and add it to the hop layout' 
-        hopT=hop_type
-        hl=QHBoxLayout()
         
-        name_edit=QLineEdit()
-        name_edit.setAccessibleName('name')
-        name_edit.setMinimumSize(400,30)
-        name_edit.setText(hopT.name)
-        hl.addWidget(name_edit)
+    def set_fonts(self):
         
-        info_label=QLabel()
-        info_label.setMinimumSize(400,30)
-        info_label.setAccessibleName('info')
-        info= ' – '+hopT.form + ' – ' +str(hopT.alpha_acid)+ ' % AA'
-        info_label.setText(info) 
-        hl.addWidget(info_label)
-
-        usage_combo=QComboBox()
-        usage_combo.setAccessibleName('usage')
-        usage_combo.setStyleSheet(sty.field_styles['editable'])
-        usage_combo.setMinimumWidth(150)
-        hl.addWidget(usage_combo)
+        print('enter set_fonts')
         
-        'in the menu view we use the val i.e. the translated string'
-        for key,val in self.util.hop_usage_dic.items():
-            usage_combo.addItem(val)
-        try:        
-            index = usage_combo.findText(self.util.hop_usage_dic[usage])
-        except:
-            index=0  
-        if index and index >= 0:
-            usage_combo.setCurrentIndex(index) 
-        usage_combo.currentIndexChanged.connect(self.show_hide_hop_duration)    
+        self.show_malt_chooser_button.setFont(self.model.in_use_fonts['title_slanted']) 
+        self.show_hop_chooser_button.setFont(self.model.in_use_fonts['title_slanted'])  
+        self.show_adjunct_chooser_button.setFont(self.model.in_use_fonts['title_slanted'])  
+        self.show_rest_dialog_button.setFont(self.model.in_use_fonts['title_slanted']) 
+        self.show_yeast_chooser_button.setFont(self.model.in_use_fonts['title_slanted'])
+        
+        self.recipe_list_label.setFont(self.model.in_use_fonts['title'])
+        self.recipe_list_widget.setFont(self.model.in_use_fonts['field'])
+        self.recipe_edit_button.setFont(self.model.in_use_fonts['button'])
+        self.recipe_delete_button.setFont(self.model.in_use_fonts['button'])
+        self.recipe_add_button.setFont(self.model.in_use_fonts['button'])
+        
+        self.recipe_name_edit.setFont(self.model.in_use_fonts['field'])
+        self.recipe_name_label.setFont(self.model.in_use_fonts['title'])
+        self.targets_name_label.setFont(self.model.in_use_fonts['title'])
+        self.targeted_original_gravity_label.setFont(self.model.in_use_fonts['field'])
+        self.targeted_original_gravity_edit.setFont(self.model.in_use_fonts['field'])
+        self.targeted_bitterness_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.targeted_bitterness_edit.setFont(self.model.in_use_fonts['field'])
+        self.targeted_bitterness_label.setFont(self.model.in_use_fonts['field'])
+        
+        self.mash_label.setFont(self.model.in_use_fonts['title'])
+        self.malt_for_mash_label.setFont(self.model.in_use_fonts['title_slanted'])
+        self.mash_rests_label.setFont(self.model.in_use_fonts['title_slanted'])
+        
+        self.boiling_label.setFont(self.model.in_use_fonts['title'])
+        self.boiling_time_label.setFont(self.model.in_use_fonts['field'])
+        self.boiling_time_edit.setFont(self.model.in_use_fonts['field'])
+        self.boiling_time_unit_label.setFont(self.model.in_use_fonts['field'])
+        
+        self.hop_list_label.setFont(self.model.in_use_fonts['title_slanted'])
+        'should be renamed as fermentation_label'
+        self.boiling_label_2.setFont(self.model.in_use_fonts['title'])
+        self.adjuncts_list_label.setFont(self.model.in_use_fonts['title_slanted'])
+        self.fermentation_explain_edit.setFont(self.model.in_use_fonts['field'])
+        self.recipe_close_button.setFont(self.model.in_use_fonts['button'])
+        
+        for i in range(self.malt_layout.count()):
+            item =self.malt_layout.itemAt(i)
+            if item:
+                w_name=self.util.get_by_name(item.layout(),'name')
+                if w_name: w_name.setFont(self.model.in_use_fonts['field'])
+                
+                w_percentage=self.util.get_by_name(item.layout(),'percentage')
+                if w_percentage: w_percentage.setFont(self.model.in_use_fonts['field'])
+                
+                w_percentage_unit=self.util.get_by_name(item.layout(),'percentage_unit')
+                if w_percentage_unit: w_percentage_unit.setFont(self.model.in_use_fonts['field'])
+                
+              
+        for i in range(self.hop_layout.count()):
+            item=self.hop_layout.itemAt(i) 
+            if item:
+                w_name=self.util.get_by_name(item.layout(),'name')
+                if w_name: w_name.setFont(self.model.in_use_fonts['field'])
+                
+                w_info=self.util.get_by_name(item.layout(),'info')
+                if w_info: w_info.setFont(self.model.in_use_fonts['field'])
+                
+                w_usage=self.util.get_by_name(item.layout(),'usage')
+                if w_usage: w_usage.setFont(self.model.in_use_fonts['field'])
+                
+                w_duration=self.util.get_by_name(item.layout(),'duration')
+                if w_duration: w_duration.setFont(self.model.in_use_fonts['field'])
+                
+                w_duration_unit=self.util.get_by_name(item.layout(),'duration_unit')
+                if w_duration_unit: w_duration_unit.setFont(self.model.in_use_fonts['field'])
+                
+                w_hop_rate=self.util.get_by_name_recursive(item.layout(),'hop_rate')
+                if w_hop_rate: w_hop_rate.setFont(self.model.in_use_fonts['field'])
+                else: print('hop_rate not found')
+                
+                w_hop_rate_unit=self.util.get_by_name_recursive(item.layout(),'hop_rate_unit')
+                if w_hop_rate_unit: w_hop_rate_unit.setFont(self.model.in_use_fonts['field'])
+                
+        for i in range(self.yeast_layout.count()):
+            item = self.yeast_layout.itemAt(i) 
+            if item:
+                       
+                w_maker=self.util.get_by_name(item.layout(),'maker')
+                if w_maker: w_maker.setFont(self.model.in_use_fonts['field'])
+                
+                w_name=self.util.get_by_name(item.layout(),'name')
+                if w_name: w_name.setFont(self.model.in_use_fonts['field'])
+                
+                w_form=self.util.get_by_name(item.layout(),'form')
+                if w_form: w_form.setFont(self.model.in_use_fonts['field'])
+                
+                w_temp_label=self.util.get_by_name_recursive(item.layout(),'temp_label')
+                if w_temp_label: w_temp_label.setFont(self.model.in_use_fonts['field'])
+                
+                w_pitch_label=self.util.get_by_name_recursive(item.layout(),'pitch_label')
+                if w_pitch_label: w_pitch_label.setFont(self.model.in_use_fonts['field'])
+                
+                w_min_allowed_temperature=self.util.get_by_name_recursive(item.layout(),'min_allowed_temperature')
+                if w_min_allowed_temperature: w_min_allowed_temperature.setFont(self.model.in_use_fonts['field'])
+                
+                w_min_advised_temperature=self.util.get_by_name_recursive(item.layout(),'min_advised_temperature')
+                if w_min_advised_temperature: w_min_advised_temperature.setFont(self.model.in_use_fonts['field'])
+                
+                w_max_advised_temperature=self.util.get_by_name_recursive(item.layout(),'max_advised_temperature')
+                if w_max_advised_temperature: w_max_advised_temperature.setFont(self.model.in_use_fonts['field'])
+                
+                w_max_allowed_temperature=self.util.get_by_name_recursive(item.layout(),'max_allowed_temperature')
+                if w_max_allowed_temperature: w_max_allowed_temperature.setFont(self.model.in_use_fonts['field'])
+                
+                w_rate=self.util.get_by_name_recursive(item.layout(),'rate')
+                if w_rate: w_rate.setFont(self.model.in_use_fonts['field'])
+                
+                w_rate_unit=self.util.get_by_name_recursive(item.layout(),'rate_unit')
+                if w_rate_unit: w_rate_unit.setFont(self.model.in_use_fonts['field'])
             
-        duration_edit=QLineEdit()   
-        duration_edit.setAccessibleName('duration')
-        hl.addWidget(duration_edit)
-        duration_edit.setStyleSheet(sty.field_styles['editable'])
-        duration_edit.setMaximumSize(40,30)
-        if duration:
-            duration_edit.setText(str(duration))      
-       
-        hl.addWidget(QLabel('min'))#4for unit
-        hl.addStretch()
-        
-
-        self.add_hop_rate(hl,hop_rate)
-        delete_button=QPushButton('X')
-        delete_button.setAccessibleName('delete_button')
-        delete_button.setMaximumSize(20,30)
-        delete_button.setStyleSheet(vcst.BUTTON_DELETE_STYLE)  
-        delete_button.clicked.connect(self.remove_hop_view) 
-        hl.addWidget(delete_button)
-        
-        self.hop_layout.addLayout(hl)
-        
+    
+    
         
     def save_recipe(self):
         recipe=self.prepare_a_recipe_to_save()
@@ -718,6 +881,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.recipe_update_button.clicked.connect(self.update_recipe) 
         self.recipe_cancel_button.clicked.connect(self.cancel)
         self.recipe_close_button.clicked.connect(self.close)
+        
+        
          
         
     def set_ro_and_color(self):
@@ -734,6 +899,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.targeted_bitterness_edit.setStyleSheet(sty.field_styles['read_only'])
         self.boiling_time_edit.setReadOnly(True)
         self.boiling_time_edit.setStyleSheet(sty.field_styles['read_only'])
+        
+        'MALTS'
         for i in range(self.malt_layout.count()):
             item =self.malt_layout.itemAt(i)
             if item: 
@@ -744,7 +911,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                 delete_button=self.util.get_by_name(item.layout(), 'delete_button')  
                 if delete_button: delete_button.hide()      
         
-                
+        'HOPS'        
         for i in range(self.hop_layout.count()):
             item = self.hop_layout.itemAt(i)       
             if item:                
@@ -765,13 +932,26 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                 delete_button=self.util.get_by_name(item.layout(), 'delete_button')
                 if delete_button: delete_button.hide()
                 
+        'YEAST'        
         pitching_rate_edit=self.util.get_by_name_recursive(self.yeast_layout, 'rate') 
         if pitching_rate_edit: 
             pitching_rate_edit.setReadOnly(True)
-            pitching_rate_edit.setStyleSheet(sty.field_styles['read_only'])            
+            pitching_rate_edit.setStyleSheet(sty.field_styles['read_only'])    
+        
+        w_min_allowed_temperature=self.util.get_by_name_recursive(self.yeast_layout,'min_allowed_temperature')
+        if w_min_allowed_temperature: w_min_allowed_temperature.setStyleSheet(sty.field_styles['read_only']) 
+                
+        w_min_advised_temperature=self.util.get_by_name_recursive(self.yeast_layout,'min_advised_temperature')
+        if w_min_advised_temperature: w_min_advised_temperature.setStyleSheet(sty.field_styles['read_only']) 
+                
+        w_max_advised_temperature=self.util.get_by_name_recursive(self.yeast_layout,'max_advised_temperature')
+        if w_max_advised_temperature: w_max_advised_temperature.setStyleSheet(sty.field_styles['read_only']) 
+                
+        w_max_allowed_temperature=self.util.get_by_name_recursive(self.yeast_layout,'max_allowed_temperature')
+        if w_max_allowed_temperature: w_max_allowed_temperature.setStyleSheet(sty.field_styles['read_only'])       
                 
     def set_subscriptions(self):
-        self.model.subscribe_model_changed(['recipe'],self.on_model_changed_recipe)
+        self.model.subscribe_model_changed(['recipe','fontset'],self.on_model_changed_recipe)
                          
     def set_translatable_textes(self):
         self.setWindowTitle(self.tr('Create a Recipe'))
@@ -788,7 +968,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.hop_list_label.setText(self.tr('Hops'))
         self.adjuncts_list_label.setText(self.tr('Adjuncts'))
         self.mash_rests_label.setText(self.tr('Mash Rests'))
-        self.add_subdialog_buttons()
+        #self.add_subdialog_buttons()
         self.recipe_close_button.setText(self.tr('Close'))
 
         
@@ -797,6 +977,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.set_translatable_textes()
         #self.add_subdialog_buttons#already done, just to refresh translation
         self.set_ro_and_color()
+        self.set_fonts()
    
         
     def show_hide_hop_duration(self):
@@ -878,7 +1059,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             #print (str(h.hop))
             #print(str(h.usage))
             #print(str(h.hop_rate))   
-            self.set_hop_view(hop, h.usage, h.duration,h.hop_rate)     
+            self.add_hop_view(hop, h.usage, h.duration,h.hop_rate)     
                
     def update_yeast_view(self,recipe):
         self.util.clearLayout(self.yeast_layout)

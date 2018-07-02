@@ -37,17 +37,18 @@ FIELD_DEFAULT_COLORS={
 MAIN_COMBO_SELECTION_STYLE="selection-background-color:rgba(0,255,255); color: black;"
 
 
-#EDITABLE_STYLE="color: #F3D3E9; background-color: pink;"
+'All styleSheet must avoid setting font size in order to not interfer with general size policy'
+
 OPTIONAL_EDITABLE_STYLE="color: rgba(255,0,0); background-color: violet;"
 READ_ONLY_STYLE="color: rgb(0, 0, 0);background-color: rgb(230,230,230);"
 MIN_MAX_ALLOWED_STYLE="color: rgb(255, 0, 0);background-color: orange;"
 MIN_MAX_ADVISED_STYLE="color: rgb(0, 120, 0);background-color: rgba(0,255,0,50);"
-BUTTON_DELETE_STYLE="font-size: 14px;color: 'red';background-color: rgb(230,230,230);font-weight: bold; "
+BUTTON_DELETE_STYLE="color: 'red';background-color: rgb(230,230,230);font-weight: bold; "
 EDIT_ALERTE_STYLE="background-color: red; color: white;"
 EDIT_NORMAL_STYLE="background-color: white; color: black;"
-EDIT_CALCULATED_STYLE="font-size: 14px;color: 'green';background-color: orange;font-weight: bold; "
-WARNING_STYLE="font-size: 14px;color: 'green';background-color: rgb(255,153,0);font-weight: bold; "
-QUESTION_BUTTON_STYLE='font-size: 14px; font-weight: bold'
+EDIT_CALCULATED_STYLE="color: 'green';background-color: orange;font-weight: bold; "
+WARNING_STYLE="color: 'green';background-color: rgb(255,153,0);font-weight: bold; "
+QUESTION_BUTTON_STYLE=' font-weight: bold'
 CUSTOM_LABEL_STYLE="color: green; font-style:oblique"
 ORIGINAL_GRAVITY_ALERT='texte à traduire'
 
@@ -106,12 +107,12 @@ FIELD_LABEL_FONT_W_SMALL=QFont('Helvetica',11,QFont.Normal)
 TITLE_SLANTED_FONT_W_SMALL=QFont('Helvetica',12,QFont.Normal,True)
 BIG_TITLE_FONT_W_SMALL=QFont('Helvetica',16,QFont.Bold)
 VERY_BIG_TITLE_FONT_W_SMALL=QFont('Helvetica',20,QFont.Normal,True)
-FONT_SET_W_SMALL=FontSet('tiny',[TITLE_FONT_W_SMALL,
-                                  BUTTON_FONT_W_SMALL,
-                                  FIELD_LABEL_FONT_W_SMALL,
-                                  TITLE_SLANTED_FONT_W_SMALL,
-                                  BIG_TITLE_FONT_W_SMALL,
-                                  VERY_BIG_TITLE_FONT_W_SMALL]) 
+FONT_SET_W_SMALL={'title':TITLE_FONT_W_SMALL,
+                 'button':BUTTON_FONT_W_SMALL,
+                 'field':FIELD_LABEL_FONT_W_SMALL,
+                 'title_slanted':TITLE_SLANTED_FONT_W_SMALL,
+                 'big_title':BIG_TITLE_FONT_W_SMALL,
+                 'very_big_title':VERY_BIG_TITLE_FONT_W_SMALL} 
 
 'SMALL LINUX'
 
@@ -122,12 +123,12 @@ FIELD_LABEL_FONT_L_SMALL=QFont('FreeSans',11,QFont.Normal)
 TITLE_SLANTED_FONT_L_SMALL=QFont('FreeSans',12,QFont.Normal,True)
 BIG_TITLE_FONT_L_SMALL=QFont('FreeSans',16,QFont.Bold)
 VERY_BIG_TITLE_FONT_L_SMALL=QFont('FreeSans',20,QFont.Normal,True)
-FONT_SET_L_SMALL=FontSet('tiny',[TITLE_FONT_L_SMALL,
-                                  BUTTON_FONT_L_SMALL,
-                                  FIELD_LABEL_FONT_L_SMALL,
-                                  TITLE_SLANTED_FONT_L_SMALL,
-                                  BIG_TITLE_FONT_L_SMALL,
-                                  VERY_BIG_TITLE_FONT_W_SMALL])
+FONT_SET_L_SMALL={'title':TITLE_FONT_L_SMALL,
+                 'button':BUTTON_FONT_L_SMALL,
+                 'field':FIELD_LABEL_FONT_L_SMALL,
+                 'title_slanted':TITLE_SLANTED_FONT_L_SMALL,
+                 'big_title':BIG_TITLE_FONT_L_SMALL,
+                 'very_big_title':VERY_BIG_TITLE_FONT_L_SMALL}  
 
 'BIG WINDOWS'
 
@@ -139,12 +140,13 @@ FIELD_LABEL_FONT_W_BIG=QFont('Helvetica',12,QFont.Normal)
 TITLE_SLANTED_FONT_W_BIG=QFont('Helvetica',13,QFont.Normal,True)
 BIG_TITLE_FONT_W_BIG=QFont('Helvetica',18,QFont.Bold)
 VERY_BIG_TITLE_FONT_W_BIG=QFont('Helvetica',22,QFont.Normal,True)
-FONT_SET_W_BIG=FontSet('tiny',[TITLE_FONT_W_BIG,
-                                  BUTTON_FONT_W_BIG,
-                                  FIELD_LABEL_FONT_W_BIG,
-                                  TITLE_SLANTED_FONT_W_BIG,
-                                  BIG_TITLE_FONT_W_BIG,
-                                  VERY_BIG_TITLE_FONT_W_BIG]) 
+FONT_SET_W_BIG={'title':TITLE_FONT_W_BIG,
+                 'button':BUTTON_FONT_W_BIG,
+                 'field':FIELD_LABEL_FONT_W_BIG,
+                 'title_slanted':TITLE_SLANTED_FONT_W_BIG,
+                 'big_title':BIG_TITLE_FONT_W_BIG,
+                 'very_big_title':VERY_BIG_TITLE_FONT_W_BIG} 
+
 
 'BIG LINUX'
 
@@ -155,13 +157,12 @@ FIELD_LABEL_FONT_L_BIG=QFont('FreeSans',12,QFont.Normal)
 TITLE_SLANTED_FONT_L_BIG=QFont('FreeSans',13,QFont.Normal,True)
 BIG_TITLE_FONT_L_BIG=QFont('FreeSans',18,QFont.Bold)
 VERY_BIG_TITLE_FONT_L_BIG=QFont('FreeSans',22,QFont.Normal,True)
-FONT_SET_L_BIG=FontSet('tiny',[TITLE_FONT_L_BIG,
-                                  BUTTON_FONT_L_BIG,
-                                  FIELD_LABEL_FONT_L_BIG,
-                                  TITLE_SLANTED_FONT_L_BIG,
-                                  BIG_TITLE_FONT_L_BIG,
-                                  VERY_BIG_TITLE_FONT_L_BIG]) 
-
+FONT_SET_L_BIG={'title':TITLE_FONT_L_BIG,
+                 'button':BUTTON_FONT_L_BIG,
+                 'field':FIELD_LABEL_FONT_L_BIG,
+                 'title_slanted':TITLE_SLANTED_FONT_L_BIG,
+                 'big_title':BIG_TITLE_FONT_L_BIG,
+                 'very_big_title':VERY_BIG_TITLE_FONT_L_BIG}  
 'HUGE WINDOWS'
 
 'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
@@ -171,12 +172,12 @@ FIELD_LABEL_FONT_W_HUGE=QFont('Helvetica',14,QFont.Normal)
 TITLE_SLANTED_FONT_W_HUGE=QFont('Helvetica',16,QFont.Normal,True)
 BIG_TITLE_FONT_W_HUGE=QFont('Helvetica',20,QFont.Bold)
 VERY_BIG_TITLE_FONT_W_HUGE=QFont('Helvetica',24,QFont.Normal,True)
-FONT_SET_W_HUGE=FontSet('tiny',[TITLE_FONT_W_HUGE,
-                                  BUTTON_FONT_W_HUGE,
-                                  FIELD_LABEL_FONT_W_HUGE,
-                                  TITLE_SLANTED_FONT_W_HUGE,
-                                  BIG_TITLE_FONT_W_HUGE,
-                                  VERY_BIG_TITLE_FONT_W_HUGE]) 
+FONT_SET_W_HUGE={'title':TITLE_FONT_W_HUGE,
+                 'button':BUTTON_FONT_W_HUGE,
+                 'field':FIELD_LABEL_FONT_W_HUGE,
+                 'title_slanted':TITLE_SLANTED_FONT_W_HUGE,
+                 'big_title':BIG_TITLE_FONT_W_HUGE,
+                 'very_big_title':VERY_BIG_TITLE_FONT_W_HUGE} 
 
 'HUGE LINUX'
 
@@ -187,12 +188,15 @@ FIELD_LABEL_FONT_L_HUGE=QFont('FreeSans',14,QFont.Normal)
 TITLE_SLANTED_FONT_L_HUGE=QFont('FreeSans',16,QFont.Normal,True)
 BIG_TITLE_FONT_L_HUGE=QFont('FreeSans',20,QFont.Bold)
 VERY_BIG_TITLE_FONT_L_HUGE=QFont('FreeSans',24,QFont.Normal,True)
-FONT_SET_L_HUGE=FontSet('tiny',[TITLE_FONT_L_HUGE,
-                                  BUTTON_FONT_L_HUGE,
-                                  FIELD_LABEL_FONT_L_HUGE,
-                                  TITLE_SLANTED_FONT_L_HUGE,
-                                  BIG_TITLE_FONT_L_HUGE,
-                                  VERY_BIG_TITLE_FONT_L_HUGE]) 
+FONT_SET_L_HUGE={'title':TITLE_FONT_L_HUGE,
+                 'button':BUTTON_FONT_L_HUGE,
+                 'field':FIELD_LABEL_FONT_L_HUGE,
+                 'title_slanted':TITLE_SLANTED_FONT_L_HUGE,
+                 'big_title':BIG_TITLE_FONT_L_HUGE,
+                 'very_big_title':VERY_BIG_TITLE_FONT_W_TINY}  
+
+
+
 
 
 

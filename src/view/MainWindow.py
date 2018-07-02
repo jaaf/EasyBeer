@@ -40,6 +40,7 @@ from doc.Documentation import Documentation
 from view.FolderChooser import FolderChooser
 from view.ImportExportDb import ImportExportDb
 from model.FontSet import FontSet
+from PyQt5.QtGui import QFont
 
      
 import sys
@@ -60,13 +61,10 @@ from PyQt5.Qt import QSpacerItem, QEvent
 from PyQt5.QtWidgets import QFileDialog
 
 
-
-
 class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
     '''
     classdocs
     '''
-    
     def __init__(self, translator,parent=None):
         super(MainWindow,self).__init__(parent)
         self.setupUi(self)
@@ -132,8 +130,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         
        
   
-    def save_hop(self,hop,usage=None,duration=None,hop_rate=None):
-        #print('dans save_hop hop_rate='+str(hop_rate))
+    def add_hop_view(self,hop,usage=None,duration=None,hop_rate=None):
         hopT=hop
         hl=QHBoxLayout()
         
@@ -151,8 +148,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         hl.addWidget(label_desc)
 
         label_usage=QLabel()
-        label_usage.setAccessibleName('usage')  
-        #print('dans save_hop : usage= '+usage)      
+        label_usage.setAccessibleName('usage')       
         label_usage.setText(usage)
         label_usage.setFixedWidth(100)
         hl.addWidget(label_usage)
@@ -165,12 +161,18 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         hl.addWidget(label_duration)    
    
         #other usage do not need time
+        time_label=QLabel()
+        time_label.setAccessibleName('time_unit')
+        
         if usage == 'Boil hopping' :
-            hl.addWidget(QLabel('min.'))#4for unit
+            time_label.setText('min')
+            hl.addWidget(time_label)#4for unit
         else:
-            hl.addWidget(QLabel(''))#4for unit   
+            time_label.setText('')
+            hl.addWidget(time_label)#4for unit   
            
         label_advised_amount=QLabel(self.tr('Advised by recipe'))
+        label_advised_amount.setAccessibleName('advised_label')
         label_advised_amount.setAlignment(Qt.Qt.AlignRight)
         hl.addWidget(label_advised_amount)
                        
@@ -181,10 +183,14 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         edit_advised_amount.setMaximumSize(50,30)
        
         hl.addWidget(edit_advised_amount)
-        hl.addWidget(QLabel('g'))
+        advised_amount_unit_label=QLabel()
+        advised_amount_unit_label.setAccessibleName('advised_unit')
+        advised_amount_unit_label.setText('g')
+        hl.addWidget(advised_amount_unit_label)
         
         'the amount the user decides to use'
         label_amount=QLabel(self.tr('Adopted'))
+        label_amount.setAccessibleName('amount_label')
         label_amount.setAlignment(Qt.Qt.AlignRight)
         hl.addWidget(label_amount)
         edit_amount=QLineEdit()
@@ -203,7 +209,9 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         edit_amount.editingFinished.connect(self.calculate_IBU)
         hl.addWidget(edit_amount)
         
-        hl.addWidget(QLabel('g'))#6 for weight unit
+        weight_unit_label=QLabel()
+        weight_unit_label.setText('g')
+        hl.addWidget(weight_unit_label)#6 for weight unit
         
         label_calculated_IBU=QLabel()
         label_calculated_IBU.setAccessibleName('calculated_IBU')
@@ -216,6 +224,19 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         label_hidden_alpha.setText(str(hopT.alpha_acid))
         hl.addWidget(label_hidden_alpha)
         label_hidden_alpha.hide()
+        
+        label_name.setFont(self.model.in_use_fonts['field'])
+        label_desc.setFont(self.model.in_use_fonts['field'])
+        label_usage.setFont(self.model.in_use_fonts['field'])
+        label_duration.setFont(self.model.in_use_fonts['field'])
+        time_label.setFont(self.model.in_use_fonts['field'])
+        advised_amount_unit_label.setFont(self.model.in_use_fonts['field'])
+        label_advised_amount.setFont(self.model.in_use_fonts['field'])
+        edit_advised_amount.setFont(self.model.in_use_fonts['field'])
+        label_amount.setFont(self.model.in_use_fonts['field'])
+        edit_amount.setFont(self.model.in_use_fonts['field'])
+        weight_unit_label.setFont(self.model.in_use_fonts['field'])
+        label_calculated_IBU.setFont(self.model.in_use_fonts['field'])
 
         self.hop_layout.addLayout(hl)
         
@@ -246,9 +267,11 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             edit_percentage.setText(str(percent))
         hl.addWidget(edit_percentage)    
         
-        label_percentage_unit=QLabel('%')
+        label_percentage_unit=QLabel()
+        label_percentage_unit.setText('%')
+        label_percentage_unit.setAccessibleName('percentage_unit')
         label_percentage_unit.setMaximumSize(30,30)
-        label_percentage_unit.setStyleSheet("font-size: 14px;")
+        #label_percentage_unit.setStyleSheet("font-size: 14px;")
         hl.addWidget(label_percentage_unit)
         
         edit_calculated_mass=QLineEdit()
@@ -258,18 +281,259 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         edit_calculated_mass.setReadOnly(True)  
         hl.addWidget(edit_calculated_mass)
         
-        label_mass_unit=QLabel('kg')
-        label_mass_unit.setStyleSheet("font-size: 14px;")
+        label_mass_unit=QLabel()
+        label_mass_unit.setText('kg')
+        label_mass_unit.setAccessibleName('calculated_mass_unit')
+        #label_mass_unit.setStyleSheet("font-size: 14px;")
         label_mass_unit.setMaximumSize(40,30)
         hl.addWidget(label_mass_unit)
+        
+        edit_name.setFont(self.model.in_use_fonts['field'])
+        edit_percentage.setFont(self.model.in_use_fonts['field'])
+        label_percentage_unit.setFont(self.model.in_use_fonts['field'])
+        edit_calculated_mass.setFont(self.model.in_use_fonts['field'])
+        label_mass_unit.setFont(self.model.in_use_fonts['field'])
               
         self.malt_layout.addLayout(hl)
+        
+    def add_yeast_view(self,yeast_type,rate=None,creation_mode=True):  
+        self.util.clearLayout(self.yeast_layout)
+        yeastT=yeast_type
+        hl=QHBoxLayout()#create an horizontal layout to host widgets for the yeast
+        
+        maker_edit=QLineEdit()
+        maker_edit.setAccessibleName('maker')
+        maker_edit.setMinimumSize(100,30)
+        maker_edit.setMaximumSize(100,30)
+        maker_edit.setStyleSheet(sty.field_styles['read_only'])
+        maker_edit.setReadOnly(True)
+        maker_edit.setText(yeastT.maker)
+        hl.addWidget(maker_edit)
+        
+        name_edit=QLineEdit()
+        name_edit.setAccessibleName('name')
+        name_edit.setMinimumSize(200,30)
+        name_edit.setMaximumSize(200,30)
+        name_edit.setStyleSheet(sty.field_styles['read_only'])
+        name_edit.setReadOnly(True)
+        name_edit.setText(yeastT.name)
+        hl.addWidget(name_edit)
+        
+        form_edit=QLineEdit()
+        form_edit.setAccessibleName('form')
+        form_edit.setMinimumSize(70,30)
+        form_edit.setMaximumSize(70,30)
+        form_edit.setStyleSheet(sty.field_styles['read_only'])
+        form_edit.setReadOnly(True)
+        form_edit.setText(yeastT.form)
+        hl.addWidget(form_edit)
+        hl.addStretch()
+        
+        vl1=QVBoxLayout()
+        temp_label=QLabel(self.tr('Temperature range'),alignment=4)
+        temp_label.setAccessibleName('temperature_label')
+        vl1.addWidget(temp_label)
+        hl1=QHBoxLayout()
+        min_allowed_temperature_edit=QLineEdit()
+        min_allowed_temperature_edit.setAccessibleName('min_allowed_temperature')
+        min_allowed_temperature_edit.setMinimumSize(50,30)
+        min_allowed_temperature_edit.setMaximumSize(50,30)
+        min_allowed_temperature_edit.setStyleSheet(sty.field_styles['min_max_allowed'])
+        min_allowed_temperature_edit.setReadOnly(True)
+        min_allowed_temperature_edit.setText(str(yeastT.min_allowed_temperature))
+        hl1.addWidget(min_allowed_temperature_edit)
+        
+        min_advised_temperature_edit=QLineEdit()
+        min_advised_temperature_edit.setAccessibleName('min_advised_temperature')
+        min_advised_temperature_edit.setMinimumSize(50,30)
+        min_advised_temperature_edit.setMaximumSize(50,30)
+        min_advised_temperature_edit.setStyleSheet(sty.field_styles['min_max_advised'])
+        min_advised_temperature_edit.setReadOnly(True)
+        min_advised_temperature_edit.setText(str(yeastT.min_advised_temperature))
+        hl1.addWidget(min_advised_temperature_edit)
+        
+        max_advised_temperature_edit=QLineEdit()
+        max_advised_temperature_edit.setAccessibleName('max_advised_temperature')
+        max_advised_temperature_edit.setMinimumSize(50,30)
+        max_advised_temperature_edit.setMaximumSize(50,30)
+        max_advised_temperature_edit.setStyleSheet(sty.field_styles['min_max_advised'])
+        max_advised_temperature_edit.setReadOnly(True)
+        max_advised_temperature_edit.setText(str(yeastT.max_advised_temperature))
+        hl1.addWidget(max_advised_temperature_edit)
+        
+        max_allowed_temperature_edit=QLineEdit()
+        max_allowed_temperature_edit.setAccessibleName('max_allowed_temperature')
+        max_allowed_temperature_edit.setMinimumSize(50,30)
+        max_allowed_temperature_edit.setMaximumSize(50,30)
+        max_allowed_temperature_edit.setStyleSheet(sty.field_styles['min_max_allowed'])
+        max_allowed_temperature_edit.setReadOnly(True)
+        max_allowed_temperature_edit.setText(str(yeastT.max_allowed_temperature))
+        hl1.addWidget(max_allowed_temperature_edit)
+        vl1.addLayout(hl1)
+        vl1.addStretch()
+        hl.addLayout(vl1)
+        hl.addStretch()
+        
+        vl2=QVBoxLayout()
+        if creation_mode:
+            hl21=QHBoxLayout()
+            hl22=QHBoxLayout()
+            hl23=QHBoxLayout()
+            pitch_label=QLabel('',alignment=4)
+            pitch_label.setText(self.tr('Recommended Pitching rate'))
+            pitch_label.setAccessibleName('recommended_pitching_label')
+            hl21.addWidget(pitch_label)
+            calculate_amount_button=QPushButton(self.tr('Calculate'))
+            calculate_amount_button.setAccessibleName('calculate_button')
+            calculate_amount_button.setMaximumSize(120, 30)
+            calculate_amount_button.clicked.connect(self.calculate_yeast_amount)
+            hl21.addWidget(calculate_amount_button)
+            vl2.addLayout(hl21)
+        
+            rate_edit=QLineEdit()
+            rate_edit.setAccessibleName('rate')
+            rate_edit.setMaximumSize(60,30)
+            rate_edit.setStyleSheet(sty.field_styles['read_only'])
+            hl22.addWidget(rate_edit)
+            if rate:
+                rate_edit.setText(str(rate))
+        
+            rate_unit=QLabel('billions/°P/liter')   
+            rate_unit.setAccessibleName('rate_unit')
+            #rate_unit.setMaximumSize(100,30)
+            #rate_unit.setStyleSheet("font-size: 14px;")
+            hl22.addWidget(rate_unit) 
+            calculated_amount_edit=QLineEdit()
+            calculated_amount_edit.setAccessibleName('calculated_amount')
+            calculated_amount_edit.setStyleSheet(sty.field_styles['calculated'])
+            calculated_amount_edit.setReadOnly(True)
+            calculated_amount_edit.setMaximumSize(60,30)
+            hl22.addWidget(calculated_amount_edit)
+            calculated_amount_unit=QLabel()
+            calculated_amount_unit.setAccessibleName('calculated_amount_unit')
+            calculated_amount_unit.setText('g')
+            calculated_amount_unit.setMaximumSize(30,30)
+            hl22.addWidget(calculated_amount_unit) 
+
+            vl2.addLayout(hl22)
+            #4 lines to add an horizontal separator
+            hline=QFrame()
+            hline.setFrameShape(QFrame.HLine)
+            hline.setFrameShadow(QFrame.Sunken)
+            vl2.addWidget(hline)
+            adopted_pitch_label=QLabel('',alignment=4)
+            adopted_pitch_label.setAccessibleName('adopted_pitching_label')
+            adopted_pitch_label.setText(self.tr('Adopted Pitching rate'))
+            vl2.addWidget(adopted_pitch_label)
+            calculated_rate_edit=QLineEdit()
+            calculated_rate_edit.setAccessibleName('calculated_pitching_rate')
+            calculated_rate_edit.setMaximumSize(60,30)
+            calculated_rate_edit.setStyleSheet(sty.field_styles['calculated'])
+            calculated_rate_edit.setReadOnly(True)
+            hl23.addWidget(calculated_rate_edit)
+            calculated_rate_unit=QLabel()
+            calculated_rate_unit.setText('billions/°P/liter')
+            calculated_rate_unit.setAccessibleName('calculated_rate_unit')
+            #calculated_rate_unit.setMaximumSize(100,30)
+            #calculated_rate_unit.setStyleSheet("font-size: 14px")
+            hl23.addWidget(calculated_rate_unit)
+            adopted_amount_edit=QLineEdit()
+            adopted_amount_edit.setAccessibleName('adopted_amount')
+            adopted_amount_edit.setStyleSheet(sty.field_styles['read_only'])
+            adopted_amount_edit.setReadOnly(True)
+            adopted_amount_edit.editingFinished.connect(self.calculate_adopted_pitching_rate)
+            adopted_amount_edit.setMaximumSize(60,30)
+            hl23.addWidget(adopted_amount_edit)
+            adopted_amount_unit=QLabel()
+            adopted_amount_unit.setAccessibleName('adopted_amount_unit')
+            adopted_amount_unit.setText('g')
+            adopted_amount_unit.setMaximumSize(30,30)
+      
+            hl23.addWidget(adopted_amount_unit) 
+        
+            vl2.addLayout(hl23)
+        else:
+            hl23=QHBoxLayout()
+            adopted_pitch_label=QLabel(self.tr('Adopted Pitching rate'),alignment=4)
+            vl2.addWidget(adopted_pitch_label)
+            calculated_rate_edit=QLineEdit()
+            calculated_rate_edit.setAccessibleName('calculated_pitching_rate')
+            calculated_rate_edit.setMaximumSize(60,30)
+            calculated_rate_edit.setStyleSheet(sty.field_styles['read_only'])
+            calculated_rate_edit.setReadOnly(True)
+            hl23.addWidget(calculated_rate_edit)
+            calculated_rate_unit=QLabel()
+            calculated_rate_unit.setText('billions/°P/liter')
+            calculated_rate_unit.setAccessibleName('calculated_rate_unit')
+            #calculated_rate_unit.setStyleSheet("font-size: 14px")
+            hl23.addWidget(calculated_rate_unit)
+            adopted_amount_edit=QLineEdit()
+            adopted_amount_edit.setAccessibleName('adopted_amount')
+            adopted_amount_edit.setStyleSheet(sty.field_styles['read_only'])
+            adopted_amount_edit.setReadOnly(True)
+            adopted_amount_edit.editingFinished.connect(self.calculate_adopted_pitching_rate)
+            adopted_amount_edit.setMaximumSize(60,30)
+            hl23.addWidget(adopted_amount_edit)
+            adopted_amount_unit=QLabel()
+            adopted_amount_unit.setAccessibleName('adopted_amount_unit')
+            adopted_amount_unit.setText('g')
+            adopted_amount_unit.setMaximumSize(30,30)
+      
+            hl23.addWidget(adopted_amount_unit) 
+        
+            vl2.addLayout(hl23)  
+
+        hl.addLayout(vl2)
+        hl.addStretch()
+        
+        maker_edit.setFont(self.model.in_use_fonts['field'])
+        name_edit.setFont(self.model.in_use_fonts['field'])
+        form_edit.setFont(self.model.in_use_fonts['field'])
+        temp_label.setFont(self.model.in_use_fonts['field'])
+        min_advised_temperature_edit.setFont(self.model.in_use_fonts['field'])
+        max_advised_temperature_edit.setFont(self.model.in_use_fonts['field'])
+        min_allowed_temperature_edit.setFont(self.model.in_use_fonts['field'])
+        max_allowed_temperature_edit.setFont(self.model.in_use_fonts['field'])
+        pitch_label.setFont(self.model.in_use_fonts['field'])
+        calculate_amount_button.setFont(self.model.in_use_fonts['button'])
+        rate_edit.setFont(self.model.in_use_fonts['field'])
+        rate_unit.setFont(self.model.in_use_fonts['field'])
+        calculated_amount_edit.setFont(self.model.in_use_fonts['field'])
+        calculated_amount_unit.setFont(self.model.in_use_fonts['field'])
+        adopted_amount_edit.setFont(self.model.in_use_fonts['field'])
+        adopted_amount_unit.setFont(self.model.in_use_fonts['field'])
+        calculated_rate_unit.setFont(self.model.in_use_fonts['field'])
+        adopted_pitch_label.setFont(self.model.in_use_fonts['field'])
+        rate_unit.setFont(self.model.in_use_fonts['field'])
+        calculated_rate_unit.setFont(self.model.in_use_fonts['field'])
+        
+        self.yeast_layout.addLayout(hl)   
      
           
         
     def batch_volume_changed(self): 
         self.clean_results()
-        self.set_aroma_amounts()   
+        self.set_aroma_amounts() 
+        
+        
+    def calculate_adopted_pitching_rate(self):
+        batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1, 100) 
+        if not batch_volume:#alert is given in check_input
+            return
+        original_gravity=self.util.check_input(self.targeted_original_gravity_value,False,self.tr('Targeted Original Gravity'),False,1.000,1.110 )
+        if not original_gravity:#alert is given in check_input
+            return
+        widgt=self.util.get_by_name_recursive(self.yeast_layout,'adopted_amount')
+        a = self.util.check_input(widgt,False,self.tr('Adopted yeast Amount'),False, 0,100)
+        if not a: return
+        advised_rate= self.recipe.yeast_in_recipe.pitching_rate
+        billions=a *100/11
+        platos=(original_gravity -1)*1000/4
+        pitching_rate=  billions / batch_volume / platos
+        val='{0:.2f}'.format(pitching_rate)
+        calculated_p_rate_edit=self.util.get_by_name_recursive(self.yeast_layout,'calculated_pitching_rate')
+        calculated_p_rate_edit.setText(val)
+        self.update_pitching_bar(advised_rate,pitching_rate)      
         
     def calculate_hop_amounts(self): 
         'calculate hop amounts based on hop rate (g/l) and final boiling volume'  
@@ -301,51 +565,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             w_amount.setText(display_value)
             self.calculate_IBU(w_amount)
         
-    def calculate_malt_amounts(self):
-        'calculate malt amounts based on percentages and gravity target'
-        'This function is called after a recipe, an equipment, a batch size and a grain temperature have been defined'
-        'whenever the user click the calculate button in the malt area of the main window'
-        
-        self.set_input_style()
-        warning_text=self.tr('Warning : Malt Amount Calculation')
-        
-        if not self.recipe:
-            self.util.alerte(self.tr('Please select a recipe'),QMessageBox.Warning, warning_text)
-            return
-        if not self.equipment:
-            self.util.alerte(self.tr('Please select an equipment'),QMessageBox.Warning, warning_text)
-        self.batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1, 100) 
-        if not self.batch_volume: return 
-        self.grain_temperature = self.util.check_input(self.grain_temperature_edit, False, 'Grain temperature', False, 0,35) 
-        if not self.grain_temperature: return
-        
-        first_rest=self.rest_layout.itemAt(0)
-        if first_rest:
-            self.first_rest_temperature = float(first_rest.itemAt(3).widget().text())                                                    
-        else:
-            self.util.alerte('There should be at least one rest. Please select a recipe or check the recipe you have selected',
-                             QMessageBox.Warning,warning_text)    
- 
-        calculator=Calculator(self.model,self.recipe,self.equipment,self.batch_volume,self.boiling_time)
-        total_mass=calculator.get_malt_mass()
-        
-        for i in range(len(self.malts)):
-            w_percentage=self.util.get_by_name(self.malt_layout.itemAt(i).layout(),'percentage')
-            amount=total_mass*float(w_percentage.text())/100
-            w_calculated_mass=self.util.get_by_name(self.malt_layout.itemAt(i).layout(),'calculated_mass')
-            w_calculated_mass.setText(str(float(math.ceil(amount*100)/100)))
 
-        if self.equipment.type == 1: self.mash_water_volume = calculator.get_mash_water_volume(1)
-        if self.equipment.type == 0: self.mash_water_volume  = calculator.get_mash_water_volume(0)
-        val='{0:.2f}'.format(self.mash_water_volume)
-        self.mash_water_volume_edit.setText(val)
-        strike_temperature = calculator.get_strike_temperature(self.mash_water_volume, total_mass, \
-                            self.first_rest_temperature, self.grain_temperature)
-        val='{0:.1f}'.format(strike_temperature)
-        self.strike_temperature_edit.setText(val)
-        self.sparge_water_volume = calculator.get_sparge_water_volume(self.mash_water_volume)
-        val ='{0:.2f}'.format(self.sparge_water_volume)
-        self.mash_sparge_water_volume_edit.setText(str(val))
  
     def calculate_IBU(self,s=None):
         #print('Entering calculate_IBU')
@@ -436,6 +656,52 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         f_G=1.65 * (0.000125 **(gravity-1))
         return (10 / final_volume) * amount * f_G * f_t * alpha  
         
+        
+    def calculate_malt_amounts(self):
+        'calculate malt amounts based on percentages and gravity target'
+        'This function is called after a recipe, an equipment, a batch size and a grain temperature have been defined'
+        'whenever the user click the calculate button in the malt area of the main window'
+        
+        self.set_input_style()
+        warning_text=self.tr('Warning : Malt Amount Calculation')
+        
+        if not self.recipe:
+            self.util.alerte(self.tr('Please select a recipe'),QMessageBox.Warning, warning_text)
+            return
+        if not self.equipment:
+            self.util.alerte(self.tr('Please select an equipment'),QMessageBox.Warning, warning_text)
+        self.batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1, 100) 
+        if not self.batch_volume: return 
+        self.grain_temperature = self.util.check_input(self.grain_temperature_edit, False, 'Grain temperature', False, 0,35) 
+        if not self.grain_temperature: return
+        
+        first_rest=self.rest_layout.itemAt(0)
+        if first_rest:
+            self.first_rest_temperature = float(first_rest.itemAt(3).widget().text())                                                    
+        else:
+            self.util.alerte('There should be at least one rest. Please select a recipe or check the recipe you have selected',
+                             QMessageBox.Warning,warning_text)    
+ 
+        calculator=Calculator(self.model,self.recipe,self.equipment,self.batch_volume,self.boiling_time)
+        total_mass=calculator.get_malt_mass()
+        
+        for i in range(len(self.malts)):
+            w_percentage=self.util.get_by_name(self.malt_layout.itemAt(i).layout(),'percentage')
+            amount=total_mass*float(w_percentage.text())/100
+            w_calculated_mass=self.util.get_by_name(self.malt_layout.itemAt(i).layout(),'calculated_mass')
+            w_calculated_mass.setText(str(float(math.ceil(amount*100)/100)))
+
+        if self.equipment.type == 1: self.mash_water_volume = calculator.get_mash_water_volume(1)
+        if self.equipment.type == 0: self.mash_water_volume  = calculator.get_mash_water_volume(0)
+        val='{0:.2f}'.format(self.mash_water_volume)
+        self.mash_water_volume_edit.setText(val)
+        strike_temperature = calculator.get_strike_temperature(self.mash_water_volume, total_mass, \
+                            self.first_rest_temperature, self.grain_temperature)
+        val='{0:.1f}'.format(strike_temperature)
+        self.strike_temperature_edit.setText(val)
+        self.sparge_water_volume = calculator.get_sparge_water_volume(self.mash_water_volume)
+        val ='{0:.2f}'.format(self.sparge_water_volume)
+        self.mash_sparge_water_volume_edit.setText(str(val))    
     def calculate_yeast_amount(self):
         batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1, 100) 
         if not batch_volume:#alert is given in check_input
@@ -459,24 +725,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.calculate_adopted_pitching_rate()
         
         
-    def calculate_adopted_pitching_rate(self):
-        batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1, 100) 
-        if not batch_volume:#alert is given in check_input
-            return
-        original_gravity=self.util.check_input(self.targeted_original_gravity_value,False,self.tr('Targeted Original Gravity'),False,1.000,1.110 )
-        if not original_gravity:#alert is given in check_input
-            return
-        widgt=self.util.get_by_name_recursive(self.yeast_layout,'adopted_amount')
-        a = self.util.check_input(widgt,False,self.tr('Adopted yeast Amount'),False, 0,100)
-        if not a: return
-        advised_rate= self.recipe.yeast_in_recipe.pitching_rate
-        billions=a *100/11
-        platos=(original_gravity -1)*1000/4
-        pitching_rate=  billions / batch_volume / platos
-        val='{0:.2f}'.format(pitching_rate)
-        calculated_p_rate_edit=self.util.get_by_name_recursive(self.yeast_layout,'calculated_pitching_rate')
-        calculated_p_rate_edit.setText(val)
-        self.update_pitching_bar(advised_rate,pitching_rate)   
+       
         
     def changeEvent(self, event):
         #print('change event')
@@ -485,17 +734,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             #print('Event is lang change')
             
             self.retranslateUi(self)
-        
-    def clear_layouts(self):
-        print('clearing mal layout')
-        self.util.clearLayout(self.malt_layout)
-        print('clearing hop layout')
-        self.util.clearLayout(self.hop_layout)
-        print('clearing yeast layout')
-        self.util.clearLayout(self.yeast_layout)
-        print('clearing rest layout')
-        self.util.clearLayout(self.rest_layout)
-        
+ 
     def clear_inputs(self):
         'clear the various inputs after deletion of a session '
         self.targeted_original_gravity_value.setText('')
@@ -507,7 +746,19 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.mash_sparge_water_volume_edit.setText('')
         self.strike_temperature_edit.setText('')
         self.zero_ibu_bar()
-        self.zero_pitching_bar()  
+        self.zero_pitching_bar()           
+        
+    def clear_layouts(self):
+        print('clearing mal layout')
+        self.util.clearLayout(self.malt_layout)
+        print('clearing hop layout')
+        self.util.clearLayout(self.hop_layout)
+        print('clearing yeast layout')
+        self.util.clearLayout(self.yeast_layout)
+        print('clearing rest layout')
+        self.util.clearLayout(self.rest_layout)
+        
+  
                 
     def clean_results(self):     
         for i in range(self.malt_layout.count()):
@@ -538,37 +789,8 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
     def edit_session(self):
         if self.session_combo.currentText():
             self.set_feedback_editable()
-                                 
-                                                     
-    def explain_ibu_bar(self):
-        message =self.tr('''
-        <h2>IBU bar explanation </h2>
-        <p>IBU stands for International Bitterness Unit</p>
-        <p>Before using the hop dialog the user has to select 
-        a recipe, an equipment and define the batch volume.</p>
-        
-        <p>In the hop dialog, when the users enters a quantity of
-        hop in the adopted field, the total bitterness is calculated anew.</p>
-        
-        <p>The Hop Bitterness Bar starts from 0 to twice the recipe
-        targeted bitterness. Thus the recipe targeted
-        bitterness is just in the middle of the bar and is 
-        represented by a small black rectangle.</p>
-        
-        <p>Nevertheless, the user can decide to modify the amount of 
-        hop  at any time. Then, the bitterness is 
-         recalculated and the bar updated.
-        The bar is displayed with a green background only if
-        the actual bitterness stays in the range +-10%. </p>
-        
-        <p>Only Boil hopping and First wort hopping contribute to the bitterness.
-        First Wort Hopping is hopping during the lautering and sparging of the 
-        wort. Its contribution, according to John Palmer is roughly 110% of 
-        a 60 min boil of the same amount.</p>
-        ''' 
-        ) 
-        self.util.alerte(message,QMessageBox.Information,self.tr('Info : Using the Hop dialog?'))    
-        
+    
+    
     def explain_current_brewing_session(self):
         message=self.tr('''
     <h2>Brewing session dialog explanation</h2>
@@ -604,7 +826,39 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         
         '''
         )     
-        self.util.alerte(message,QMessageBox.Information,self.tr('Info : Using the Current Brewing Session Dialog?'))     
+        self.util.alerte(message,QMessageBox.Information,self.tr('Info : Using the Current Brewing Session Dialog?'))   
+                                 
+                                                     
+    def explain_ibu_bar(self):
+        message =self.tr('''
+        <h2>IBU bar explanation </h2>
+        <p>IBU stands for International Bitterness Unit</p>
+        <p>Before using the hop dialog the user has to select 
+        a recipe, an equipment and define the batch volume.</p>
+        
+        <p>In the hop dialog, when the users enters a quantity of
+        hop in the adopted field, the total bitterness is calculated anew.</p>
+        
+        <p>The Hop Bitterness Bar starts from 0 to twice the recipe
+        targeted bitterness. Thus the recipe targeted
+        bitterness is just in the middle of the bar and is 
+        represented by a small black rectangle.</p>
+        
+        <p>Nevertheless, the user can decide to modify the amount of 
+        hop  at any time. Then, the bitterness is 
+         recalculated and the bar updated.
+        The bar is displayed with a green background only if
+        the actual bitterness stays in the range +-10%. </p>
+        
+        <p>Only Boil hopping and First wort hopping contribute to the bitterness.
+        First Wort Hopping is hopping during the lautering and sparging of the 
+        wort. Its contribution, according to John Palmer is roughly 110% of 
+        a 60 min boil of the same amount.</p>
+        ''' 
+        ) 
+        self.util.alerte(message,QMessageBox.Information,self.tr('Info : Using the Hop dialog?'))    
+        
+   
                 
     def explain_yeast_bar(self): 
         message =self.tr('''
@@ -653,7 +907,37 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         for w in widgets:
             ##print(w)
             w.hide()       
-             
+     
+    def init_dialog_and_connections(self):
+        self.actionEdit_Malt_Database.triggered.connect(self.show_malt_dialog)
+        self.actionEdit_Hop_Database.triggered.connect(self.show_hop_dialog)
+        self.actionEdit_Rest_Database.triggered.connect(self.show_rest_dialog_create)
+        self.actionEdit_Yeast_Database.triggered.connect(self.show_yeast_dialog)
+        self.actionCustomize_colors.triggered.connect(self.show_color_dialog)
+        self.actionCustomize_Font_Size.triggered.connect(self.show_font_size_dialog)
+        self.actionImport_Export_Databases.triggered.connect(self.show_import_export_dialog)
+        self.actionEdit_Recipe_Database.triggered.connect(self.show_recipe_dialog)
+        self.actionEdit_Equipment_Database.triggered.connect(self.show_equipment_dialog)
+        self.actionView_Help.triggered.connect(self.show_help)
+        self.actionFrench.triggered.connect(self.set_language_fr)
+        self.actionEnglish.triggered.connect(self.set_language_en)
+        self.actionJapanese.triggered.connect(self.set_language_jp)
+
+        
+        self.calculate_button.clicked.connect(self.calculate_malt_amounts)
+        self.hop_calculate_button.clicked.connect(self.calculate_hop_amounts)
+        self.batch_volume_edit.editingFinished.connect(self.batch_volume_changed)    
+        self.bar_button.clicked.connect(self.explain_ibu_bar)
+        self.main_help_button.clicked.connect(self.explain_current_brewing_session)
+        self.pitching_bar_button.clicked.connect(self.explain_yeast_bar)
+        self.add_button.clicked.connect(self.save_session)
+        self.new_button.clicked.connect(self.new_session)
+        self.delete_button.clicked.connect(self.remove_session)   
+        self.edit_button.clicked.connect(self.edit_session)  
+        self.feedback_save_button.clicked.connect(self.save_session_feedback)   
+        self.batch_volume_edit.editingFinished.connect(self.calculate_hop_amounts)
+        
+                 
     def init_equipment_combo(self):
         self.equipment_combo.clear()  
         self.equipment_combo.addItem('')
@@ -682,7 +966,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.model.set_in_use_fonts()    
             
        
-                
+             
                 
                 
             
@@ -749,14 +1033,14 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             for hir in self.hops:
                 hop=self.model.get_hop(hir.hop)
                 use=self.util.hop_usage_dic[hir.usage]
-                self.save_hop(hop,use,hir.duration,hir.hop_rate)
+                self.add_hop_view(hop,use,hir.duration,hir.hop_rate)
             self.targeted_bitterness_value.setText(str(self.recipe.targeted_bitterness))  
             #self.calculate_hop_amounts()
             
             #YEAST
             self.util.clearLayout(self.yeast_layout)
             yeast=self.model.get_yeast(self.recipe.yeast_in_recipe.yeast)
-            self.set_yeast_view(yeast,self.recipe.yeast_in_recipe.pitching_rate)
+            self.add_yeast_view(yeast,self.recipe.yeast_in_recipe.pitching_rate)
             if hasattr(self.recipe,'fermentation_explanation'):
                 self.fermentation_explain_edit.setPlainText(self.recipe.fermentation_explanation)
                     
@@ -859,7 +1143,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             self.util.clearLayout(self.yeast_layout)
             yeast=self.model.get_yeast(yis.name)
             if yeast: 
-                self.set_yeast_view(yeast,None,False)
+                self.add_yeast_view(yeast,None,False)
             adopted_amount=self.util.get_by_name_recursive(self.yeast_layout, 'adopted_amount')    
             if adopted_amount: 
                 adopted_amount.setText(str(session.yeast_in_session.amount))
@@ -952,7 +1236,11 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                     self.equipment_combo.setCurrentIndex(index) 
         if target == 'style':
             self.set_active_colors()
-            self.maltDialog = MaltDialog(self.model,self.controller,self.util)        
+            self.maltDialog = MaltDialog(self.model,self.controller,self.util)    
+        if target == 'fontset':
+            print( 'during model init a model change is triggered before in_use_font is created')
+            if (self.model.in_use_fonts):
+                self.set_fonts()  
                     
                     
     def remove_session(self):
@@ -963,26 +1251,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.clear_layouts()
         self.clear_inputs()
         self.hide_session_feedback()
-        
-
-    def save_session_feedback(self):
-        designation=self.designation_edit.text()
-        session=self.model.get_session(designation)
-        if not session: 
-            return
-        feedback_water_treatment_text=self.feedback_water_treatment_textedit.toPlainText()
-        session.feedback_water_treatment_text=feedback_water_treatment_text
-        feedback_mash_ph=self.util.check_input(self.feedback_mash_PH_edit_2, False, self.tr('Feedback Mash PH'), True, 3, 7)
-        session.feedback_mash_ph=feedback_mash_ph
-        feedback_preboil_volume=self.util.check_input(self.feedback_preboil_volume_edit_2, False, self.tr('Feedback Preboil Volume'), True, 0, 100)
-        session.feedback_preboil_volume=feedback_preboil_volume
-        feedback_original_gravity=self.util.check_input(self.feedback_original_gravity_edit_2, False, self.tr('Feedback Original Gravity'), True, 1, 2)
-        session.feedback_original_gravity=feedback_original_gravity
-        feedback_fermentor_volume=self.util.check_input(self.feedback_fermentor_volume_edit, False, self.tr('Feedback Fermentor Volume'), True, 0, 100)
-        session.feedback_fermentor_volume=feedback_fermentor_volume
-        self.model.save_session(session)
-        self.show_session_feedback() #to get back to non editable state
-
+                
         
     def save_session(self):
         recipe=self.recipe_combo.currentText()
@@ -1103,7 +1372,100 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         if index >= 0:
             self.session_combo.setCurrentIndex(index)
             
-        #print('Session has been saved')    
+    def save_session_feedback(self):
+        designation=self.designation_edit.text()
+        session=self.model.get_session(designation)
+        if not session: 
+            return
+        feedback_water_treatment_text=self.feedback_water_treatment_textedit.toPlainText()
+        session.feedback_water_treatment_text=feedback_water_treatment_text
+        feedback_mash_ph=self.util.check_input(self.feedback_mash_PH_edit_2, False, self.tr('Feedback Mash PH'), True, 3, 7)
+        session.feedback_mash_ph=feedback_mash_ph
+        feedback_preboil_volume=self.util.check_input(self.feedback_preboil_volume_edit_2, False, self.tr('Feedback Preboil Volume'), True, 0, 100)
+        session.feedback_preboil_volume=feedback_preboil_volume
+        feedback_original_gravity=self.util.check_input(self.feedback_original_gravity_edit_2, False, self.tr('Feedback Original Gravity'), True, 1, 2)
+        session.feedback_original_gravity=feedback_original_gravity
+        feedback_fermentor_volume=self.util.check_input(self.feedback_fermentor_volume_edit, False, self.tr('Feedback Fermentor Volume'), True, 0, 100)
+        session.feedback_fermentor_volume=feedback_fermentor_volume
+        self.model.save_session(session)
+        self.show_session_feedback() #to get back to non editable state   #print('Session has been saved')    
+     
+     
+    def select_combo_by_text(self,combo,text):    
+        index = combo.findText(text, QtCore.Qt.MatchFixedString)
+        if index >= 0:
+            combo.setCurrentIndex(index) 
+            
+    def set_active_colors(self):
+        'This function is called at init time of mainwindow and also on model changed'
+        self.active_colors={}
+        'if style in db then use it, otherwise use default'
+        for key in vcst.FIELD_DEFAULT_COLORS:
+            if key in self.style_key_list:
+                self.active_colors[key]=self.model.get_style(key)
+            else:
+                self.active_colors[key]=vcst.FIELD_DEFAULT_COLORS[key]            
+                
+        sty.field_styles['editable']="background-color:"+self.active_colors['editable'][0]+\
+        ";color:"+self.active_colors['editable'][1]+";" 
+        sty.field_colors['editable']=[self.active_colors['editable'][0],self.active_colors['editable'][1]]
+        
+        sty.field_styles['calculated']="background-color:"+self.active_colors['calculated'][0]+\
+        ";color:"+self.active_colors['calculated'][1]+";"
+        sty.field_colors['calculated']=[self.active_colors['calculated'][0],self.active_colors['calculated'][1]]
+        
+        sty.field_styles['read_only']="background-color:"+self.active_colors['read_only'][0]+\
+        ";color:"+self.active_colors['read_only'][1]+";" 
+        sty.field_colors['read_only']=[self.active_colors['read_only'][0],self.active_colors['read_only'][1]]
+        
+        sty.field_styles['min_max_allowed']="background-color:"+self.active_colors['min_max_allowed'][0]+\
+        ";color:"+self.active_colors['min_max_allowed'][1]+";"
+        sty.field_colors['min_max_allowed']=[self.active_colors['min_max_allowed'][0],self.active_colors['min_max_allowed'][1]]
+        
+        sty.field_styles['min_max_advised']="background-color:"+self.active_colors['min_max_advised'][0]+\
+        ";color:"+self.active_colors['min_max_advised'][1]+";"    
+        sty.field_colors['min_max_advised']=[self.active_colors['min_max_advised'][0],self.active_colors['min_max_advised'][1]]   
+        
+    def set_aroma_amounts(self):
+        for  i in range(self.hop_layout.count()):
+            item =self.hop_layout.itemAt(i)
+            if item:
+                hidden_hop_rate=self.util.get_by_name_recursive(item.layout(),'hidden_hop_rate')
+                if not hidden_hop_rate : continue
+                else: hop_rate=self.util.check_input(hidden_hop_rate,False,self.tr('Hop rate'),False,0,4)
+                if not hop_rate: continue
+                
+                hop_amount_edit=self.util.get_by_name_recursive(item.layout(),'amount')
+                if not hop_amount_edit: continue
+                else:
+                    batch_size=self.util.check_input(self.batch_volume_edit,False,self.tr('Batch Volume'),False, 0,100)
+                    if  batch_size:
+                        hop_amount=batch_size * hop_rate
+                        val='{0:.1f}'.format(hop_amount)
+                        hop_amount_edit.setText(str(val))
+                        hop_amount_edit.setStyleSheet(sty.field_styles['calculated'])
+                        self.calculate_IBU(hop_amount_edit)
+                        
+                        
+    def set_calculated_style(self):
+        
+        self.mash_water_volume_edit.setStyleSheet(sty.field_styles['calculated'])
+        self.mash_water_volume_edit.setReadOnly(True)
+        self.strike_temperature_edit.setStyleSheet(sty.field_styles['calculated'])
+        self.strike_temperature_edit.setReadOnly(True)
+        self.mash_sparge_water_volume_edit.setStyleSheet(sty.field_styles['calculated'])
+        self.mash_sparge_water_volume_edit.setReadOnly(True)
+     
+    def set_disable_session(self):
+            self.hide_session_designation()
+            self.batch_volume_edit.setStyleSheet(sty.field_styles['read_only'])
+            self.batch_volume_edit.setEnabled(False)
+            self.grain_temperature_edit.setEnabled(False)
+            self.grain_temperature_edit.setStyleSheet(sty.field_styles['read_only'])
+            self.recipe_combo.setEnabled(False)
+            self.equipment_combo.setEnabled(False)
+            self.calculate_button.setEnabled(False)
+            self.hop_calculate_button.setEnabled(False)   
         
         
     def set_editable_session(self):
@@ -1121,6 +1483,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.grain_temperature_edit.setText('')
         
         self.calculate_button.setEnabled(True)
+        self.hop_calculate_button.setEnabled(True)
         
         self.targeted_original_gravity_value.setText('-.---')
         self.targeted_bitterness_value.setText('--')
@@ -1152,50 +1515,13 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.add_button.setEnabled(True)
         
      
-    def set_disable_session(self):
-            self.hide_session_designation()
-            self.batch_volume_edit.setStyleSheet(sty.field_styles['read_only'])
-            self.batch_volume_edit.setEnabled(False)
-            self.grain_temperature_edit.setEnabled(False)
-            self.grain_temperature_edit.setStyleSheet(sty.field_styles['read_only'])
-            self.recipe_combo.setEnabled(False)
-            self.equipment_combo.setEnabled(False)
-            self.calculate_button.setEnabled(False)
+    
             
             
             
-    def select_combo_by_text(self,combo,text):    
-        index = combo.findText(text, QtCore.Qt.MatchFixedString)
-        if index >= 0:
-            combo.setCurrentIndex(index)
+    
             
-    def init_dialog_and_connections(self):
-        self.actionEdit_Malt_Database.triggered.connect(self.show_malt_dialog)
-        self.actionEdit_Hop_Database.triggered.connect(self.show_hop_dialog)
-        self.actionEdit_Rest_Database.triggered.connect(self.show_rest_dialog_create)
-        self.actionEdit_Yeast_Database.triggered.connect(self.show_yeast_dialog)
-        self.actionCustomize_colors.triggered.connect(self.show_color_dialog)
-        self.actionImport_Export_Databases.triggered.connect(self.show_import_export_dialog)
-        self.actionEdit_Recipe_Database.triggered.connect(self.show_recipe_dialog)
-        self.actionEdit_Equipment_Database.triggered.connect(self.show_equipment_dialog)
-        self.actionView_Help.triggered.connect(self.show_help)
-        self.actionFrench.triggered.connect(self.set_language_fr)
-        self.actionEnglish.triggered.connect(self.set_language_en)
-        self.actionJapanese.triggered.connect(self.set_language_jp)
-
-        
-        self.calculate_button.clicked.connect(self.calculate_malt_amounts)
-        self.hop_calculate_button.clicked.connect(self.calculate_hop_amounts)
-        self.batch_volume_edit.editingFinished.connect(self.batch_volume_changed)    
-        self.bar_button.clicked.connect(self.explain_ibu_bar)
-        self.main_help_button.clicked.connect(self.explain_current_brewing_session)
-        self.pitching_bar_button.clicked.connect(self.explain_yeast_bar)
-        self.add_button.clicked.connect(self.save_session)
-        self.new_button.clicked.connect(self.new_session)
-        self.delete_button.clicked.connect(self.remove_session)   
-        self.edit_button.clicked.connect(self.edit_session)  
-        self.feedback_save_button.clicked.connect(self.save_session_feedback)   
-        self.batch_volume_edit.editingFinished.connect(self.calculate_hop_amounts) 
+     
         
     def set_feedback_editable(self):
         self.feedback_water_treatment_textedit.setStyleSheet(sty.field_styles['editable'])   
@@ -1209,120 +1535,148 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.feedback_fermentor_volume_edit.setStyleSheet(sty.field_styles['editable'])  
         self.feedback_fermentor_volume_edit.setEnabled(True)
         self.feedback_save_button.show()
-        self.edit_button.hide()    
+        self.edit_button.hide()   
         
-    def set_subscriptions(self):
-        self.model.subscribe_model_changed(['malt','hop','yeast','recipe','equipment','session','style'],self.on_model_changed_main)
         
-    def show_color_dialog(self):
-        self.colorDialog.show()    
+    def set_fonts(self):
+        self.menubar.setFont(self.model.in_use_fonts['field'])
+        self.menuHelp.setFont(self.model.in_use_fonts['field'])
+        self.menuSettings.setFont(self.model.in_use_fonts['field'])
+        self.menuFile.setFont(self.model.in_use_fonts['field'])
+        self.menuDatabase.setFont(self.model.in_use_fonts['field'])
+        self.menuImport_Export.setFont(self.model.in_use_fonts['field'])
+        self.menuChoose_Language.setFont(self.model.in_use_fonts['field'])
+        self.batch_volume_edit.setFont(self.model.in_use_fonts['field'])
+        self.grain_temperature_edit.setFont(self.model.in_use_fonts['field'])
+        self.mash_water_volume_edit.setFont(self.model.in_use_fonts['field'])
+        self.strike_temperature_edit.setFont(self.model.in_use_fonts['field'])
+        self.mash_sparge_water_volume_edit.setFont(self.model.in_use_fonts['field'])
+        self.recipe_combo.setFont(self.model.in_use_fonts['field'])
+        self.equipment_combo.setFont(self.model.in_use_fonts['field'])
         
-    def show_help(self):
-        self.helpWindow.show()
-        self.helpWindow.textEdit.setHtml(Documentation.text)
+        self.delete_button.setFont(self.model.in_use_fonts['button'])
+        self.new_button.setFont(self.model.in_use_fonts['button'])
+        self.designation_label.setFont(self.model.in_use_fonts['field'])
+        
+        self.current_brewing_session_label.setFont(self.model.in_use_fonts['very_big_title']) 
+        self.choose_session_label.setFont(self.model.in_use_fonts['title_slanted'])
+        self.new_session_label.setFont(self.model.in_use_fonts['title_slanted'])
+        
+        self.batch_volume_label.setFont(self.model.in_use_fonts['field'])  
+        self.batch_volume_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.grain_temperature_label.setFont(self.model.in_use_fonts['field'])
+        self.grain_temperature_unit_label.setFont(self.model.in_use_fonts['field'])  
+        self.add_button.setFont(self.model.in_use_fonts['button'])
+        
+        self.recipe_label.setFont(self.model.in_use_fonts['field'])
+        self.equipment_label.setFont(self.model.in_use_fonts['field'])
+        
+        self.boiling_time_label.setFont(self.model.in_use_fonts['field'])
+        self.boiling_time_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.recipe_label.setFont(self.model.in_use_fonts['field'])
+        self.targeted_original_gravity_label.setFont(self.model.in_use_fonts['field'])
+        self.targeted_bitterness_label.setFont(self.model.in_use_fonts['field'])
+        self.targeted_bitterness_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.brewing_efficiency_label.setFont(self.model.in_use_fonts['field'])
+        
+        self.mash_label.setFont(self.model.in_use_fonts['big_title'])
+        self.malt_label.setFont(self.model.in_use_fonts['button'])
+        self.calculate_button.setFont(self.model.in_use_fonts['button'])
+        
+        self.mash_rest_label.setFont(self.model.in_use_fonts['title'])
+        self.mash_water_volume_label.setFont(self.model.in_use_fonts['field'])
+        self.mash_water_volume_unit_label.setFont(self.model.in_use_fonts['field'])
+        
+        self.strike_temperature_label.setFont(self.model.in_use_fonts['field'])
+        self.strike_temperature_unit_label.setFont(self.model.in_use_fonts['field'])
+        
+        self.mash_sparge_water_volume_label.setFont(self.model.in_use_fonts['field'])
+        self.mash_sparge_water_volume_unit_label.setFont(self.model.in_use_fonts['field'])
+        
+        self.boil_label.setFont(self.model.in_use_fonts['big_title'])
+        self.hop_label.setFont(self.model.in_use_fonts['title'])
+        self.ibu_bar_label.setFont(self.model.in_use_fonts['field'])
+        self.hop_calculate_button.setFont(self.model.in_use_fonts['button'])
+        
+        self.adjunct_label.setFont(self.model.in_use_fonts['title'])
+        
+        self.pitching_label.setFont(self.model.in_use_fonts['big_title'])
+        self.yeast_label.setFont(self.model.in_use_fonts['title'])
+        self.pitching_rate_bar_label.setFont(self.model.in_use_fonts['field'])
+        
+        self.feedback_label.setFont(self.model.in_use_fonts['very_big_title'])
+        self.feedback_water_treatment_label.setFont(self.model.in_use_fonts['big_title'])
+        self.feedback_observed_data_label.setFont(self.model.in_use_fonts['big_title'])
+        self.feedback_mash_PH_label_2.setFont(self.model.in_use_fonts['field'])
+        self.feedback_preboil_volume_label_2.setFont(self.model.in_use_fonts['field'])
+        self.feedback_preboil_volume_unit_label_2.setFont(self.model.in_use_fonts['field'])
+        self.feedback_original_gravity_label_2.setFont(self.model.in_use_fonts['field'])
+        self.feedback_fermentor_volume_label_2.setFont(self.model.in_use_fonts['field'])
+        self.feedback_fermentor_volume_unit_label_2.setFont(self.model.in_use_fonts['field']) 
+        self.feedback_save_button.setFont(self.model.in_use_fonts['button'])
             
-           
-    def show_malt_dialog(self):
-        self.maltDialog.show()  
-        
-    def show_rest_dialog_create(self):
-        self.restDialogCreate.show()    
-        
-    def show_session_designation(self):
-        widgets=self.util.get_included_widgets(self.current_session_intro_layout)
-        for w in widgets:
-            w.setEnabled(False)
-            w.show()          
-        
-    def show_session_feedback(self):
-        widgets=self.util.get_included_widgets(self.feedback_groupbox_layout)
-        for w in widgets:
-            w.show() 
-        self.feedback_save_button.hide()    
-        self.edit_button.show()   
-            
-        self.feedback_water_treatment_textedit.setStyleSheet(sty.field_styles['read_only'])   
-        self.feedback_water_treatment_textedit.setEnabled(False) 
-        self.feedback_mash_PH_edit_2.setStyleSheet(sty.field_styles['read_only']) 
-        self.feedback_mash_PH_edit_2.setEnabled(False)
-        self.feedback_preboil_volume_edit_2.setStyleSheet(sty.field_styles['read_only']) 
-        self.feedback_preboil_volume_edit_2.setEnabled(False)
-        self.feedback_original_gravity_edit_2.setStyleSheet(sty.field_styles['read_only']) 
-        self.feedback_original_gravity_edit_2.setEnabled(False)
-        self.feedback_fermentor_volume_edit.setStyleSheet(sty.field_styles['read_only'])  
-        self.feedback_fermentor_volume_edit.setEnabled(False)
-                
-    def show_yeast_dialog(self):
-        self.yeastDialog.show()
-        
-    def set_active_colors(self):
-        'This function is called at init time of mainwindow and also on model changed'
-        self.active_colors={}
-        'if style in db then use it, otherwise use default'
-        for key in vcst.FIELD_DEFAULT_COLORS:
-            if key in self.style_key_list:
-                self.active_colors[key]=self.model.get_style(key)
-            else:
-                self.active_colors[key]=vcst.FIELD_DEFAULT_COLORS[key]            
-                
-        sty.field_styles['editable']="background-color:"+self.active_colors['editable'][0]+\
-        ";color:"+self.active_colors['editable'][1]+";" 
-        sty.field_colors['editable']=[self.active_colors['editable'][0],self.active_colors['editable'][1]]
-        
-        sty.field_styles['calculated']="background-color:"+self.active_colors['calculated'][0]+\
-        ";color:"+self.active_colors['calculated'][1]+";"
-        sty.field_colors['calculated']=[self.active_colors['calculated'][0],self.active_colors['calculated'][1]]
-        
-        sty.field_styles['read_only']="background-color:"+self.active_colors['read_only'][0]+\
-        ";color:"+self.active_colors['read_only'][1]+";" 
-        sty.field_colors['read_only']=[self.active_colors['read_only'][0],self.active_colors['read_only'][1]]
-        
-        sty.field_styles['min_max_allowed']="background-color:"+self.active_colors['min_max_allowed'][0]+\
-        ";color:"+self.active_colors['min_max_allowed'][1]+";"
-        sty.field_colors['min_max_allowed']=[self.active_colors['min_max_allowed'][0],self.active_colors['min_max_allowed'][1]]
-        
-        sty.field_styles['min_max_advised']="background-color:"+self.active_colors['min_max_advised'][0]+\
-        ";color:"+self.active_colors['min_max_advised'][1]+";"    
-        sty.field_colors['min_max_advised']=[self.active_colors['min_max_advised'][0],self.active_colors['min_max_advised'][1]]        
-                
-                
-              
-                        
-    def set_aroma_amounts(self):
-        for  i in range(self.hop_layout.count()):
-            item =self.hop_layout.itemAt(i)
+        self.set_malt_fonts() 
+        self.set_hop_fonts()
+        self.set_yeast_fonts()
+     
+    def set_hop_fonts(self):
+        for i in range (self.hop_layout.count()):
+            item = self.hop_layout.itemAt(i)
             if item:
-                hidden_hop_rate=self.util.get_by_name_recursive(item.layout(),'hidden_hop_rate')
-                if not hidden_hop_rate : continue
-                else: hop_rate=self.util.check_input(hidden_hop_rate,False,self.tr('Hop rate'),False,0,4)
-                if not hop_rate: continue
+                name_w=self.util.get_by_name(item.layout(), 'name')
+                if name_w: name_w.setFont(self.model.in_use_fonts['field'])
                 
-                hop_amount_edit=self.util.get_by_name_recursive(item.layout(),'amount')
-                if not hop_amount_edit: continue
-                else:
-                    batch_size=self.util.check_input(self.batch_volume_edit,False,self.tr('Batch Volume'),False, 0,100)
-                    if  batch_size:
-                        hop_amount=batch_size * hop_rate
-                        val='{0:.1f}'.format(hop_amount)
-                        hop_amount_edit.setText(str(val))
-                        hop_amount_edit.setStyleSheet(sty.field_styles['calculated'])
-                        self.calculate_IBU(hop_amount_edit)
-                          
-            
-    def set_calculated_style(self):
+                desc_w=self.util.get_by_name(item.layout(), 'desc')
+                if desc_w: desc_w.setFont(self.model.in_use_fonts['field'])
+                
+                usage_w=self.util.get_by_name(item.layout(), 'usage')
+                if usage_w: usage_w.setFont(self.model.in_use_fonts['field'])
+                
+                duration_w=self.util.get_by_name(item.layout(), 'duration')
+                if duration_w: duration_w.setFont(self.model.in_use_fonts['field'])
+                
+                time_unit_w=self.util.get_by_name(item.layout(), 'time_unit')
+                if time_unit_w: time_unit_w.setFont(self.model.in_use_fonts['field'])
+                
+                advised_label_w=self.util.get_by_name(item.layout(), 'advised_label')
+                if advised_label_w: advised_label_w.setFont(self.model.in_use_fonts['field'])
+                
+                advised_amount_w=self.util.get_by_name(item.layout(), 'advised_amount')
+                if advised_amount_w: advised_amount_w.setFont(self.model.in_use_fonts['field'])
+                
+                advised_unit_w=self.util.get_by_name(item.layout(), 'advised_unit')
+                if advised_unit_w: advised_unit_w.setFont(self.model.in_use_fonts['field'])
+                
+                amount_label_w=self.util.get_by_name(item.layout(), 'amount_label')
+                if amount_label_w: amount_label_w.setFont(self.model.in_use_fonts['field'])
+               
+                    
+                amount_w=self.util.get_by_name(item.layout(), 'amount')
+                if amount_w: amount_w.setFont(self.model.in_use_fonts['field'])
         
-        self.mash_water_volume_edit.setStyleSheet(sty.field_styles['calculated'])
-        self.mash_water_volume_edit.setReadOnly(True)
-        self.strike_temperature_edit.setStyleSheet(sty.field_styles['calculated'])
-        self.strike_temperature_edit.setReadOnly(True)
-        self.mash_sparge_water_volume_edit.setStyleSheet(sty.field_styles['calculated'])
-        self.mash_sparge_water_volume_edit.setReadOnly(True)
         
-           
+         
     def set_input_style(self):
         self.batch_volume_edit.setStyleSheet(sty.field_styles['editable'])
         self.grain_temperature_edit.setStyleSheet(sty.field_styles['editable'])  
+            
         
+    def set_malt_fonts(self):
+        for i in range (self.malt_layout.count()):
+            item=self.malt_layout.itemAt(i)
+            if item:
+                name_w=self.util.get_by_name(item.layout(), 'name')
+                if name_w: name_w.setFont(self.model.in_use_fonts['field'])
+                percentage_w=self.util.get_by_name(item.layout(), 'percentage')
+                if percentage_w: percentage_w.setFont(self.model.in_use_fonts['field'])
+                percentage_unit_w=self.util.get_by_name(item.layout(),'percentage_unit')
+                if percentage_unit_w: percentage_unit_w.setFont(self.model.in_use_fonts['field'])
+                amount_w=self.util.get_by_name(item.layout(), 'calculated_mass')
+                if amount_w:amount_w.setFont(self.model.in_use_fonts['field'])
+                amount_unit_w=self.util.get_by_name(item.layout(),'calculated_mass_unit')
+                if amount_unit_w:amount_unit_w.setFont(self.model.in_use_fonts['field'])        
+        
+    
     def set_language_jp(self):
         #print('Japanese language selected')  
         app=QApplication.instance()
@@ -1413,7 +1767,11 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         except:
             pass   
              
+             
+    def set_subscriptions(self):
+        self.model.subscribe_model_changed(['malt','hop','yeast','recipe','equipment','session','style','fontset'],self.on_model_changed_main)
         
+           
     def set_tooltips (self):
         return
         if self.equipment:
@@ -1502,264 +1860,122 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.feedback_original_gravity_label_2.setText(self.tr('Original Gravity'))
         self.feedback_fermentor_volume_label_2.setText(self.tr('Fermentor Volume'))
         self.feedback_fermentor_volume_unit_label_2.setText(self.tr('liters')) 
-        self.feedback_save_button.setText(self.tr('Save Feedback'))    
+        self.feedback_save_button.setText(self.tr('Save Feedback'))     
         
-    def set_fonts(self):
-        self.menubar.setFont(self.model.in_use_fonts['field'])
-        self.menuHelp.setFont(self.model.in_use_fonts['field'])
-        self.menuSettings.setFont(self.model.in_use_fonts['field'])
-        self.menuFile.setFont(self.model.in_use_fonts['field'])
-        self.menuDatabase.setFont(self.model.in_use_fonts['field'])
-        self.menuImport_Export.setFont(self.model.in_use_fonts['field'])
-        self.menuChoose_Language.setFont(self.model.in_use_fonts['field'])
-        self.batch_volume_edit.setFont(self.model.in_use_fonts['field'])
-        self.grain_temperature_edit.setFont(self.model.in_use_fonts['field'])
-        self.mash_water_volume_edit.setFont(self.model.in_use_fonts['field'])
-        self.strike_temperature_edit.setFont(self.model.in_use_fonts['field'])
-        self.mash_sparge_water_volume_edit.setFont(self.model.in_use_fonts['field'])
-        self.recipe_combo.setFont(self.model.in_use_fonts['field'])
-        self.equipment_combo.setFont(self.model.in_use_fonts['field'])
+ 
+    def set_yeast_fonts(self):
+        for i in range (self.yeast_layout.count()):
+            item = self.yeast_layout.itemAt(i)
+            if item:
+                
+                maker_w=self.util.get_by_name(item.layout(), 'maker')
+                if maker_w: maker_w.setFont(self.model.in_use_fonts['field']) 
+                
+                name_w=self.util.get_by_name(item.layout(), 'name')
+                if name_w: name_w.setFont(self.model.in_use_fonts['field'])
+                
+                desc_w=self.util.get_by_name(item.layout(), 'desc')
+                if desc_w: desc_w.setFont(self.model.in_use_fonts['field'])
+                
+                form_w=self.util.get_by_name(item.layout(), 'form')
+                if form_w: form_w.setFont(self.model.in_use_fonts['field'])
+                
+                temperature_label_w=self.util.get_by_name_recursive(item.layout(), 'temperature_label')
+                if temperature_label_w: temperature_label_w.setFont(self.model.in_use_fonts['field'])
+                
+                max_allowed_temperature_w=self.util.get_by_name_recursive(item.layout(), 'max_allowed_temperature')
+                if max_allowed_temperature_w: max_allowed_temperature_w.setFont(self.model.in_use_fonts['field'])
+                
+                min_allowed_temperature_w=self.util.get_by_name_recursive(item.layout(), 'min_allowed_temperature')
+                if min_allowed_temperature_w: min_allowed_temperature_w.setFont(self.model.in_use_fonts['field'])
+                
+                max_advised_temperature_w=self.util.get_by_name_recursive(item.layout(), 'max_advised_temperature')
+                if max_advised_temperature_w: max_advised_temperature_w.setFont(self.model.in_use_fonts['field'])
+                
+                min_advised_temperature_w=self.util.get_by_name_recursive(item.layout(), 'min_advised_temperature')
+                if min_advised_temperature_w: min_advised_temperature_w.setFont(self.model.in_use_fonts['field'])
+                
+                max_recommended_temperature_w=self.util.get_by_name_recursive(item.layout(), 'max_recommended_temperature')
+                if max_recommended_temperature_w: max_recommended_temperature_w.setFont(self.model.in_use_fonts['field'])
+                
+                min_recommended_temperature_w=self.util.get_by_name_recursive(item.layout(), 'min_recommended_temperature')
+                if min_recommended_temperature_w: min_recommended_temperature_w.setFont(self.model.in_use_fonts['field'])
+                
+                recommended_pitching_label_w=self.util.get_by_name_recursive(item.layout(), 'recommended_pitching_label')
+                if recommended_pitching_label_w: recommended_pitching_label_w.setFont(self.model.in_use_fonts['field'])
+                
+                calculate_button_w=self.util.get_by_name_recursive(item.layout(), 'calculate_button')
+                if calculate_button_w: calculate_button_w.setFont(self.model.in_use_fonts['field'])
+                
+                rate_w=self.util.get_by_name_recursive(item.layout(), 'rate')
+                if rate_w: rate_w.setFont(self.model.in_use_fonts['field'])
+                
+                rate_unit_w=self.util.get_by_name_recursive(item.layout(), 'rate_unit')
+                if rate_unit_w: rate_unit_w.setFont(self.model.in_use_fonts['field'])
+                
+                calculated_amount_w=self.util.get_by_name_recursive(item.layout(), 'calculated')
+                if calculated_amount_w: calculated_amount_w.setFont(self.model.in_use_fonts['field'])
+                
+                calculated_amount_unit_w=self.util.get_by_name_recursive(item.layout(), 'calculated_amount_unit')
+                if calculated_amount_unit_w: calculated_amount_unit_w.setFont(self.model.in_use_fonts['field'])
+                
+                adopted_pitch_label_w=self.util.get_by_name_recursive(item.layout(), 'adopted_pitching_label')
+                if adopted_pitch_label_w: adopted_pitch_label_w.setFont(self.model.in_use_fonts['field'])
+               
+                    
+                calculated_pitch_rate_w=self.util.get_by_name_recursive(item.layout(), 'calculated_pitching_rate')
+                if calculated_pitch_rate_w: calculated_pitch_rate_w.setFont(self.model.in_use_fonts['field'])
+                
+                calculated_rate_unit_w=self.util.get_by_name_recursive(item.layout(), 'calculated_rate_unit')
+                if calculated_rate_unit_w: calculated_rate_unit_w.setFont(self.model.in_use_fonts['field'])
         
-        self.delete_button.setFont(self.model.in_use_fonts['button'])
-        self.new_button.setFont(self.model.in_use_fonts['button'])
-        self.designation_label.setFont(self.model.in_use_fonts['field'])
-        
-        self.current_brewing_session_label.setFont(self.model.in_use_fonts['very_big_title']) 
-        self.choose_session_label.setFont(self.model.in_use_fonts['title_slanted'])
-        self.new_session_label.setFont(self.model.in_use_fonts['title_slanted'])
-        
-        self.batch_volume_label.setFont(self.model.in_use_fonts['field'])  
-        self.batch_volume_unit_label.setFont(self.model.in_use_fonts['field'])
-        self.grain_temperature_label.setFont(self.model.in_use_fonts['field'])
-        self.grain_temperature_unit_label.setFont(self.model.in_use_fonts['field'])  
-        self.add_button.setFont(self.model.in_use_fonts['button'])
-        
-        self.recipe_label.setFont(self.model.in_use_fonts['field'])
-        self.equipment_label.setFont(self.model.in_use_fonts['field'])
-        
-        self.boiling_time_label.setFont(self.model.in_use_fonts['field'])
-        self.boiling_time_unit_label.setFont(self.model.in_use_fonts['field'])
-        self.recipe_label.setFont(self.model.in_use_fonts['field'])
-        self.targeted_original_gravity_label.setFont(self.model.in_use_fonts['field'])
-        self.targeted_bitterness_label.setFont(self.model.in_use_fonts['field'])
-        self.targeted_bitterness_unit_label.setFont(self.model.in_use_fonts['field'])
-        self.brewing_efficiency_label.setFont(self.model.in_use_fonts['field'])
-        
-        self.mash_label.setFont(self.model.in_use_fonts['big_title'])
-        self.malt_label.setFont(self.model.in_use_fonts['button'])
-        self.calculate_button.setFont(self.model.in_use_fonts['button'])
-        
-        self.mash_rest_label.setFont(self.model.in_use_fonts['title'])
-        self.mash_water_volume_label.setFont(self.model.in_use_fonts['field'])
-        self.mash_water_volume_unit_label.setFont(self.model.in_use_fonts['field'])
-        
-        self.strike_temperature_label.setFont(self.model.in_use_fonts['field'])
-        self.strike_temperature_unit_label.setFont(self.model.in_use_fonts['field'])
-        
-        self.mash_sparge_water_volume_label.setFont(self.model.in_use_fonts['field'])
-        self.mash_sparge_water_volume_unit_label.setFont(self.model.in_use_fonts['field'])
-        
-        self.boil_label.setFont(self.model.in_use_fonts['big_title'])
-        self.hop_label.setFont(self.model.in_use_fonts['title'])
-        self.ibu_bar_label.setFont(self.model.in_use_fonts['field'])
-        self.hop_calculate_button.setFont(self.model.in_use_fonts['field'])
-        
-        self.adjunct_label.setFont(self.model.in_use_fonts['title'])
-        
-        self.pitching_label.setFont(self.model.in_use_fonts['big_title'])
-        self.yeast_label.setFont(self.model.in_use_fonts['title'])
-        self.pitching_rate_bar_label.setFont(self.model.in_use_fonts['field'])
-        
-        self.feedback_label.setFont(self.model.in_use_fonts['very_big_title'])
-        self.feedback_water_treatment_label.setFont(self.model.in_use_fonts['big_title'])
-        self.feedback_observed_data_label.setFont(self.model.in_use_fonts['big_title'])
-        self.feedback_mash_PH_label_2.setFont(self.model.in_use_fonts['field'])
-        self.feedback_preboil_volume_label_2.setFont(self.model.in_use_fonts['field'])
-        self.feedback_preboil_volume_unit_label_2.setFont(self.model.in_use_fonts['field'])
-        self.feedback_original_gravity_label_2.setFont(self.model.in_use_fonts['field'])
-        self.feedback_fermentor_volume_label_2.setFont(self.model.in_use_fonts['field'])
-        self.feedback_fermentor_volume_unit_label_2.setFont(self.model.in_use_fonts['field']) 
-        self.feedback_save_button.setFont(self.model.in_use_fonts['button'])
             
+    def show_color_dialog(self):
+        self.colorDialog.show()   
         
+    def show_font_size_dialog(self):
+        self.fontSizeDialog.show()     
         
-    def set_yeast_view(self,yeast_type,rate=None,creation_mode=True):  
-        self.util.clearLayout(self.yeast_layout)
-        yeastT=yeast_type
-        hl=QHBoxLayout()#create an horizontal layout to host widgets for the yeast
+    def show_help(self):
+        self.helpWindow.show()
+        self.helpWindow.textEdit.setHtml(Documentation.text)
+            
+           
+    def show_malt_dialog(self):
+        self.maltDialog.show()  
         
-        maker_edit=QLineEdit()
-        maker_edit.setAccessibleName('maker')
-        maker_edit.setMinimumSize(100,30)
-        maker_edit.setMaximumSize(100,30)
-        maker_edit.setStyleSheet(sty.field_styles['read_only'])
-        maker_edit.setReadOnly(True)
-        maker_edit.setText(yeastT.maker)
-        hl.addWidget(maker_edit)
+    def show_rest_dialog_create(self):
+        self.restDialogCreate.show()    
         
-        name_edit=QLineEdit()
-        name_edit.setAccessibleName('name')
-        name_edit.setMinimumSize(200,30)
-        name_edit.setMaximumSize(200,30)
-        name_edit.setStyleSheet(sty.field_styles['read_only'])
-        name_edit.setReadOnly(True)
-        name_edit.setText(yeastT.name)
-        hl.addWidget(name_edit)
+    def show_session_designation(self):
+        widgets=self.util.get_included_widgets(self.current_session_intro_layout)
+        for w in widgets:
+            w.setEnabled(False)
+            w.show()          
         
-        form_edit=QLineEdit()
-        form_edit.setAccessibleName('form')
-        form_edit.setMinimumSize(70,30)
-        form_edit.setMaximumSize(70,30)
-        form_edit.setStyleSheet(sty.field_styles['read_only'])
-        form_edit.setReadOnly(True)
-        form_edit.setText(yeastT.form)
-        hl.addWidget(form_edit)
-        hl.addStretch()
+    def show_session_feedback(self):
+        widgets=self.util.get_included_widgets(self.feedback_groupbox_layout)
+        for w in widgets:
+            w.show() 
+        self.feedback_save_button.hide()    
+        self.edit_button.show()   
+            
+        self.feedback_water_treatment_textedit.setStyleSheet(sty.field_styles['read_only'])   
+        self.feedback_water_treatment_textedit.setEnabled(False) 
+        self.feedback_mash_PH_edit_2.setStyleSheet(sty.field_styles['read_only']) 
+        self.feedback_mash_PH_edit_2.setEnabled(False)
+        self.feedback_preboil_volume_edit_2.setStyleSheet(sty.field_styles['read_only']) 
+        self.feedback_preboil_volume_edit_2.setEnabled(False)
+        self.feedback_original_gravity_edit_2.setStyleSheet(sty.field_styles['read_only']) 
+        self.feedback_original_gravity_edit_2.setEnabled(False)
+        self.feedback_fermentor_volume_edit.setStyleSheet(sty.field_styles['read_only'])  
+        self.feedback_fermentor_volume_edit.setEnabled(False)
         
-        vl1=QVBoxLayout()
-        temp_label=QLabel(self.tr('Temperature range'),alignment=4)
-        vl1.addWidget(temp_label)
-        hl1=QHBoxLayout()
-        min_allowed_temperature_edit=QLineEdit()
-        min_allowed_temperature_edit.setAccessibleName('min_allowed_temperature')
-        min_allowed_temperature_edit.setMinimumSize(50,30)
-        min_allowed_temperature_edit.setMaximumSize(50,30)
-        min_allowed_temperature_edit.setStyleSheet(sty.field_styles['min_max_allowed'])
-        min_allowed_temperature_edit.setReadOnly(True)
-        min_allowed_temperature_edit.setText(str(yeastT.min_allowed_temperature))
-        hl1.addWidget(min_allowed_temperature_edit)
+                
+    def show_yeast_dialog(self):
+        self.yeastDialog.show()
         
-        min_advised_temperature_edit=QLineEdit()
-        min_advised_temperature_edit.setAccessibleName('min_advised_temperature')
-        min_advised_temperature_edit.setMinimumSize(50,30)
-        min_advised_temperature_edit.setMaximumSize(50,30)
-        min_advised_temperature_edit.setStyleSheet(sty.field_styles['min_max_advised'])
-        min_advised_temperature_edit.setReadOnly(True)
-        min_advised_temperature_edit.setText(str(yeastT.min_advised_temperature))
-        hl1.addWidget(min_advised_temperature_edit)
-        
-        max_advised_temperature_edit=QLineEdit()
-        max_advised_temperature_edit.setAccessibleName('max_advised_temperature')
-        max_advised_temperature_edit.setMinimumSize(50,30)
-        max_advised_temperature_edit.setMaximumSize(50,30)
-        max_advised_temperature_edit.setStyleSheet(sty.field_styles['min_max_advised'])
-        max_advised_temperature_edit.setReadOnly(True)
-        max_advised_temperature_edit.setText(str(yeastT.max_advised_temperature))
-        hl1.addWidget(max_advised_temperature_edit)
-        
-        max_allowed_temperature_edit=QLineEdit()
-        max_allowed_temperature_edit.setAccessibleName('max_allowed_temperature')
-        max_allowed_temperature_edit.setMinimumSize(50,30)
-        max_allowed_temperature_edit.setMaximumSize(50,30)
-        max_allowed_temperature_edit.setStyleSheet(sty.field_styles['min_max_allowed'])
-        max_allowed_temperature_edit.setReadOnly(True)
-        max_allowed_temperature_edit.setText(str(yeastT.max_allowed_temperature))
-        hl1.addWidget(max_allowed_temperature_edit)
-        vl1.addLayout(hl1)
-        vl1.addStretch()
-        hl.addLayout(vl1)
-        hl.addStretch()
-        
-        vl2=QVBoxLayout()
-        if creation_mode:
-            hl21=QHBoxLayout()
-            hl22=QHBoxLayout()
-            hl23=QHBoxLayout()
-            pitch_label=QLabel(self.tr('Recommended Pitching rate'),alignment=4)
-            hl21.addWidget(pitch_label)
-            calculate_amount_button=QPushButton(self.tr('Calculate'))
-            calculate_amount_button.setAccessibleName('calculate_button')
-            calculate_amount_button.setMaximumSize(120, 30)
-            calculate_amount_button.clicked.connect(self.calculate_yeast_amount)
-            hl21.addWidget(calculate_amount_button)
-            vl2.addLayout(hl21)
-        
-            rate_edit=QLineEdit()
-            rate_edit.setAccessibleName('rate')
-            rate_edit.setMaximumSize(60,30)
-            rate_edit.setStyleSheet(sty.field_styles['read_only'])
-            hl22.addWidget(rate_edit)
-            if rate:
-                rate_edit.setText(str(rate))
-        
-            rate_unit=QLabel('billions/°P/liter')   
-            rate_unit.setAccessibleName('rate_unit')
-            rate_unit.setMaximumSize(100,30)
-            rate_unit.setStyleSheet("font-size: 14px;")
-            hl22.addWidget(rate_unit) 
-            calculated_amount_edit=QLineEdit()
-            calculated_amount_edit.setAccessibleName('calculated_amount')
-            calculated_amount_edit.setStyleSheet(sty.field_styles['calculated'])
-            calculated_amount_edit.setReadOnly(True)
-            calculated_amount_edit.setMaximumSize(60,30)
-            hl22.addWidget(calculated_amount_edit)
-            calculated_amount_unit=QLabel('g')
-            calculated_amount_unit.setMaximumSize(30,30)
-            hl22.addWidget(calculated_amount_unit) 
-
-            vl2.addLayout(hl22)
-            #4 lines to add an horizontal separator
-            hline=QFrame()
-            hline.setFrameShape(QFrame.HLine)
-            hline.setFrameShadow(QFrame.Sunken)
-            vl2.addWidget(hline)
-            adopted_pitch_label=QLabel(self.tr('Adopted Pitching rate'),alignment=4)
-            vl2.addWidget(adopted_pitch_label)
-            calculated_rate_edit=QLineEdit()
-            calculated_rate_edit.setAccessibleName('calculated_pitching_rate')
-            calculated_rate_edit.setMaximumSize(60,30)
-            calculated_rate_edit.setStyleSheet(sty.field_styles['calculated'])
-            calculated_rate_edit.setReadOnly(True)
-            hl23.addWidget(calculated_rate_edit)
-            calculated_rate_unit=QLabel('billions/°P/liter')
-            calculated_rate_unit.setAccessibleName('calculated_rate_unit')
-            calculated_rate_unit.setStyleSheet("font-size: 14px")
-            hl23.addWidget(calculated_rate_unit)
-            adopted_amount_edit=QLineEdit()
-            adopted_amount_edit.setAccessibleName('adopted_amount')
-            adopted_amount_edit.setStyleSheet(sty.field_styles['read_only'])
-            adopted_amount_edit.setReadOnly(True)
-            adopted_amount_edit.editingFinished.connect(self.calculate_adopted_pitching_rate)
-            adopted_amount_edit.setMaximumSize(60,30)
-            hl23.addWidget(adopted_amount_edit)
-            adopted_amount_unit=QLabel('g')
-            adopted_amount_unit.setMaximumSize(30,30)
-      
-            hl23.addWidget(adopted_amount_unit) 
-        
-            vl2.addLayout(hl23)
-        else:
-            hl23=QHBoxLayout()
-            adopted_pitch_label=QLabel(self.tr('Adopted Pitching rate'),alignment=4)
-            vl2.addWidget(adopted_pitch_label)
-            calculated_rate_edit=QLineEdit()
-            calculated_rate_edit.setAccessibleName('calculated_pitching_rate')
-            calculated_rate_edit.setMaximumSize(60,30)
-            calculated_rate_edit.setStyleSheet(sty.field_styles['read_only'])
-            calculated_rate_edit.setReadOnly(True)
-            hl23.addWidget(calculated_rate_edit)
-            calculated_rate_unit=QLabel('billions/°P/liter')
-            calculated_rate_unit.setAccessibleName('calculated_rate_unit')
-            calculated_rate_unit.setStyleSheet("font-size: 14px")
-            hl23.addWidget(calculated_rate_unit)
-            adopted_amount_edit=QLineEdit()
-            adopted_amount_edit.setAccessibleName('adopted_amount')
-            adopted_amount_edit.setStyleSheet(sty.field_styles['read_only'])
-            adopted_amount_edit.setReadOnly(True)
-            adopted_amount_edit.editingFinished.connect(self.calculate_adopted_pitching_rate)
-            adopted_amount_edit.setMaximumSize(60,30)
-            hl23.addWidget(adopted_amount_edit)
-            adopted_amount_unit=QLabel('g')
-            adopted_amount_unit.setMaximumSize(30,30)
-      
-            hl23.addWidget(adopted_amount_unit) 
-        
-            vl2.addLayout(hl23)  
-
-        hl.addLayout(vl2)
-        hl.addStretch()
-        
-        self.yeast_layout.addLayout(hl)
+    
     def show_equipment_dialog(self):
         self.equipmentDialog.show()  
         
@@ -1787,7 +2003,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             w.hide()
             
         self.hide_session_designation() 
-        #self.fontSizeDialog.show()
+        self.set_fonts()
 
         
     def  show_folder_chooser(self):
@@ -1833,14 +2049,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.ibu_bar_label.setText(self.tr('Calculated IBUs vs. Target ⇒ ') + val_ibu+' / '+val_target)   
         
         
-    def zero_ibu_bar(self): 
-        mypb=  self.util.get_by_name(self.hops_header_layout,'ibu') 
-        if  mypb: mypb.setValue(0)
-        
-    def zero_pitching_bar(self):
-        mypb=self.util.get_by_name(self.yeast_header_layout,'pitching')  
-        if mypb: mypb.setValue(0)  
-        
     def update_pitching_bar(self,target,value):
         mypb=self.util.get_by_name(self.yeast_header_layout,'pitching')
         mypb.setRange(0,target *2*100)
@@ -1851,7 +2059,8 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                       
         val_rate='{0:.2f}'.format(value)
         val_target='{0:.2f}'.format(target)
-        self.pitching_rate_bar_label.setText(self.tr('Current Pitching Rate vs. Recommended Rate ⇒ ') + val_rate+' / '+val_target)             
+        self.pitching_rate_bar_label.setText(self.tr('Current Pitching Rate vs. Recommended Rate ⇒ ') + val_rate+' / '+val_target)   
+                  
         
     def update_rest_view(self,rests):       
         self.util.clearLayout(self.rest_layout)
@@ -1889,7 +2098,15 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             temperature_unit_edit.setMaximumWidth(40)
             hl.addWidget(temperature_unit_edit)            
    
-            self.rest_layout.addLayout(hl)      
+            self.rest_layout.addLayout(hl) 
+            
+    def zero_ibu_bar(self): 
+        mypb=  self.util.get_by_name(self.hops_header_layout,'ibu') 
+        if  mypb: mypb.setValue(0)
+        
+    def zero_pitching_bar(self):
+        mypb=self.util.get_by_name(self.yeast_header_layout,'pitching')  
+        if mypb: mypb.setValue(0)      
             
 
         

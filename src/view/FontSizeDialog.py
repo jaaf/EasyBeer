@@ -24,6 +24,7 @@ from gen import FontSizeDialogUI
 
 
 import view.constants as vcst
+from model.FontSet import FontSet
 import view.styles as sty
 import platform
 
@@ -49,13 +50,22 @@ class FontSetDialog(QWidget,FontSizeDialogUI.Ui_Form ):
         
     def init_dialog_and_connections(self):
         self.label.setText(self.tr('Chose a font size below and see the results above'))
+        self.init_combo()
+        self.combo.currentIndexChanged.connect(self.on_item_changed)
         
     def init_combo(self):
         self.combo.clear()  
         self.combo.addItem('')
-        for key in self.font_set_key_list:
-            fs = self.model.get_font_set(key)
-            self.combo.addItem(fs.category)
+        self.combo.addItem('tiny')
+        self.combo.addItem('small')
+        self.combo.addItem('big')
+        self.combo.addItem('huge')
+        
+    def on_item_changed(self):
+        print('item changed in FontSizeDialog')  
+        category=self.combo.currentText()  
+        self.model.change_active_font_set(category)
+        
             
             
                 

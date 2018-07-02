@@ -937,6 +937,8 @@ class Ui_MainWindow(object):
         self.actionEnglish.setObjectName("actionEnglish")
         self.actionJapanese = QtWidgets.QAction(MainWindow)
         self.actionJapanese.setObjectName("actionJapanese")
+        self.actionCustomize_Font_Size = QtWidgets.QAction(MainWindow)
+        self.actionCustomize_Font_Size.setObjectName("actionCustomize_Font_Size")
         self.menuDatabase.addAction(self.actionEdit_Malt_Database)
         self.menuDatabase.addAction(self.actionEdit_Hop_Database)
         self.menuDatabase.addAction(self.actionEdit_Rest_Database)
@@ -946,6 +948,7 @@ class Ui_MainWindow(object):
         self.menuDatabase.addSeparator()
         self.menuHelp.addAction(self.actionView_Help)
         self.menuSettings.addAction(self.actionCustomize_colors)
+        self.menuSettings.addAction(self.actionCustomize_Font_Size)
         self.menuImport_Export.addAction(self.actionImport_Export_Databases)
         self.menuChoose_Language.addAction(self.actionFrench)
         self.menuChoose_Language.addAction(self.actionEnglish)
@@ -1039,4 +1042,5 @@ class Ui_MainWindow(object):
         self.actionFrench.setText(_translate("MainWindow", "French"))
         self.actionEnglish.setText(_translate("MainWindow", "English"))
         self.actionJapanese.setText(_translate("MainWindow", "Japanese"))
+        self.actionCustomize_Font_Size.setText(_translate("MainWindow", "Customize Font Size"))
 
