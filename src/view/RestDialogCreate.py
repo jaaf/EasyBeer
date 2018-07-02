@@ -44,7 +44,7 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.current_rest=None # the rest currently selected
         
         # register function with model for future model update announcements
-        self.model.subscribe_model_changed(['rest'],self.on_model_changed_rest_create)
+        self.model.subscribe_model_changed(['rest','fontset'],self.on_model_changed_rest_create)
         
         self.add_button.hide()
         self.cancel_button.hide()
@@ -210,7 +210,12 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         if target == 'rest':
             self.rest_key_list=self.model.rest_list 
             self.refresh_rest_list_combo()
-            self.clear_edits()       
+            self.clear_edits()   
+            
+        'we must wait for fonts to be initialized in model'    
+        if target == 'fontset':
+            if (self.model.in_use_fonts):
+                self.set_fonts()         
         
     def save_rest(self):
         'save or update the rest that is defined by the GUI'
@@ -242,27 +247,33 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.add_button.setStyleSheet('background-color:lightgreen;')
         self.update_button.setStyleSheet('background-color:lightgreen;')
         self.cancel_button.setStyleSheet('background-color:pink:ont-family')
-        if pf=='Windows':
-            print('setting Windows Fonts in Rest Dialog')
-            self.add_button.setFont(vcst.BUTTON_FONT_W)
-            self.update_button.setFont(vcst.BUTTON_FONT_W)
-            self.cancel_button.setFont(vcst.BUTTON_FONT_W)
-            self.edit_button.setFont(vcst.BUTTON_FONT_W)
-            self.delete_button.setFont(vcst.BUTTON_FONT_W)
-            self.new_button.setFont(vcst.BUTTON_FONT_W)
-            self.main_label.setFont(vcst.TITLE_FONT_W)
+       
+        print('setting  Fonts in Rest Dialog')
+        self.add_button.setFont(self.model.in_use_fonts['button'])
+        self.update_button.setFont(self.model.in_use_fonts['button'])
+        self.cancel_button.setFont(self.model.in_use_fonts['button'])
+        self.edit_button.setFont(self.model.in_use_fonts['button'])
+        self.delete_button.setFont(self.model.in_use_fonts['button'])
+        self.new_button.setFont(self.model.in_use_fonts['button'])
+        self.main_label.setFont(self.model.in_use_fonts['title'])
+        self.choose_label.setFont(self.model.in_use_fonts['title_slanted'])
+        self.name_label.setFont(self.model.in_use_fonts['field'])
+        self.ph_range_label.setFont(self.model.in_use_fonts['field'])
+        self.temperature_label.setFont(self.model.in_use_fonts['field'])
+        self.name_edit.setFont(self.model.in_use_fonts['field'])
+        self.name_combo.setFont(self.model.in_use_fonts['field'])
+        self.ph_max.setFont(self.model.in_use_fonts['field'])
+        self.ph_min.setFont(self.model.in_use_fonts['field']) 
+        self.optimal_ph_max.setFont(self.model.in_use_fonts['field'])
+        self.optimal_ph_min.setFont(self.model.in_use_fonts['field'])
+        self.temperature_max.setFont(self.model.in_use_fonts['field'])
+        self.temperature_min.setFont(self.model.in_use_fonts['field'])
+        self.optimal_temperature_max.setFont(self.model.in_use_fonts['field'])
+        self.optimal_temperature_min.setFont(self.model.in_use_fonts['field'])    
+        self.usage_guidance_edit.setFont(self.model.in_use_fonts['field'])       
             
             
-            
-        elif pf=='Linux':
-            print('setting linux fonts in Rest Dialog')
-            self.add_button.setFont(vcst.BUTTON_FONT_L)
-            self.update_button.setFont(vcst.BUTTON_FONT_L)
-            self.cancel_button.setFont(vcst.BUTTON_FONT_L)
-            self.edit_button.setFont(vcst.BUTTON_FONT_L)
-            self.delete_button.setFont(vcst.BUTTON_FONT_L)
-            self.new_button.setFont(vcst.BUTTON_FONT_L)
-            self.main_label.setFont(vcst.TITLE_FONT_L)
+        
            
     def set_ro(self):
         #self.name_combo.setEnabled(False)
@@ -306,7 +317,21 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.set_fonts()   
         
     def update_rest(self):
-        pass                     
+        'update the rest that is defined by the GUI'
+        rest=self.read_input()
+        self.current_rest=rest.name # in order to be able to select it back on refresh
+        for i in range(len(rest.phs)):
+            print('ph '+str(i)+' : '+str(rest.phs[i]))
+        for i in range(len(rest.temperatures)):
+            print('temp '+str(i)+' : '+str(rest.temperatures[i]))   
+        print (rest.guidance)
+        print(rest.removable)      
+        self.model.update_rest(rest)
+        self.set_ro()
+        #self.set_read_only_style()
+        self.update_button.hide()  
+        self.cancel_button.hide()
+                          
                 
                     
      

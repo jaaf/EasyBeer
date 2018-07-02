@@ -70,7 +70,7 @@ class Model(object):
         self._update_funcs_recipe=[]
         self._update_funcs_equipment=[]
         self._update_funcs_style=[]
-        self._update_funcs_size=[]
+        self._update_funcs_fontset=[]
         
         'read the keys in all the databases'
         self.update_from_db('malt')
@@ -597,6 +597,33 @@ class Model(object):
         con.close()
         self.update_from_db('recipe')
         self.announce_model_changed('recipe')
+        
+    def update_rest(self, rest):
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        for i in range(len(rest.phs)):
+            print('ph '+str(i)+' : '+str(rest.phs[i]))
+        for i in range(len(rest.temperatures)):
+            print('temp '+str(i)+' : '+str(rest.temperatures[i]))   
+        print (rest.guidance)
+        print(rest.removable) 
+        phs=pickle.dumps(rest.phs)
+        tps=pickle.dumps(rest.temperatures)
+        try:
+            c.execute("update rests set \
+             phs=:phs,\
+             temperatures=:temperatures,\
+              guidance=:guidance,\
+              removable=:removable where name=:name",
+                      {'name':rest.name,'phs':phs,'temperatures':tps,'guidance':rest.guidance,'removable':rest.removable})  
+            con.commit()
+        except Error as e:
+            print('there is an error in updating of rest')
+            print(e)
+        c.close()
+        con.close()
+        self.update_from_db('rest')
+        self.announce_model_changed('rest')        
         
     def save_session(self,session):
         'save or update a session'
