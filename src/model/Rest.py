@@ -19,7 +19,7 @@
 
 class Rest(object):
     
-    def __init__(self,name,phs,temperatures,guidance,removable):
+    def __init__(self,name,phs,temperatures,guidance,removable='yes'):
         self.name = name
         self.phs = phs
         self.temperatures = temperatures

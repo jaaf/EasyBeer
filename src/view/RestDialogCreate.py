@@ -23,7 +23,10 @@ from PyQt5.QtWidgets import  QWidget
 from gen import RestDialogCreateUI
 
 from model.Rest import Rest
+import model.constants as mcst
 import view.styles as sty
+import view.constants as vcst
+import platform
 
 
 class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
@@ -44,13 +47,27 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.model.subscribe_model_changed(['rest'],self.on_model_changed_rest_create)
         
         self.add_button.hide()
+        self.cancel_button.hide()
+        self.delete_button.hide()
+        self.edit_button.hide()
+        self.update_button.hide()
         self.set_ro()
         self.init_dialog_and_connections()
+        
              
         self.rest_key_list=self.model.rest_list        
-          
+        self.ensure_unremovable_rests()  
         self.refresh_rest_list_combo()  
         #self.set_translatable_texts()  
+        
+    def cancel(self):
+        self.clear_edits()
+        self.set_ro()
+        self.cancel_button.hide()
+        self.add_button.hide()
+        self.update_button.hide()
+        self.new_button.show()
+        pass    
         
     def clear_edits(self):
         self.refresh_rest_list_combo()
@@ -64,40 +81,76 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
             if item:
                 item.widget().setText('')
         self.usage_guidance_edit.setText('')        
-            
+     
+    def create_unremovable_rests(self):
+        self.prot_rest=Rest('Protein Rest',[4.5, 5, 6, 7],[65,66,68,70],self.tr(mcst.TEXT_REST_PROTEIN),'no')
+        self.sach_rest=Rest('Saccharification Rest',[4.5, 5, 6, 7],[65,66,68,70],self.tr(mcst.TEXT_REST_SACH),'no') 
         
     def create_rest(self):
         self.set_rw()
         self.clear_edits()
         self.add_button.show() 
+        self.cancel_button.show()
+        self.new_button.hide()
+        self.delete_button.hide()
+        self.edit_button.hide()
         
     def delete_rest(self):
         name=str(self.name_combo.currentText())
+        r=self.model.get_rest(name)
+        print(r.removable)
+        if r.removable=='no':
+            self.util.alerte(self.tr('You cannot delete this basic rest'))
+            return
+        
         self.current_rest=None
         self.model.remove_rest(name)
         
     
           
     def edit_rest(self):   
-        self.add_button.show() 
+        name=str(self.name_combo.currentText())
+        r=self.model.get_rest(name)
+        if r.removable=='no':
+            self.util.alerte(self.tr('You cannot edit this kind of basic rest'))
+            return
+        self.update_button.show() 
+        self.cancel_button.show()
+        self.edit_button.hide()
+        self.delete_button.hide()
+        self.new_button.hide()
         self.set_rw()
        
+    def ensure_unremovable_rests(self):
+        self.create_unremovable_rests()
+        if not ('Protein Rest' in self.rest_key_list):
+            self.model.save_rest(self.prot_rest)
+        if not('Saccharification Rest' in self.rest_key_list):
+            self.model.save_rest(self.sach_rest)    
+            
+           
         
     def name_combo_current_item_changed(self):
         name=str(self.name_combo.currentText())
         if name:
             rest=self.model.get_rest(name)
             self.name_edit.setText(rest.name)
+               
             for i in range(self.ph_layout.count()):
                 item=self.ph_layout.itemAt(i)
                 if item:
                     item.widget().setText(str(rest.phs[i]))
-                    
             for i in range(self.temperature_layout.count()):
                 item=self.temperature_layout.itemAt(i)
                 if item:
                     item.widget().setText(str(rest.temperatures[i]))     
-            self.usage_guidance_edit.setPlainText(rest.guidance)           
+            self.usage_guidance_edit.setHtml(rest.guidance) 
+            if rest.removable=='no':
+                self.usage_guidance_edit.setStyleSheet('color:green')
+            else: 
+                self.usage_guidance_edit.setStyleSheet('color:blue')
+                self.edit_button.show()  
+                self.delete_button.show()         
         print(name)
         
         
@@ -176,11 +229,41 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
     def init_dialog_and_connections(self):
         self.add_button.clicked.connect(self.save_rest)
         self.edit_button.clicked.connect(self.edit_rest)
+        self.cancel_button.clicked.connect(self.cancel)
+        self.update_button.clicked.connect(self.update_rest)
         self.new_button.clicked.connect(self.create_rest)
         self.delete_button.clicked.connect(self.delete_rest)
         self.name_combo.currentIndexChanged.connect(self.name_combo_current_item_changed)
         #self.close_button.clicked.connect(self.close)  
-        
+     
+     
+    def set_fonts(self):
+        pf=platform.system()
+        self.add_button.setStyleSheet('background-color:lightgreen;')
+        self.update_button.setStyleSheet('background-color:lightgreen;')
+        self.cancel_button.setStyleSheet('background-color:pink:ont-family')
+        if pf=='Windows':
+            print('setting Windows Fonts in Rest Dialog')
+            self.add_button.setFont(vcst.BUTTON_FONT_W)
+            self.update_button.setFont(vcst.BUTTON_FONT_W)
+            self.cancel_button.setFont(vcst.BUTTON_FONT_W)
+            self.edit_button.setFont(vcst.BUTTON_FONT_W)
+            self.delete_button.setFont(vcst.BUTTON_FONT_W)
+            self.new_button.setFont(vcst.BUTTON_FONT_W)
+            self.main_label.setFont(vcst.TITLE_FONT_W)
+            
+            
+            
+        elif pf=='Linux':
+            print('setting linux fonts in Rest Dialog')
+            self.add_button.setFont(vcst.BUTTON_FONT_L)
+            self.update_button.setFont(vcst.BUTTON_FONT_L)
+            self.cancel_button.setFont(vcst.BUTTON_FONT_L)
+            self.edit_button.setFont(vcst.BUTTON_FONT_L)
+            self.delete_button.setFont(vcst.BUTTON_FONT_L)
+            self.new_button.setFont(vcst.BUTTON_FONT_L)
+            self.main_label.setFont(vcst.TITLE_FONT_L)
+           
     def set_ro(self):
         #self.name_combo.setEnabled(False)
         self.name_edit.setReadOnly(True)
@@ -217,7 +300,13 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
                 item.widget().setStyleSheet(sty.field_styles['editable'])  
                 
         self.usage_guidance_edit.setReadOnly(False)
-        self.usage_guidance_edit.setStyleSheet(sty.field_styles['editable'])                      
+        self.usage_guidance_edit.setStyleSheet(sty.field_styles['editable'])    
+        
+    def showEvent(self,e):  
+        self.set_fonts()   
+        
+    def update_rest(self):
+        pass                     
                 
                     
      

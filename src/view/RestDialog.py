@@ -64,7 +64,10 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
         the three fields in the customize part at the bottom of the
         dialog. </p>
         
-        <p>Nevertheless, you will be still able to change anything you
+        <p>Some very basic and classical rests come with the program installation. Nevertheless, the user can
+        use the Rest Dialog from the Database menu to add frequently used rests and their definition.<p> 
+        
+        <p>Whatever the source of the used rest, you will be still able to change anything you
         want to customize the rest as you intend. Moreover, you will
         be able to change this field values even after the rest has 
         been transfered into the recipe dialog.</p>

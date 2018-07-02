@@ -229,7 +229,7 @@ class Model(object):
         c = con.cursor()  
         c.execute("""select * from rests where name=:name""",{'name':key})
         r=c.fetchone()
-        rest=Rest(r[0],pickle.loads(r[1]),pickle.loads(r[2]),r[3])     
+        rest=Rest(r[0],pickle.loads(r[1]),pickle.loads(r[2]),r[3],r[4])     
         return rest
     
     def get_yeast(self,key):
@@ -395,8 +395,8 @@ class Model(object):
         c = con.cursor()
         try:
             'rests table already exists as created in self.update_from_db'
-            c.execute("insert into rests values (:name,:phs,:temperatures,:guidance)",
-                  {'name':rest.name, 'phs':pickle.dumps(rest.phs), 'temperatures':pickle.dumps(rest.temperatures),'guidance':rest.guidance})
+            c.execute("insert into rests values (:name,:phs,:temperatures,:guidance,:removable)",
+                  {'name':rest.name, 'phs':pickle.dumps(rest.phs), 'temperatures':pickle.dumps(rest.temperatures),'guidance':rest.guidance,'removable':rest.removable})
             con.commit()
             c.execute("select * from hops")    
         except Error as e :
@@ -925,7 +925,7 @@ class Model(object):
             max_advised_temperature real,min_advised_temperature  real, form text, attenuation text, floculation text)"""
             c.execute(sql) 
 
-            sql = """create table if not exists rests (name text primary key not null,phs text,temperatures text, guidance text)"""
+            sql = """create table if not exists rests (name text primary key not null,phs text,temperatures text, guidance text,removable text)"""
             c.execute(sql)      
             
             sql = """create table if not exists recipes (name text primary key not null,malts_in_mash text, mash_rests text, hops_in_recipe text,targeted_original_gravity real,targeted_bitterness real, boiling_time real,
