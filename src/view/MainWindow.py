@@ -32,6 +32,7 @@ from view.EquipmentDialog import EquipmentDialog
 from view.ColorDialog import ColorDialog
 from view.FontSizeDialog import FontSetDialog
 from view.HelpWindow import HelpWindow
+from view.UnitSetter import UnitSetter
 from view.Utils import Utils
 import view.constants as vcst
 import view.styles as sty
@@ -105,7 +106,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.colorDialog = ColorDialog(self.model,self.controller,self.util)
         self.equipmentDialog = EquipmentDialog(self.model,self.controller,self.util)
         self.fontSizeDialog=FontSetDialog(self.model,self.controller,self.util)
-        
+        self.unitSetter=UnitSetter(self.model,self.util)
         'if running in a bundle may be the user wants to save or restore their databases'
         if self.frozen=='yes':
             self.importExportDbDialog=ImportExportDb(self.model,self.controller,self.util,self.bundle_dir)
@@ -127,6 +128,8 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.init_session_combo()
         self.new_session()
         self.init_font_set_db()
+        
+        
         
        
   
@@ -1766,7 +1769,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                 yeast_calculate_button.clicked.disconnect()    
         except:
             pass   
-             
+        self.fermentation_explain_edit.setStyleSheet(sty.field_styles['read_only'])     
              
     def set_subscriptions(self):
         self.model.subscribe_model_changed(['malt','hop','yeast','recipe','equipment','session','style','fontset'],self.on_model_changed_main)
@@ -2004,6 +2007,9 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             
         self.hide_session_designation() 
         self.set_fonts()
+        
+        self.unitSetter.setModal(True)
+        self.unitSetter.show()
 
         
     def  show_folder_chooser(self):
@@ -2108,7 +2114,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         mypb=self.util.get_by_name(self.yeast_header_layout,'pitching')  
         if mypb: mypb.setValue(0)      
             
-
+'''
         
 if __name__ == "__main__":
  
@@ -2117,4 +2123,9 @@ if __name__ == "__main__":
     ui = MainWindowUI.Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
-    sys.exit(app.exec_())    
+    sys.exit(app.exec_())
+    '''
+            
+            
+            
+        

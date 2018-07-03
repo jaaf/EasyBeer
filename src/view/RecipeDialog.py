@@ -847,6 +847,15 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                 w_rate_unit=self.util.get_by_name_recursive(item.layout(),'rate_unit')
                 if w_rate_unit: w_rate_unit.setFont(self.model.in_use_fonts['field'])
                 
+                
+       
+        self.fermentation_explain_label.setFont(self.model.in_use_fonts['title_slanted'])
+                
+       
+        self.fermentation_explain_edit.setFont(self.model.in_use_fonts['field'])
+                
+                
+                
         for i in range(self.rest_layout.count()):
             item = self.rest_layout.itemAt(i)
             if item:
@@ -973,7 +982,9 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         if w_max_advised_temperature: w_max_advised_temperature.setStyleSheet(sty.field_styles['read_only']) 
                 
         w_max_allowed_temperature=self.util.get_by_name_recursive(self.yeast_layout,'max_allowed_temperature')
-        if w_max_allowed_temperature: w_max_allowed_temperature.setStyleSheet(sty.field_styles['read_only'])       
+        if w_max_allowed_temperature: w_max_allowed_temperature.setStyleSheet(sty.field_styles['read_only'])     
+        
+        self.fermentation_explain_edit.setStyleSheet(sty.field_styles['read_only'])  
                 
     def set_subscriptions(self):
         self.model.subscribe_model_changed(['recipe','fontset'],self.on_model_changed_recipe)
@@ -1074,6 +1085,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         if pitching_rate_edit: 
             pitching_rate_edit.setReadOnly(False) 
             pitching_rate_edit.setStyleSheet(sty.field_styles['editable']) 
+            
+        self.fermentation_explain_edit.setStyleSheet(sty.field_styles['editable'])    
                   
                 
     def update_hop_view(self,recipe):

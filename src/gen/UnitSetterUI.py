@@ -1,0 +1,90 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'unitsetter.ui'
+#
+# Created by: PyQt5 UI code generator 5.10
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+class Ui_Dialog(object):
+    def setupUi(self, Dialog):
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(691, 618)
+        self.apply_button = QtWidgets.QPushButton(Dialog)
+        self.apply_button.setGeometry(QtCore.QRect(560, 420, 92, 36))
+        self.apply_button.setObjectName("apply_button")
+        self.cancel_button = QtWidgets.QPushButton(Dialog)
+        self.cancel_button.setGeometry(QtCore.QRect(40, 420, 92, 36))
+        self.cancel_button.setObjectName("cancel_button")
+        self.main_label = QtWidgets.QLabel(Dialog)
+        self.main_label.setGeometry(QtCore.QRect(40, 30, 1331, 20))
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        font.setBold(True)
+        font.setWeight(75)
+        self.main_label.setFont(font)
+        self.main_label.setObjectName("main_label")
+        self.info_edit = QtWidgets.QLineEdit(Dialog)
+        self.info_edit.setGeometry(QtCore.QRect(40, 490, 611, 121))
+        self.info_edit.setAlignment(QtCore.Qt.AlignJustify|QtCore.Qt.AlignVCenter)
+        self.info_edit.setObjectName("info_edit")
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setGeometry(QtCore.QRect(40, 90, 611, 301))
+        self.widget.setObjectName("widget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.temperature_label = QtWidgets.QLabel(self.widget)
+        self.temperature_label.setObjectName("temperature_label")
+        self.horizontalLayout.addWidget(self.temperature_label)
+        self.temperature_combo = QtWidgets.QComboBox(self.widget)
+        self.temperature_combo.setObjectName("temperature_combo")
+        self.horizontalLayout.addWidget(self.temperature_combo)
+        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.volume_label = QtWidgets.QLabel(self.widget)
+        self.volume_label.setObjectName("volume_label")
+        self.horizontalLayout_2.addWidget(self.volume_label)
+        self.water_volume_combo = QtWidgets.QComboBox(self.widget)
+        self.water_volume_combo.setObjectName("water_volume_combo")
+        self.horizontalLayout_2.addWidget(self.water_volume_combo)
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.malt_mass_label = QtWidgets.QLabel(self.widget)
+        self.malt_mass_label.setObjectName("malt_mass_label")
+        self.horizontalLayout_3.addWidget(self.malt_mass_label)
+        self.malt_mass_combo = QtWidgets.QComboBox(self.widget)
+        self.malt_mass_combo.setObjectName("malt_mass_combo")
+        self.horizontalLayout_3.addWidget(self.malt_mass_combo)
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.yeast_mass_label = QtWidgets.QLabel(self.widget)
+        self.yeast_mass_label.setObjectName("yeast_mass_label")
+        self.horizontalLayout_4.addWidget(self.yeast_mass_label)
+        self.yeast_mass_combo = QtWidgets.QComboBox(self.widget)
+        self.yeast_mass_combo.setObjectName("yeast_mass_combo")
+        self.horizontalLayout_4.addWidget(self.yeast_mass_combo)
+        self.verticalLayout.addLayout(self.horizontalLayout_4)
+
+        self.retranslateUi(Dialog)
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def retranslateUi(self, Dialog):
+        _translate = QtCore.QCoreApplication.translate
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        self.apply_button.setText(_translate("Dialog", "Apply"))
+        self.cancel_button.setText(_translate("Dialog", "Cancel"))
+        self.main_label.setText(_translate("Dialog", "Please select the units you want the application to use"))
+        self.info_edit.setText(_translate("Dialog", "If you close this dialog, it will not appear at next startup. <b/>To make it appear again, please use the Preferences menu."))
+        self.temperature_label.setText(_translate("Dialog", "Température"))
+        self.volume_label.setText(_translate("Dialog", "Water volume"))
+        self.malt_mass_label.setText(_translate("Dialog", "Malt mass"))
+        self.yeast_mass_label.setText(_translate("Dialog", "Yeast mass"))
+

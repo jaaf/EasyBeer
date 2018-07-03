@@ -904,7 +904,7 @@
         </spacer>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_7">
+        <layout class="QVBoxLayout" name="fermentation_layout">
          <item>
           <widget class="QLabel" name="boiling_label_2">
            <property name="font">
@@ -966,6 +966,19 @@
          </item>
          <item>
           <layout class="QVBoxLayout" name="yeast_layout"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="fermentation_explain_label">
+           <property name="font">
+            <font>
+             <family>FreeSans</family>
+             <pointsize>13</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Add some specific guidance or information herebelow</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QTextEdit" name="fermentation_explain_edit"/>
