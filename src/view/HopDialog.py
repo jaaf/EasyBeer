@@ -42,7 +42,7 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.util=util
         self.current_hop=None # the hop currently selected
         ' register function with model for future model update announcements'
-        self.model.subscribe_model_changed(['hop'],self.on_model_changed_hop) 
+        self.model.subscribe_model_changed(['hop','fontset'],self.on_model_changed_hop) 
         self.add_button.hide()
         self.update_button.hide()
         self.cancel_button.hide()
@@ -149,7 +149,12 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         '''
         if target == 'hop':
             self.hop_key_list=self.model.hop_list 
-            self.refresh_hop_list_widget()   
+            self.refresh_hop_list_widget()  
+            
+        'we must wait for fonts to be initialized in model'    
+        if target == 'fontset':
+            if (self.model.in_use_fonts):
+                self.set_fonts()     
             
     def read_input(self):
         name=self.util.check_input(self.name_edit,True,self.tr('Name'),False)
@@ -242,35 +247,25 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         
         
     def set_fonts(self):
-        pf=platform.system()    
-        if pf=='Windows':
-            self.setWindowTitle(self.tr('Hop Database Edition'))
-            self.list_label.setFont(vcst.TITLE_FONT_W)
-            self.detail_label.setFont(vcst.TITLE_FONT_W)
-            self.add_button.setFont(vcst.BUTTON_FONT_W)
-            self.cancel_button.setFont(vcst.BUTTON_FONT_W)
-            self.update_button.setFont(vcst.BUTTON_FONT_W)
-            self.name_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.alpha_acid_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.form_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.close_button.setFont(vcst.BUTTON_FONT_W)
-            self.edit_button.setFont(vcst.BUTTON_FONT_W)
-            self.delete_button.setFont(vcst.BUTTON_FONT_W)
-            self.new_button.setFont(vcst.BUTTON_FONT_W)
-        elif pf=='Linux':
-            self.setWindowTitle(self.tr('Hop Database Edition'))
-            self.list_label.setFont(vcst.TITLE_FONT_L)
-            self.detail_label.setFont(vcst.TITLE_FONT_L)
-            self.add_button.setFont(vcst.BUTTON_FONT_L)
-            self.cancel_button.setFont(vcst.BUTTON_FONT_L)
-            self.update_button.setFont(vcst.BUTTON_FONT_L)
-            self.name_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.alpha_acid_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.form_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.close_button.setFont(vcst.BUTTON_FONT_L)
-            self.edit_button.setFont(vcst.BUTTON_FONT_L)
-            self.delete_button.setFont(vcst.BUTTON_FONT_L)
-            self.new_button.setFont(vcst.BUTTON_FONT_L)
+          
+        self.setWindowTitle(self.tr('Hop Database Edition'))
+        self.list_label.setFont(self.model.in_use_fonts['title_slanted'])
+        self.detail_label.setFont(self.model.in_use_fonts['title_slanted'])
+        self.add_button.setFont(self.model.in_use_fonts['button'])
+        self.cancel_button.setFont(self.model.in_use_fonts['button'])
+        self.update_button.setFont(self.model.in_use_fonts['button'])
+        self.name_label.setFont(self.model.in_use_fonts['field'])
+        self.name_edit.setFont(self.model.in_use_fonts['field'])
+        self.alpha_acid_label.setFont(self.model.in_use_fonts['field'])
+        self.alpha_acid_edit.setFont(self.model.in_use_fonts['field'])
+        self.form_label.setFont(self.model.in_use_fonts['field'])
+        self.form_list.setFont(self.model.in_use_fonts['field'])
+        self.close_button.setFont(self.model.in_use_fonts['button'])
+        self.edit_button.setFont(self.model.in_use_fonts['button'])
+        self.delete_button.setFont(self.model.in_use_fonts['button'])
+        self.new_button.setFont(self.model.in_use_fonts['button'])
+        self.hop_list_widget.setFont(self.model.in_use_fonts['field'])
+        
                 
         
     def showEvent(self,ev):
