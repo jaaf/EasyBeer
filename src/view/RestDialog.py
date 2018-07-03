@@ -44,7 +44,7 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
         self.init_styles()
         
     def add_rest(self):
-        rest=self.get_rest()
+        rest=self.read_rest_from_GUI()
         if not rest: return
         self.owner.insert_rest(self.rest_list_combo.currentIndex()+1,rest)
         self.update_rest_list()
@@ -78,7 +78,7 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
         self.util.alerte(message,QMessageBox.Information,self.tr('Info : Using the rest dialog?'))     
               
     
-    def get_rest(self):
+    def read_rest_from_GUI(self):
         purpose=self.util.check_input(self.purpose_edit,True,self.tr('purpose '),False)
         if not purpose: return
         duration = self.util.check_input(self.duration_edit,False,self.tr('duration'),False,0,200)

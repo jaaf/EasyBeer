@@ -844,6 +844,13 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                 
                 w_rate_unit=self.util.get_by_name_recursive(item.layout(),'rate_unit')
                 if w_rate_unit: w_rate_unit.setFont(self.model.in_use_fonts['field'])
+                
+        for i in range(self.rest_layout.count()):
+            item = self.rest_layout.itemAt(i)
+            if item:
+                pass
+                
+                        
             
     
     
