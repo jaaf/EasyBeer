@@ -850,7 +850,23 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         for i in range(self.rest_layout.count()):
             item = self.rest_layout.itemAt(i)
             if item:
-                pass
+                w_purpose=self.util.get_by_name(item.layout(),'purpose')
+                if w_purpose: w_purpose.setFont(self.model.in_use_fonts['field'])
+                
+                w_duration=self.util.get_by_name(item.layout(),'duration')
+                if w_duration: w_duration.setFont(self.model.in_use_fonts['field'])
+                
+                w_temperature=self.util.get_by_name(item.layout(),'temperature')
+                if w_temperature: w_temperature.setFont(self.model.in_use_fonts['field'])
+
+
+                w_duration_unit=self.util.get_by_name(item.layout(),'duration_unit')
+                if w_duration_unit: w_duration_unit.setFont(self.model.in_use_fonts['field'])
+                
+                w_temperature_unit=self.util.get_by_name(item.layout(),'temperature_unit')
+                if w_temperature_unit: w_temperature_unit.setFont(self.model.in_use_fonts['field'])                
+               
+                
                 
                         
             
@@ -1120,6 +1136,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             purpose.setReadOnly(ro)
             hl.addWidget(purpose)
             purpose.setText(r.purpose)
+            purpose.setFont(self.model.in_use_fonts['field'])
 
             duration=QLineEdit()  
             duration.setAccessibleName('duration')
@@ -1128,10 +1145,13 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             duration.setReadOnly(ro)
             hl.addWidget(duration)
             duration.setText(str(r.duration))
+            duration.setFont(self.model.in_use_fonts['field'])
             
             duration_unit =QLabel('min')
             duration_unit.setMaximumSize(40,30)
+            duration_unit.setAccessibleName('duration_unit')
             hl.addWidget(duration_unit)
+            duration_unit.setFont(self.model.in_use_fonts['field'])
             
             temperature = QLineEdit()
             temperature.setAccessibleName('temperature')
@@ -1140,10 +1160,13 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             temperature.setReadOnly(ro)  
             hl.addWidget(temperature)
             temperature.setText(str(r.temperature))
+            temperature.setFont(self.model.in_use_fonts['field'])
             
             temperature_unit =QLabel('°C')
             temperature_unit.setMaximumSize(40,30)
+            temperature_unit.setAccessibleName('temperature_unit')
             hl.addWidget(temperature_unit)
+            temperature_unit.setFont(self.model.in_use_fonts['field'])
             
             delete_button=QPushButton('X')
             delete_button.setAccessibleName('delete_button')
