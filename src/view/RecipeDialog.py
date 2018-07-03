@@ -458,6 +458,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.recipe_new_button.hide()
         self.recipe_edit_button.hide()
         self.unset_ro_and_color()
+        'the False last attribute means we are going to update the view with the list of rests the recipe contains u'
         self.update_rest_view(self.current_recipe, False)
         
                                  
@@ -465,12 +466,13 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
     def hop_chooser_show(self):
         self.hop_chooser.show()      
         self.hop_chooser.window().raise_()    
-        
-        
+      
+    'this function is called from the RestDialog to insert a rest a some place in the layout and in the list'    
     def insert_rest(self,position,rest):
         self.rest_list.insert(position,rest)
+        'from this time on, the list of rests in the recipe is different from the list of rests in the database'
         self.update_rest_view(self.current_recipe, False)        
-           
+        
             
     def load_selected_recipe(self):
         if self.recipe_list_widget.currentItem():
