@@ -276,7 +276,7 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>50</width>
+          <width>70</width>
           <height>16777215</height>
          </size>
         </property>
@@ -333,7 +333,7 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>50</width>
+          <width>70</width>
           <height>16777215</height>
          </size>
         </property>
@@ -403,7 +403,7 @@
          <widget class="QLineEdit" name="kolbach_min">
           <property name="maximumSize">
            <size>
-            <width>50</width>
+            <width>70</width>
             <height>50</height>
            </size>
           </property>
@@ -444,7 +444,7 @@
          <widget class="QLineEdit" name="kolbach_max">
           <property name="maximumSize">
            <size>
-            <width>50</width>
+            <width>70</width>
             <height>50</height>
            </size>
           </property>

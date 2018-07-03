@@ -35,7 +35,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.controller=controller
         self.util=util
         self.current_malt=None # the malt currently selected
-        self.model.subscribe_model_changed(['malt'],self.on_model_changed_malt) 
+        self.model.subscribe_model_changed(['malt','fontset'],self.on_model_changed_malt) 
         self.add_button.hide()
         self.update_button.hide()
         self.cancel_button.hide()
@@ -101,42 +101,35 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.add_button.setStyleSheet('background-color:lightgreen;')
         self.update_button.setStyleSheet('background-color:lightgreen;')
         self.cancel_button.setStyleSheet('background-color:pink:ont-family')
-        if pf=='Windows':
-            print('setting Windows Fonts in MaltDialog')
-            self.add_button.setFont(vcst.BUTTON_FONT_W)
-            self.update_button.setFont(vcst.BUTTON_FONT_W)
-            self.cancel_button.setFont(vcst.BUTTON_FONT_W)
-            self.edit_button.setFont(vcst.BUTTON_FONT_W)
-            self.delete_button.setFont(vcst.BUTTON_FONT_W)
-            self.new_button.setFont(vcst.BUTTON_FONT_W)
-            self.malt_list_label.setFont(vcst.TITLE_FONT_W)
-            self.detail_label.setFont(vcst.TITLE_FONT_W)
-            self.name_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.maker_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.max_yield_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.color_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.kolbach_index_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.kolbach_max_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.kolbach_min_label.setFont(vcst.FIELD_LABEL_FONT_W)
+     
+        print('setting Windows Fonts in MaltDialog')
+        self.add_button.setFont(self.model.in_use_fonts['button'])
+        self.update_button.setFont(self.model.in_use_fonts['button'])
+        self.cancel_button.setFont(self.model.in_use_fonts['button'])
+        self.edit_button.setFont(self.model.in_use_fonts['button'])
+        self.delete_button.setFont(self.model.in_use_fonts['button'])
+        self.new_button.setFont(self.model.in_use_fonts['button'])
+        self.close_button.setFont(self.model.in_use_fonts['button'])
+        self.malt_list_label.setFont(self.model.in_use_fonts['title_slanted'])
+        self.detail_label.setFont(self.model.in_use_fonts['title_slanted'])
+        self.name_label.setFont(self.model.in_use_fonts['field'])
+        self.name_edit.setFont(self.model.in_use_fonts['field'])
+        
+        self.maker_label.setFont(self.model.in_use_fonts['field'])
+        self.maker_edit.setFont(self.model.in_use_fonts['field'])
+        self.max_yield_label.setFont(self.model.in_use_fonts['field'])
+        self.max_yield_edit.setFont(self.model.in_use_fonts['field'])
+        self.color_label.setFont(self.model.in_use_fonts['field'])
+        self.kolbach_index_label.setFont(self.model.in_use_fonts['field'])
+        self.kolbach_min.setFont(self.model.in_use_fonts['field'])
+        self.kolbach_max.setFont(self.model.in_use_fonts['field'])
+        self.kolbach_max_label.setFont(self.model.in_use_fonts['field'])
+        self.kolbach_min_label.setFont(self.model.in_use_fonts['field'])
+        self.malt_list_widget.setFont(self.model.in_use_fonts['field'])
+        self.color_edit.setFont(self.model.in_use_fonts['field'] )
             
             
-        elif pf=='Linux':
-            print('setting linux fonts in MaltDialog')
-            self.add_button.setFont(vcst.BUTTON_FONT_L)
-            self.update_button.setFont(vcst.BUTTON_FONT_L)
-            self.cancel_button.setFont(vcst.BUTTON_FONT_L)
-            self.edit_button.setFont(vcst.BUTTON_FONT_L)
-            self.delete_button.setFont(vcst.BUTTON_FONT_L)
-            self.new_button.setFont(vcst.BUTTON_FONT_L)
-            self.malt_list_label.setFont(vcst.TITLE_FONT_L)
-            self.detail_label.setFont(vcst.TITLE_FONT_L)
-            self.name_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.maker_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.max_yield_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.color_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.kolbach_index_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.kolbach_max_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.kolbach_min_label.setFont(vcst.FIELD_LABEL_FONT_L)    
+      
                     
         
     def init_dialog_and_connections(self):
@@ -192,6 +185,11 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         if target == 'malt':
             self.malt_key_list=self.model.malt_list 
             self.refresh_malt_list_widget()  
+            
+        'we must wait for fonts to be initialized in model'    
+        if target == 'fontset':
+            if (self.model.in_use_fonts):
+                self.set_fonts()    
             
      
     def read_input(self):
