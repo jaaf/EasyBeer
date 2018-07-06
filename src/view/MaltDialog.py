@@ -100,9 +100,9 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         pf=platform.system()
         self.add_button.setStyleSheet('background-color:lightgreen;')
         self.update_button.setStyleSheet('background-color:lightgreen;')
-        self.cancel_button.setStyleSheet('background-color:pink:ont-family')
+        self.cancel_button.setStyleSheet('background-color:pink')
      
-        print('setting Windows Fonts in MaltDialog')
+        
         self.add_button.setFont(self.model.in_use_fonts['button'])
         self.update_button.setFont(self.model.in_use_fonts['button'])
         self.cancel_button.setFont(self.model.in_use_fonts['button'])
