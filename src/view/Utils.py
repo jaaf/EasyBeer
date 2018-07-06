@@ -18,7 +18,7 @@
 #Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow,QHBoxLayout,QLabel,QLineEdit,QMessageBox,QFrame,QComboBox
+from PyQt5.QtWidgets import  QWidget,QMessageBox,QComboBox
 import view.constants as vcst
 import view.styles as sty
 import collections
@@ -128,6 +128,18 @@ class Utils(QWidget):
         self.alerte_bad_input(tx)
         return None 
     
+    def clearLayout(self, layout):
+        if layout:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget:
+                    widget.deleteLater()
+                else :
+                    self.clearLayout(item.layout())
+                layout.removeItem(item) 
+                
+    
     def confirm_dialog(self,message):
         question=QMessageBox()
         question.setIcon(QMessageBox.Information)
@@ -143,9 +155,7 @@ class Utils(QWidget):
         if unit.name=='temperature':
             if target == 'Farenheit':
                 ret=(value*1.8)+32
-                return ('{0:.1f}'.format(ret))
-                
-               
+                return ('{0:.1f}'.format(ret))  
             else: 
                 return ('{0:.1f}'.format(value))
             
@@ -221,6 +231,7 @@ class Utils(QWidget):
             if origin == 'Ounce':
                 return value    *28.3495
             else: return value  
+            
         if unit.name=='water_volume':
             if origin=='Gallon':
                 return value*3.78541
@@ -245,7 +256,48 @@ class Utils(QWidget):
                 return value
             if origin=='Ounce':
                 return value*28.3495    
-             
+    
+    
+    def get_by_name(self,layout,name):
+        'return the widget which name is given in first level'
+        for i in range(layout.count()):
+            try:
+                if layout.itemAt(i).widget().accessibleName()==name:
+                    return layout.itemAt(i).widget()
+            except:
+                pass
+        return None    
+      
+    def get_by_name_recursive(self,layout,name):
+        'find a widget by name whatever its deepness' 
+        for i in range(layout.count()):
+            item = layout.itemAt(i)
+            try:
+                if item.widget().accessibleName() == name:
+                    return item.widget()
+                                  
+            except:
+                try: 
+                    if item.layout():
+                        w=self.get_by_name_recursive(item.layout(),name)
+                        if w: return w
+                except:
+                    pass          
+        return None     
+
+
+    def get_containing_layout(self,layout,name):
+        'Find a layout in a layout that contains the widget the name of which is given: Recursive'
+        for i in range(layout.count()):
+            item = layout.itemAt(i)
+            if item.widget():
+                if item.widget().accessibleName()==name:
+                    return layout
+            
+            if item.layout():
+                    return self.get_containing_layout(item.layout(), name)
+  
+        return None          
 
     'list all widgets included in a layout recursively'
     def get_included_widgets(self,layout):
@@ -273,63 +325,12 @@ class Utils(QWidget):
         if unit.unit=='Kilogram': return 'kg' 
         if unit.unit=='Gram': return 'g'
         if unit.unit=='Ounce': return 'oz.'
-        
-        
-    def clearLayout(self, layout):
-        if layout:
-            while layout.count():
-                item = layout.takeAt(0)
-                widget = item.widget()
-                if widget:
-                    widget.deleteLater()
-                else :
-                    self.clearLayout(item.layout())
-                layout.removeItem(item) 
-
-    def get_by_name(self,layout,name):
-        'return the widget which name is given in first level'
-        for i in range(layout.count()):
-            try:
-                if layout.itemAt(i).widget().accessibleName()==name:
-                    return layout.itemAt(i).widget()
-            except:
-                pass
-        return None    
-      
-    def get_by_name_recursive(self,layout,name):
-        'find a widget by name whatever its deepness' 
-        for i in range(layout.count()):
-            item = layout.itemAt(i)
-            try:
-                if item.widget().accessibleName() == name:
-                    return item.widget()
-                                  
-            except:
-                try: 
-                    if item.layout():
-                        w=self.get_by_name_recursive(item.layout(),name)
-                        if w: return w
-                except:
-                    pass
-              
-        return None     
-
-
-    def get_containing_layout(self,layout,name):
-        'Find a layout in a layout that contains the widget the name of which is given: Recursive'
-        for i in range(layout.count()):
-            item = layout.itemAt(i)
-            if item.widget():
-                if item.widget().accessibleName()==name:
-                    return layout
-            
-            if item.layout():
-                    return self.get_containing_layout(item.layout(), name)
-  
-        return None 
+    
     
     def get_usage_key(self,v):
         for key,val in   self.hop_usage_dic.items():
             if val == v:
                 return key
-        return None    
+        return None  
+    
+      

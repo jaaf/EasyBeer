@@ -19,12 +19,8 @@
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import  QWidget,QMessageBox
-
 from gen import RestDialogUI
-
-from model.Rest import Rest
 from model.RestInRecipe import RestInRecipe
-
 import view.styles as sty
 
 
@@ -78,16 +74,6 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
         self.util.alerte(message,QMessageBox.Information,self.tr('Info : Using the rest dialog?'))     
               
     
-    def read_rest_from_GUI(self):
-        purpose=self.util.check_input(self.purpose_edit,True,self.tr('purpose '),False)
-        if not purpose: return
-        duration = self.util.check_input(self.duration_edit,False,self.tr('duration'),False,0,200)
-        if not duration: return
-        temperature = self.util.check_input(self.temperature_edit,False,self.tr('temperature'),False,0,100)
-        if not temperature: return
-        self.clear_edits()
-        return RestInRecipe(purpose, duration,temperature)
-    
     def init_styles(self):
         self.purpose_edit.setStyleSheet(sty.field_styles['editable'])
         self.temperature_edit.setStyleSheet(sty.field_styles['editable'])
@@ -102,6 +88,22 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
         self.optimal_ph_max.setStyleSheet(sty.field_styles['min_max_advised'])
         self.optimal_temperature_min.setStyleSheet(sty.field_styles['min_max_advised'])
         self.optimal_temperature_max.setStyleSheet(sty.field_styles['min_max_advised'])
+        
+        
+    def on_model_changed_rest(self,target):
+        if target == 'rest':
+            self.refresh_rest_list_widget() 
+            
+                
+    def read_rest_from_GUI(self):
+        purpose=self.util.check_input(self.purpose_edit,True,self.tr('purpose '),False)
+        if not purpose: return
+        duration = self.util.check_input(self.duration_edit,False,self.tr('duration'),False,0,200)
+        if not duration: return
+        temperature = self.util.check_input(self.temperature_edit,False,self.tr('temperature'),False,0,100)
+        if not temperature: return
+        self.clear_edits()
+        return RestInRecipe(purpose, duration,temperature)    
     
     def refresh_select_rest_combo(self):
         self.select_rest_combo.clear()
@@ -110,7 +112,6 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
             self.select_rest_combo.addItem(r)
         
         if self.current_rest:
-            #print('RestDialogCreate : current_rest is set and equal to: '+self.current_rest)
             index = self.select_rest_combo.findData(self.current_rest)
             self.select_rest_combo.setCurrentIndex(index) 
         else:
@@ -124,13 +125,10 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
             self.rest_list_widget.addItem(key)
 
         if self.current_rest:
-            #print('RestDialogCreate : current_rest is set and equal to: '+self.current_rest)
             item=self.rest_list_widget.findItems(self.current_rest,QtCore.Qt.MatchExactly)
             self.rest_list_widget.setCurrentItem(item[0])             
             
-    def on_model_changed_rest(self,target):
-        if target == 'rest':
-            self.refresh_rest_list_widget()     
+        
         
     def selection_changed_rest(self):
         if self.rest_list_widget.currentItem():
@@ -149,8 +147,7 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
             self.guidance_text.setText(rest.guidance)  
             self.purpose_edit.setText(name)
             self.temperature_edit.setText(str((rest.temperatures[1]+rest.temperatures[2])/2))    
-            self.duration_edit.setText(str(60))#this is the recommended duration     
-        #print(name)
+            self.duration_edit.setText(str(60))#this is the recommended duration   
    
         
     def init_dialog_and_connections(self):
@@ -176,12 +173,8 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
         self.set_translatable_textes()
         
         
-        
     def update_rest_list(self):
-        
-        #print ('Updating rest list')
         self.rest_list_combo.clear()
         for r in self.owner.rest_list:
-            #print(r.purpose + ' in rest list')
             self.rest_list_combo.addItem(r.purpose)
             

@@ -17,11 +17,8 @@
 #along with this program; if not, write to the Free Software
 #Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow,QLabel,QComboBox,QHBoxLayout,QLineEdit,QPushButton,QMessageBox,QVBoxLayout
-
+from PyQt5.QtWidgets import  QWidget, QMainWindow,QLabel,QComboBox,QHBoxLayout,QLineEdit,QPushButton,QMessageBox,QVBoxLayout
 from gen import RecipeDialogUI
-
-
 from model.Recipe import Recipe
 from model.MaltInMash import MaltInMash
 from model.HopInRecipe import HopInRecipe
@@ -32,11 +29,7 @@ import view.styles as sty
 from view.MaltChooser import MaltChooser
 from view.HopChooser import HopChooser
 from view.YeastChooser import YeastChooser
-
-
-
 from view.RestDialog import RestDialog
-
 from PyQt5.QtCore import pyqtSignal
 
 
@@ -67,19 +60,17 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
     '''
     classdocs
     '''
-
     def __init__(self,model,controller,util):
-        
         QWidget.__init__(self,None,QtCore.Qt.WindowStaysOnTopHint) 
         self.setupUi(self)
         self.model = model
         self.controller=controller
         self.util=util
         self.current_recipe=None # the recipe currently selected
-        #get the list of malts from db and load into the malt_list widget
+        'get the list of malts from db and load into the malt_list widget'
         self.malt_key_list=self.model.malt_list 
         self.recipe_key_list=self.model.recipe_list
-        # register function with model for future model update announcements
+        'register function with model for future model update announcements'
         self.set_subscriptions()
         self.malt_type_list=[]
         self.rest_list=[]
@@ -112,13 +103,30 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.recipe_edit_button.hide()
         self.recipe_delete_button.hide()
         self.recipe_new_button.show()
-
+        
+    def add_hop_rate(self,layout,value=None):
+        'add an input for hop rate in the layout'
+        unit=self.model.get_unit('hop_rate')
+        if unit: 
+            unit_label=self.util.get_unit_label(unit)
+        hop_rate_edit=QLineEdit()
+        hop_rate_edit.setAccessibleName('hop_rate')
+        hop_rate_edit.setFont(self.model.in_use_fonts['field'])
+        hop_rate_edit.setMaximumSize(50,30)
+        hop_rate_edit.setMinimumSize(50,30)
+        hop_rate_edit.setStyleSheet(sty.field_styles['editable'])
+        layout.addWidget(hop_rate_edit)
+        hop_rate_unit_label=QLabel('g/l')
+        hop_rate_unit_label.setAccessibleName('hop_rate_unit')
+        hop_rate_unit_label.setFont(self.model.in_use_fonts['field'])
+        layout.addWidget(hop_rate_unit_label)
+        hop_rate_unit_label.setText(unit_label)
+        if value: hop_rate_edit.setText(str(self.util.convert_to(unit,value)))  
         
     def add_hop_view(self,hop_type,usage=None,duration=None,hop_rate=None): 
         'prepare a hop view from the data loaded and add it to the hop layout' 
         hopT=hop_type
         hl=QHBoxLayout()
-        
         name_edit=QLineEdit()
         name_edit.setAccessibleName('name')
         name_edit.setMinimumSize(400,30)
@@ -162,8 +170,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         duration_unit_label.setAccessibleName('duration_unit')
         hl.addWidget(duration_unit_label)
         hl.addStretch()
-        
-
+    
         self.add_hop_rate(hl,hop_rate)
         delete_button=QPushButton('X')
         delete_button.setAccessibleName('delete_button')
@@ -176,8 +183,6 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         info_label.setFont(self.model.in_use_fonts['field'])
         usage_combo.setFont(self.model.in_use_fonts['field'])
         duration_edit.setFont(self.model.in_use_fonts['field'])
-        
-        
         self.hop_layout.addLayout(hl)
             
                
@@ -221,25 +226,37 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         name_edit.setFont(self.model.in_use_fonts['field'])
         percentage_edit.setFont(self.model.in_use_fonts['field'])
         percentage_unit.setFont(self.model.in_use_fonts['field'])
-        
-      
         self.malt_layout.addLayout(hl)
-    
-    def alerte(self,texte):
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
-        msg.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
-        msg.setText(texte)
-        msg.setWindowTitle(self.tr("Warning Text"))
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec_() 
         
         
-    def set_yeast_view(self,yeast_type,rate=None):   
+    def add_subdialog_buttons(self):
+        caption=self.tr('+ Add a malt')
+        self.show_malt_chooser_button = customLabel('')
+        self.show_malt_chooser_button.setText('+ Add a malt')
+        self.show_malt_chooser_button.clicked.connect(self.malt_chooser_show)
+        self.malt_header_layout.insertWidget(1,self.show_malt_chooser_button)
+        caption=self.tr('+ Add a hop')
+        self.show_hop_chooser_button = customLabel(caption)
+        self.show_hop_chooser_button.clicked.connect(self.hop_chooser_show)
+        self.hop_header_layout.insertWidget(1,self.show_hop_chooser_button)
+        caption=self.tr('+ Add an adjunct')
+        self.show_adjunct_chooser_button = customLabel(caption)
+        self.show_adjunct_chooser_button.clicked.connect(self.adjunct_chooser_show)
+        self.adjunct_header_layout.insertWidget(1,self.show_adjunct_chooser_button)
+        caption=self.tr('+ Add a rest')
+        self.show_rest_dialog_button = customLabel(caption)
+        self.show_rest_dialog_button.clicked.connect(self.rest_dialog_show)
+        self.rest_header_layout.insertWidget(1,self.show_rest_dialog_button)  
+        caption='+ Select or change the yeast'
+        self.show_yeast_chooser_button =customLabel(caption)
+        self.show_yeast_chooser_button.clicked.connect(self.yeast_chooser_show)
+        self.yeast_header_layout.insertWidget(1,self.show_yeast_chooser_button)  
+        
+        
+    def add_yeast_view(self,yeast_type,rate=None):   
         self.util.clearLayout(self.yeast_layout)
         yeastT=yeast_type
         hl=QHBoxLayout()#create an horizontal layout to host widgets for the yeast
-        
         maker_edit=QLineEdit()
         maker_edit.setAccessibleName('maker')
         maker_edit.setMinimumSize(100,30)
@@ -347,58 +364,23 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         max_allowed_temperature_edit.setFont(self.model.in_use_fonts['field'])
         rate_edit.setFont(self.model.in_use_fonts['field'])
         rate_unit.setFont(self.model.in_use_fonts['field'])
+        self.yeast_layout.addLayout(hl)      
         
-        
-        self.yeast_layout.addLayout(hl)
-        
-        
-    def aroma_explain(self):
-        mess='''
-        Checking the aromatic checkbox allows you to define 
-        a pitching rate for the hop used, and means that  
-        this rate is fixed and will not be modified in the 
-        brewing session contrarily to  the other hop that 
-        are used for bitterness and for which an amount can 
-        be adjusted to reach a given bitterness target.'''
-        self.util.alerte(self.tr(mess))   
-
-        
-  
-        
-    def add_subdialog_buttons(self):
-        caption=self.tr('+ Add a malt')
-        self.show_malt_chooser_button = customLabel('')
-        self.show_malt_chooser_button.setText('+ Add a malt')
-        self.show_malt_chooser_button.clicked.connect(self.malt_chooser_show)
-        self.malt_header_layout.insertWidget(1,self.show_malt_chooser_button)
-        
-       
-        caption=self.tr('+ Add a hop')
-        self.show_hop_chooser_button = customLabel(caption)
-        self.show_hop_chooser_button.clicked.connect(self.hop_chooser_show)
-        self.hop_header_layout.insertWidget(1,self.show_hop_chooser_button)
-        
-        caption=self.tr('+ Add an adjunct')
-        self.show_adjunct_chooser_button = customLabel(caption)
-        self.show_adjunct_chooser_button.clicked.connect(self.adjunct_chooser_show)
-        self.adjunct_header_layout.insertWidget(1,self.show_adjunct_chooser_button)
-        
-        caption=self.tr('+ Add a rest')
-        self.show_rest_dialog_button = customLabel(caption)
-        self.show_rest_dialog_button.clicked.connect(self.rest_dialog_show)
-        self.rest_header_layout.insertWidget(1,self.show_rest_dialog_button)  
-        
-        caption='+ Select or change the yeast'
-        self.show_yeast_chooser_button =customLabel(caption)
-        self.show_yeast_chooser_button.clicked.connect(self.yeast_chooser_show)
-        self.yeast_header_layout.insertWidget(1,self.show_yeast_chooser_button)
-        
-         
         
     def adjunct_chooser_show(self):
         return
         self.adjunct_chooser.show()    
-         
+     
+     
+    def alerte(self,texte):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
+        msg.setText(texte)
+        msg.setWindowTitle(self.tr("Warning Text"))
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()      
+        
         
     def alerte_sum_percentage(self,val): 
         msg = QMessageBox()
@@ -408,31 +390,19 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         msg.setText(text)
         msg.setWindowTitle(self.tr("Warning percentages"))
         msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec_()   
-
-
-    def add_hop_rate(self,layout,value=None):
-        'add an input for hop rate in the layout'
-        print('adding hop_rate')
-        unit=self.model.get_unit('hop_rate')
-        if unit: 
-            unit_label=self.util.get_unit_label(unit)
-        else:print('Unit not found in model')
-        hop_rate_edit=QLineEdit()
-        hop_rate_edit.setAccessibleName('hop_rate')
-        hop_rate_edit.setFont(self.model.in_use_fonts['field'])
-        hop_rate_edit.setMaximumSize(50,30)
-        hop_rate_edit.setMinimumSize(50,30)
-        hop_rate_edit.setStyleSheet(sty.field_styles['editable'])
-        layout.addWidget(hop_rate_edit)
-        hop_rate_unit_label=QLabel('g/l')
-        hop_rate_unit_label.setAccessibleName('hop_rate_unit')
-        hop_rate_unit_label.setFont(self.model.in_use_fonts['field'])
-        layout.addWidget(hop_rate_unit_label)
-        hop_rate_unit_label.setText(unit_label)
-        if value: 
-            
-            hop_rate_edit.setText(str(self.util.convert_to(unit,value)))            
+        msg.exec_()       
+     
+     
+    def cancel(self):
+        'after canceling an update or a creation'  
+        'to prevent reselect after cancellation or creation'
+        self.current_recipe=None
+        self.selection_changed_recipe()  
+        self.refresh_recipe_list_widget()
+        'because selection_changed show them'
+        self.recipe_edit_button.hide()
+        self.recipe_delete_button.hide()
+        self.recipe_new_button.show()      
                                
     def clear_edits(self):
         self.recipe_name_edit.setText('')
@@ -462,7 +432,6 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                          
     def edit_recipe(self):
         self.recipe_add_button.setText(self.tr('Add this recipe'))  
-        
         self.recipe_add_button.hide()
         self.recipe_update_button.show()
         self.recipe_cancel_button.show()
@@ -473,11 +442,20 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         'the False last attribute means we are going to update the view with the list of rests the recipe contains u'
         self.update_rest_view(self.current_recipe, False)
         
-                                 
-
     def hop_chooser_show(self):
         self.hop_chooser.show()      
-        self.hop_chooser.window().raise_()    
+        self.hop_chooser.window().raise_() 
+        
+        
+    def init_dialog_and_connections(self):
+        self.recipe_edit_button.clicked.connect(self.edit_recipe)
+        self.recipe_new_button.clicked.connect(self.new_recipe)
+        self.recipe_delete_button.clicked.connect(self.delete_recipe)
+        self.recipe_list_widget.currentItemChanged.connect(self.selection_changed_recipe)
+        self.recipe_add_button.clicked.connect(self.save_recipe)  
+        self.recipe_update_button.clicked.connect(self.update_recipe) 
+        self.recipe_cancel_button.clicked.connect(self.cancel)
+        self.recipe_close_button.clicked.connect(self.close)       
       
     'this function is called from the RestDialog to insert a rest a some place in the layout and in the list'    
     def insert_rest(self,position,rest):
@@ -515,7 +493,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             if hasattr(recipe,'yeast_in_recipe'):
                 yir=recipe.yeast_in_recipe
                 yeast=self.model.get_yeast(yir.yeast)  
-                self.set_yeast_view(yeast, yir.pitching_rate)  
+                self.add_yeast_view(yeast, yir.pitching_rate)  
                 
             if hasattr(recipe,'fermentation_explanation'):
                 self.fermentation_explain_edit.setPlainText(recipe.fermentation_explanation)          
@@ -545,16 +523,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.clear_edits() 
         self.rest_list=[]
         
-    def cancel(self):
-        'after canceling an update or a creation'  
-        'to prevent reselect after cancellation or creation'
-        self.current_recipe=None
-        self.selection_changed_recipe()  
-        self.refresh_recipe_list_widget()
-        'because selection_changed show them'
-        self.recipe_edit_button.hide()
-        self.recipe_delete_button.hide()
-        self.recipe_new_button.show()    
+        
         
         
     def on_model_changed_recipe(self,target):
@@ -703,6 +672,19 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             item=self.recipe_list_widget.findItems(self.current_recipe,QtCore.Qt.MatchExactly)
             self.recipe_list_widget.setCurrentItem(item[0])      
     
+    
+    def remove_hop_view(self):
+        'remove a hop view from the GUI after the user used Delete button in it'
+        s=self.sender()
+        for i in range(self.hop_layout.count()):
+            item = self.hop_layout.itemAt(i)
+            if item:
+                delete_button=self.util.get_by_name_recursive(item.layout(),'delete_button')
+                #if s == item.layout().itemAt(5).widget():#5 est la position du bouton 
+                if s == delete_button:
+                    self.util.clearLayout(item.layout())  
+                    self.hop_layout.removeItem(item)
+                    return
             
     def remove_malt_view(self):
         'remove a malt view from the GUI after the user used the Delete button'
@@ -714,6 +696,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                     self.util.clearLayout(item.layout())
                     self.malt_layout.removeItem(item)
                     return   
+    
+    
             
                 
     def remove_rest_view(self):
@@ -729,23 +713,35 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                     return   
            
                 
-    def remove_hop_view(self):
-        'remove a hop view from the GUI after the user used Delete button in it'
-        s=self.sender()
-        for i in range(self.hop_layout.count()):
-            item = self.hop_layout.itemAt(i)
-            if item:
-                delete_button=self.util.get_by_name_recursive(item.layout(),'delete_button')
-                #if s == item.layout().itemAt(5).widget():#5 est la position du bouton 
-                if s == delete_button:
-                    self.util.clearLayout(item.layout())  
-                    self.hop_layout.removeItem(item)
-                    return             
+                 
     
     
     def rest_dialog_show(self):
         self.rest_dialog.show()
         self.rest_dialog.window().raise_()
+        
+    def save_recipe(self):
+        recipe=self.prepare_a_recipe_to_save()
+        if not recipe: return #the dialog may have aborted because on field was let empty  
+        'use the model to save the recipe'
+        self.model.add_recipe(recipe)
+        item=self.recipe_list_widget.findItems(recipe.name,QtCore.Qt.MatchExactly)
+        self.recipe_list_widget.setCurrentItem(item[0])     
+        self.set_ro_and_color()  
+        self.recipe_add_button.hide() 
+        self.recipe_delete_button.setEnabled(True)
+        self.recipe_new_button.setEnabled(True)  
+        
+        
+    def selection_changed_recipe(self):
+        #print('RecipeDialog : Recipe selection changed') 
+        self.recipe_add_button.hide()
+        self.recipe_update_button.hide()
+        self.recipe_cancel_button.hide()
+        self.load_selected_recipe() 
+        self.recipe_edit_button.show()
+        self.recipe_delete_button.show() 
+        self.recipe_new_button.show()      
         
     def set_fonts(self):
         
@@ -898,39 +894,13 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
     
     
         
-    def save_recipe(self):
-        recipe=self.prepare_a_recipe_to_save()
-        if not recipe: return #the dialog may have aborted because on field was let empty  
-        'use the model to save the recipe'
-        self.model.add_recipe(recipe)
-        item=self.recipe_list_widget.findItems(recipe.name,QtCore.Qt.MatchExactly)
-        self.recipe_list_widget.setCurrentItem(item[0])     
-        self.set_ro_and_color()  
-        self.recipe_add_button.hide() 
-        self.recipe_delete_button.setEnabled(True)
-        self.recipe_new_button.setEnabled(True)
+    
       
            
-    def selection_changed_recipe(self):
-        #print('RecipeDialog : Recipe selection changed') 
-        self.recipe_add_button.hide()
-        self.recipe_update_button.hide()
-        self.recipe_cancel_button.hide()
-        self.load_selected_recipe() 
-        self.recipe_edit_button.show()
-        self.recipe_delete_button.show() 
-        self.recipe_new_button.show()          
+              
         
         
-    def init_dialog_and_connections(self):
-        self.recipe_edit_button.clicked.connect(self.edit_recipe)
-        self.recipe_new_button.clicked.connect(self.new_recipe)
-        self.recipe_delete_button.clicked.connect(self.delete_recipe)
-        self.recipe_list_widget.currentItemChanged.connect(self.selection_changed_recipe)
-        self.recipe_add_button.clicked.connect(self.save_recipe)  
-        self.recipe_update_button.clicked.connect(self.update_recipe) 
-        self.recipe_cancel_button.clicked.connect(self.cancel)
-        self.recipe_close_button.clicked.connect(self.close)
+    
         
         
          
@@ -1117,11 +1087,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             #print(str(h.hop_rate))   
             self.add_hop_view(hop, h.usage, h.duration,h.hop_rate)     
                
-    def update_yeast_view(self,recipe):
-        self.util.clearLayout(self.yeast_layout)
-        yir=recipe.yeast_in_recipe
-        yeast=self.model.get_yeast(yir.yeast)
-        self.set_yeast_view(yeast,yir.pitching_rate)
+    
         
     def update_recipe(self):
         boiling_time = self.util.check_input(self.boiling_time_edit,False,self.tr('Boiling Time'),False, 30,200)
@@ -1214,8 +1180,14 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             else:
                 delete_button.show()
                      
-            self.rest_layout.addLayout(hl)      
+            self.rest_layout.addLayout(hl)     
             
+             
+    def update_yeast_view(self,recipe):
+        self.util.clearLayout(self.yeast_layout)
+        yir=recipe.yeast_in_recipe
+        yeast=self.model.get_yeast(yir.yeast)
+        self.add_yeast_view(yeast,yir.pitching_rate)        
                       
     def yeast_chooser_show(self):
 

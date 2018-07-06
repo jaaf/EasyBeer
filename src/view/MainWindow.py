@@ -75,8 +75,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         'Please see pyinstaller’s documentation'
         self.frozen = 'not' 
         if getattr(sys, 'frozen', False):
-            # we are running in a bundle
-            #print('Frozen')
             self.frozen = 'yes'
             self.bundle_dir = sys._MEIPASS
             self.model = Model(self.bundle_dir)
@@ -84,7 +82,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             self.trad_path=os.path.join(self.bundle_dir ,'translate')
    
         else: 
-            #print('Not frozen')
             'l’import export is reserved to the frozen application (bundled)'
             self.actionImport_Export_Databases.setVisible(False)
             self.model = Model()
@@ -207,10 +204,8 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
     
         if hop_rate:
             hr_unit=self.model.get_unit('hop_rate')
-            print('hop rate = '+str(hop_rate))
             hidden_hop_rate=QLineEdit()
             hidden_hop_rate.setText(str(self.util.convert_to(hr_unit,hop_rate)))
-            print('this his hidden hop rate '+hidden_hop_rate.text())
             hidden_hop_rate.setVisible(False)
             hidden_hop_rate.setAccessibleName('hidden_hop_rate')
             hl.addWidget(hidden_hop_rate)
@@ -579,7 +574,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         v_unit=self.model.get_unit('water_volume')
         'batch_size always in liter hence the conversion from display unit'
         batch_size=self.util.check_input(self.batch_volume_edit,False,self.tr('Batch Volume'),False, 0,100,None,v_unit)
-        print('batch_size= '+str(batch_size))
         if not batch_size:
             return
         if not self.equipment:
@@ -588,8 +582,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             return
         'end_boiling_volume also in liters'
         end_boiling_volume=batch_size+self.equipment.boiler_dead_space
-        print('end_boiling_volume= '+str(end_boiling_volume))
-        #print('end boiling volume = '+str(end_boiling_volume))
         for i in range(self.hop_layout.count()):
             hr_unit=self.model.get_unit('hop_rate')
             ha_unit=self.model.get_unit('hop_mass')
@@ -597,21 +589,16 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             w_amount= self.util.get_by_name(hl,'amount')
             #w_advised_amount=self.util.get_by_name(hl,'advised_amount')
             w_hidden_rate=self.util.get_by_name(hl, 'hidden_hop_rate')
-            print('hidden rate =='+w_hidden_rate.text()) 
             'rate always in g/liters'
             rate=self.util.check_input(w_hidden_rate, False, self.tr(' Hop rate '+str(i)), False, 0, 50, True,hr_unit)
-            print('rate = '+str(rate))
             if not rate:
                 return
             w_advised=self.util.get_by_name(hl,'advised_amount')
-            print('calculating advised hop amount')
             
             advised_value=self.util.convert_to(ha_unit, rate*end_boiling_volume)
             #advised_value_formated='{0:.2f}'.format(advised_value)
             #display_value='{0:.2f}'.format(advised_value)
             w_advised.setText(advised_value)
-            #w_amount.setText(display_value)
-            print('advised_value = '+str(advised_value))
             w_amount.setText(advised_value)
             #w_advised_amount.setText(str(advised_value))
             self.calculate_IBU(w_amount)
@@ -619,7 +606,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
 
  
     def calculate_IBU(self,s=None):
-        #print('Entering calculate_IBU')
         '''
         this function is called after hop amounts have been calculated or on editing finished for one specific hop adopted amount 
         and calculate the IBU contribution for all hops or the selected hop
@@ -656,8 +642,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             return #normally not possible
         'In the hop_usage_dic, usage is the key not the val'
         if not(usage==vcst.HOP_BOILING_HOPPING or usage==vcst.HOP_FIRST_WORT_HOPPING):
-            #print('leaving IBU soon because not boiling or FWH')
-            #print(usage)
             'no calculation in other usage cases'
             return 
         v_unit=self.model.get_unit('water_volume')
@@ -716,9 +700,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         'This function is called after a recipe, an equipment, a batch size and a grain temperature have been defined'
         'whenever the user click the calculate button in the malt area of the main window'
         v_unit=self.model.get_unit('water_volume')
-        print(v_unit.unit+ ' in calculate malt_amount')
         t_unit=self.model.get_unit('temperature')
-        print(t_unit.unit+ ' in calculate malt amount')
         self.set_input_style()
         warning_text=self.tr('Warning : Malt Amount Calculation')
         
@@ -773,8 +755,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         pitching_rate = self.recipe.yeast_in_recipe.pitching_rate
         billions=pitching_rate * batch_volume * 1000 * (original_gravity -1)/4
         amount=billions/100*11
-        #val='{0:.0f}'.format(amount)
-        print('yeast amount = '+str(amount))
         w_amount=self.util.get_by_name_recursive(self.yeast_layout,'calculated_amount')
         w_amount.setText(self.util.convert_to(y_unit,amount))
         w_adopted_amount=self.util.get_by_name_recursive(self.yeast_layout,'adopted_amount')
@@ -790,12 +770,9 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
        
         
     def changeEvent(self, event):
-        #print('change event')
-        #print(str(event.type))
         if event.type() == QtCore.QEvent.LanguageChange:
-            #print('Event is lang change')
-            
             self.retranslateUi(self)
+ 
  
     def clear_inputs(self):
         'clear the various inputs after deletion of a session '
@@ -811,13 +788,9 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.zero_pitching_bar()           
         
     def clear_layouts(self):
-        print('clearing mal layout')
         self.util.clearLayout(self.malt_layout)
-        print('clearing hop layout')
         self.util.clearLayout(self.hop_layout)
-        print('clearing yeast layout')
         self.util.clearLayout(self.yeast_layout)
-        print('clearing rest layout')
         self.util.clearLayout(self.rest_layout)
         
   
@@ -967,7 +940,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
     def hide_session_feedback(self):
         widgets=self.util.get_included_widgets(self.feedback_groupbox_layout)
         for w in widgets:
-            ##print(w)
             w.hide()       
      
     def init_dialog_and_connections(self):
@@ -1097,7 +1069,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             self.hops=self.recipe.hops_in_recipe
             for hir in self.hops:
                 hop=self.model.get_hop(hir.hop)
-                print('hir.usage = '+str(hir.usage))
                 use=self.util.hop_usage_dic[hir.usage]
                 self.add_hop_view(hop,use,hir.duration,hir.hop_rate)
             self.targeted_bitterness_value.setText(str(self.recipe.targeted_bitterness))  
@@ -1157,9 +1128,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             index = self.equipment_combo.findText(session.equipment, QtCore.Qt.MatchFixedString)
             if index >= 0:
                 self.equipment_combo.setCurrentIndex(index)
-            
-            print('batch_volume ='+str(session.batch_volume))
-            
             self.batch_volume_edit.setText(str(self.util.convert_to(v_unit, session.batch_volume)))
             self.grain_temperature_edit.setText(str(self.util.convert_to(t_unit,session.grain_temperature)))
             
@@ -1167,7 +1135,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             malts=session.malts_in_session
             self.util.clearLayout(self.malt_layout)
             for i in range(len(malts)):
-                ##print(malts[i].name)
                 m=self.model.get_malt(malts[i].name)
                 self.add_malt_view(m,malts[i].percentage)
                 item=self.malt_layout.itemAt(i)
@@ -1280,7 +1247,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             w.hide()        
         self.hide_session_designation() 
         self.set_editable_session()
-        #print('in new_session passing mode_session to create')
         self.mode_session='create'
     
     def on_model_changed_main(self,target):    
@@ -1313,7 +1279,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             self.set_active_colors()
             self.maltDialog = MaltDialog(self.model,self.controller,self.util)    
         if target == 'fontset':
-            print( 'during model init a model change is triggered before in_use_font is created')
             if (self.model.in_use_fonts):
                 self.set_fonts()  
                     
@@ -1428,7 +1393,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
              Please use the calculate button and if you want change the value '), False,0,100)
             if not isinstance(adopted_yeast_amount,float):
                 return
-            #print('Saving yeast '+yeast_name +'  -- '+str(adopted_yeast_amount)+'  --  '+str(rate))
             yeast_in_session=YeastInSession(yeast_name,adopted_yeast_amount,rate)
         
         'all what will reside in db is in liter'    
@@ -1467,7 +1431,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         feedback_fermentor_volume=self.util.check_input(self.feedback_fermentor_volume_edit, False, self.tr('Feedback Fermentor Volume'), True, 0, 100)
         session.feedback_fermentor_volume=feedback_fermentor_volume
         self.model.save_session(session)
-        self.show_session_feedback() #to get back to non editable state   #print('Session has been saved')    
+        self.show_session_feedback()
      
      
     def select_combo_by_text(self,combo,text):    
@@ -1771,7 +1735,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         
     
     def set_language_jp(self):
-        #print('Japanese language selected')  
         app=QApplication.instance()
         app.removeTranslator(self.translator)
         self.translator.load(os.path.join(self.trad_path,'ja_JP'))
@@ -1779,7 +1742,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
    
          
     def set_language_en(self):
-        #print('English language selected') 
         app=QApplication.instance()
         app.removeTranslator(self.translator)
         self.translator.load(os.path.join(self.trad_path,'en_EN'))
@@ -1787,7 +1749,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         
         
     def set_language_fr(self):
-        #print('French language selected') 
         app=QApplication.instance()
         app.removeTranslator(self.translator)
         self.translator.load(os.path.join(self.trad_path,'fr_FR'))
@@ -1979,14 +1940,8 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
     def set_unit_labels(self):
         t_unit=self.model.get_unit('temperature')
         if t_unit  : t_unit_label=self.util.get_unit_label(t_unit) 
-        #print(t_unit_label) 
         v_unit=self.model.get_unit('water_volume')
-        #print(v_unit.name)
-        print(v_unit.unit)
         if v_unit: v_unit_label=self.util.get_unit_label(v_unit)
-        print(v_unit_label)
-        
-        
         self.mash_water_volume_unit_label.setText(v_unit_label)   
         self.mash_sparge_water_volume_unit_label.setText(v_unit_label) 
         self.strike_temperature_unit_label.setText(t_unit_label)
@@ -2166,12 +2121,10 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.importExportDbDialog.show()
           
     def show_hop_dialog(self):
-        ##print('MainWindow : showing hop dialog')
         self.hopDialog.show() 
         
     
     def show_recipe_dialog(self):
-        ##print('MainWindow : showing recipe dialog')
         self.recipeDialog.show()     
         
       

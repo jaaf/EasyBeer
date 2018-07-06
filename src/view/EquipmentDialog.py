@@ -48,9 +48,6 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
            
         for key in self.equipment_key_list:
             self.equipment_list_widget.addItem(key)
-            
-        # register function with model for future model update announcements
-        #print('subscribing update from model')
         self.model.subscribe_model_changed(['equipment','fontset'],self.on_model_changed_equipment)
         self.init_dialog_and_connections()
     
@@ -70,8 +67,6 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
               
         self.refresh_equipment_list_widget()
         item=self.equipment_list_widget.findItems(equipment.name,QtCore.Qt.MatchExactly)
-        #print('equipment item[0]')
-        #print(item[0].text())
         self.equipment_list_widget.setCurrentItem(item[0])     
         self.set_ro()
         self.unset_color()
@@ -101,7 +96,6 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         
     def all_in_one_type_radiobutton_toggled(self):
         if self.all_in_one_type_radiobutton.isChecked():
-            #print('All in one type selected') 
             self.mash_tun_size_label.hide()
             self.mash_tun_size_unit_label.hide()
             self.mash_tun_size_edit.hide()
@@ -119,8 +113,6 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             
     def basic_type_radiobutton_toggled(self):
         if self.basic_type_radiobutton.isChecked():
-            #print ('Basic Type')
-            
             self.mash_tun_groupbox.show()
             self.mash_tun_size_label.show()
             self.mash_tun_size_unit_label.show()
@@ -140,7 +132,16 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             self.mash_tun_heat_losses_edit.setText('')    
             self.set_fonts()
                                                                      
-                    
+    def cancel(self):
+        'after canceling an update or a creation'  
+        self.selection_changed()  
+        self.refresh_equipment_list_widget()
+        'because selection_changed show them'
+        self.edit_button.hide()
+        self.delete_button.hide()
+        self.new_button.show() 
+        
+                        
     def clear_edits(self):
         self.name_edit.setText('') 
         self.basic_type_radiobutton.setChecked(True)
@@ -159,7 +160,6 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.close()
         
     def delete_equipment(self):
-        #print('demanding equipment deletion in EquipmentDialog')
         equipment=self.model.get_equipment(self.equipment_list_widget.currentItem().text())
         self.current_equipment=None#avoid selection after update
         self.model.remove_equipment(equipment.name)
@@ -206,18 +206,27 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         msg.setWindowTitle(self.tr("Warning Bad Input: "))
         msg.setStandardButtons(QMessageBox.Ok)
         msg.exec_()
-            
+    
+    
+    def init_dialog_and_connections(self):
+        self.add_button.clicked.connect(self.add_equipment)
+        self.type_ask_button.clicked.connect(self.explain_type)
+        self.edit_button.clicked.connect(self.edit_equipment)
+        self.new_button.clicked.connect(self.new_equipment)
+        self.delete_button.clicked.connect(self.delete_equipment)
+        self.close_button.clicked.connect(self.close)
+        self.basic_type_radiobutton.toggled.connect(self.basic_type_radiobutton_toggled)
+        self.all_in_one_type_radiobutton.toggled.connect(self.all_in_one_type_radiobutton_toggled) 
+        self.equipment_list_widget.currentItemChanged.connect(self.selection_changed) 
+        self.cancel_button.clicked.connect(self.cancel)  
+        self.update_button.clicked.connect(self.update_equipment)        
 
     def load_selected(self):
-        
         v_unit=self.model.get_unit('water_volume')
         if not v_unit:
-            print('no v_unit in load_selected equipment')
             return
         t_unit=self.model.get_unit('temperature')
         delta_t_unit=self.model.get_unit('delta_temperature')
-        
-        #print('loading selected equipment')
         if self.equipment_list_widget.currentItem():
             equipment=self.model.get_equipment(str(self.equipment_list_widget.currentItem().text()))           
             self.clear_edits()
@@ -258,7 +267,6 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
     def new_equipment(self):
         self.update_button.hide()
         self.unset_ro()
-         
         self.clear_edits() 
         self.equipment_list_widget.clear() 
         self.cancel_button.show()
@@ -269,7 +277,6 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
       
             
     def read_input(self):
-        #print('reading user inputs')
         typ=None
         mash_tun_size=None
         mash_tun_dead_space=None 
@@ -338,18 +345,9 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         if self.current_equipment:
             item=self.equipment_list_widget.findItems(self.current_equipment,QtCore.Qt.MatchExactly)
             self.equipment_list_widget.setCurrentItem(item[0]) 
-            
-    def cancel(self):
-        'after canceling an update or a creation'  
-        self.selection_changed()  
-        self.refresh_equipment_list_widget()
-        'because selection_changed show them'
-        self.edit_button.hide()
-        self.delete_button.hide()
-        self.new_button.show()        
+                   
             
     def selection_changed(self):
-        #print('selection changed')
         self.add_button.hide()
         self.update_button.hide()
         self.cancel_button.hide()
@@ -368,20 +366,6 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.boiler_evaporation_rate_edit.setStyleSheet(sty.field_styles['editable'])
         self.fermentor_size_edit.setStyleSheet(sty.field_styles['editable']) 
         self.fermentor_dead_space_edit.setStyleSheet(sty.field_styles['editable']) 
-        
-
-    def init_dialog_and_connections(self):
-        self.add_button.clicked.connect(self.add_equipment)
-        self.type_ask_button.clicked.connect(self.explain_type)
-        self.edit_button.clicked.connect(self.edit_equipment)
-        self.new_button.clicked.connect(self.new_equipment)
-        self.delete_button.clicked.connect(self.delete_equipment)
-        self.close_button.clicked.connect(self.close)
-        self.basic_type_radiobutton.toggled.connect(self.basic_type_radiobutton_toggled)
-        self.all_in_one_type_radiobutton.toggled.connect(self.all_in_one_type_radiobutton_toggled) 
-        self.equipment_list_widget.currentItemChanged.connect(self.selection_changed) 
-        self.cancel_button.clicked.connect(self.cancel)  
-        self.update_button.clicked.connect(self.update_equipment)
         
         
     def set_labels(self):
@@ -432,12 +416,11 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             t_unit_label=self.util.get_unit_label(t_unit)
             self.mash_tun_heat_losses_unit_label.setText(t_unit_label+self.tr('/hour'))
         
-    def set_fonts(self):
         
+    def set_fonts(self):
         self.add_button.setStyleSheet('background-color:lightgreen;')
         self.update_button.setStyleSheet('background-color:lightgreen;')
         self.cancel_button.setStyleSheet('background-color:pink;')  
-        
        
         self.add_button.setFont(self.model.in_use_fonts['button'])
         self.update_button.setFont(self.model.in_use_fonts['button'])
@@ -485,10 +468,6 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.general_groupbox.setFont(self.model.in_use_fonts['title_slanted'])
         self.equipment_list_widget.setFont(self.model.in_use_fonts['field'])
             
-    
-      
-               
-             
         
     def set_ro(self):
         self.basic_type_radiobutton.setEnabled(False)

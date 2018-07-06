@@ -37,7 +37,6 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
     def __init__(self,model,controller,util):
         QWidget.__init__(self)
         self.setupUi(self)
-        print ('RestDialog: creating a MaltDialog object')
         self.model = model
         self.controller=controller
         self.util=util
@@ -99,7 +98,6 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
     def delete_rest(self):
         name=str(self.name_combo.currentText())
         r=self.model.get_rest(name)
-        print(r.removable)
         if r.removable=='no':
             self.util.alerte(self.tr('You cannot delete this basic rest'))
             return
@@ -156,7 +154,7 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
                 self.usage_guidance_edit.setStyleSheet('color:blue')
                 self.edit_button.show()  
                 self.delete_button.show()         
-        print(name)
+       
         
         
         
@@ -164,11 +162,8 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         
     def read_input(self):
         unit=self.model.get_unit('temperature')
-        
-        print('Reading input in RestDialogCreate')
         name=self.util.check_input(self.name_edit,True,self.tr('Name'),False)
         if not name: 
-            print('returning soon in read_input')
             return
         phs=[]
         for i in range(self.ph_layout.count()):
@@ -176,7 +171,6 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
             if item:
                 ph=self.util.check_input(item.widget(),False,self.tr('PH value ' + str(i)), False,0,14)
                 if not ph: 
-                    print('returning after phs')
                     return
                 else:
                     phs.append(ph)                          
@@ -199,7 +193,6 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         
         
         if self.current_rest:
-            #print('RestDialogCreate : current_rest is set and equal to: '+self.current_rest)
             index = self.name_combo.findData(self.current_rest)
             self.name_combo.setCurrentIndex(index) 
         else:
@@ -226,14 +219,9 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
     def save_rest(self):
         'save or update the rest that is defined by the GUI'
         rest=self.read_input()
-        self.current_rest=rest.name # in order to be able to select it back on refresh
-        for i in range(len(rest.phs)):
-            print('ph '+str(i)+' : '+str(rest.phs[i]))
-        for i in range(len(rest.temperatures)):
-            print('temp '+str(i)+' : '+str(rest.temperatures[i]))    
+        self.current_rest=rest.name # in order to be able to select it back on refresh    
         self.model.save_rest(rest)
         self.set_ro()
-        #self.set_read_only_style()
         self.add_button.hide()
         
         
@@ -253,8 +241,6 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.add_button.setStyleSheet('background-color:lightgreen;')
         self.update_button.setStyleSheet('background-color:lightgreen;')
         self.cancel_button.setStyleSheet('background-color:pink:ont-family')
-       
-        print('setting  Fonts in Rest Dialog')
         self.add_button.setFont(self.model.in_use_fonts['button'])
         self.update_button.setFont(self.model.in_use_fonts['button'])
         self.cancel_button.setFont(self.model.in_use_fonts['button'])
@@ -342,13 +328,7 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
     def update_rest(self):
         'update the rest that is defined by the GUI'
         rest=self.read_input()
-        self.current_rest=rest.name # in order to be able to select it back on refresh
-        #for i in range(len(rest.phs)):
-          #  print('ph '+str(i)+' : '+str(rest.phs[i]))
-        #for i in range(len(rest.temperatures)):
-            #print('temp '+str(i)+' : '+str(rest.temperatures[i]))   
-        #print (rest.guidance)
-       # print(rest.removable)      
+        self.current_rest=rest.name # in order to be able to select it back on refresh    
         self.model.update_rest(rest)
         self.set_ro()
         #self.set_read_only_style()

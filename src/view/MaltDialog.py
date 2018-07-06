@@ -22,7 +22,6 @@ from gen import MaltDialogUI
 from model.Malt import Malt
 import view.constants as vcst
 import view.styles as sty
-import platform
 
 class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
     """
@@ -43,8 +42,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.init_dialog_and_connections()         
         self.malt_key_list=self.model.malt_list             
         self.refresh_malt_list_widget()  
-
-        
+          
         
     def cancel(self):
         'after canceling an update or a creation' 
@@ -69,10 +67,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         
     def closeEvent(self,event):
         self.close()   
-         
-        
-    
-           
+              
         
     def delete_malt(self):
         maltT=self.model.get_malt(self.malt_list_widget.currentItem().text())
@@ -86,7 +81,6 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
   
         
     def edit(self):
-        #self.edit_mode=True
         self.add_button.hide()
         self.cancel_button.show()
         self.update_button.show()
@@ -97,12 +91,10 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.new_button.hide()
         
     def set_fonts(self):
-        pf=platform.system()
         self.add_button.setStyleSheet('background-color:lightgreen;')
         self.update_button.setStyleSheet('background-color:lightgreen;')
         self.cancel_button.setStyleSheet('background-color:pink')
      
-        
         self.add_button.setFont(self.model.in_use_fonts['button'])
         self.update_button.setFont(self.model.in_use_fonts['button'])
         self.cancel_button.setFont(self.model.in_use_fonts['button'])
@@ -127,10 +119,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.kolbach_min_label.setFont(self.model.in_use_fonts['field'])
         self.malt_list_widget.setFont(self.model.in_use_fonts['field'])
         self.color_edit.setFont(self.model.in_use_fonts['field'] )
-            
-            
-      
-                    
+                               
         
     def init_dialog_and_connections(self):
         self.malt_list_widget.currentItemChanged.connect(self.selection_changed) 
@@ -212,17 +201,11 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.malt_list_widget.clear()       
         self.malt_key_list.sort()  
         for key in self.malt_key_list:
-            self.malt_list_widget.addItem(key)
-            
+            self.malt_list_widget.addItem(key)         
         if self.current_malt:
             item=self.malt_list_widget.findItems(self.current_malt,QtCore.Qt.MatchExactly)
-            self.malt_list_widget.setCurrentItem(item[0]) 
-            
-        self.set_read_only() 
-        
-        
-    
-             
+            self.malt_list_widget.setCurrentItem(item[0])         
+        self.set_read_only()    
         
     def save_malt(self):
         'save the malt that is defined by the GUI into the database'
@@ -273,7 +256,6 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.kolbach_min.setStyleSheet(sty.field_styles['read_only'])
         self.kolbach_max.setStyleSheet(sty.field_styles['read_only'])
         
-    
         
     def set_translatable_texts(self):    
         self.setWindowTitle(self.tr('Malt Database Edition'))
@@ -321,8 +303,4 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.set_read_only_style()
         self.update_button.hide()
         self.cancel_button.hide()    
-
-        
-        
- 
 
