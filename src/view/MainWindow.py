@@ -1973,7 +1973,8 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             self.model.update_unit(u.name,u.unit)
            
     def set_units_at_startup(self):
-        self.model.drop_units()    
+        self.model.drop_units()   
+        self.util.alerte(self.tr('Your request for changing the unit system has been taken into account. Please restart the application and you will be invited to enter your new units.'), QMessageBox.Warning, 'Request for changing units') 
         
     def set_unit_labels(self):
         t_unit=self.model.get_unit('temperature')
