@@ -139,7 +139,7 @@
        <widget class="QLineEdit" name="max_allowed_temperature_edit">
         <property name="minimumSize">
          <size>
-          <width>50</width>
+          <width>75</width>
           <height>0</height>
          </size>
         </property>
@@ -154,7 +154,7 @@
       <item>
        <widget class="QLabel" name="max_allowed_temperature_unit_label">
         <property name="text">
-         <string>°C</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -188,7 +188,7 @@
        <widget class="QLineEdit" name="max_advised_temperature_edit">
         <property name="minimumSize">
          <size>
-          <width>50</width>
+          <width>75</width>
           <height>0</height>
          </size>
         </property>
@@ -203,7 +203,7 @@
       <item>
        <widget class="QLabel" name="max_advised_temperature_unit_label">
         <property name="text">
-         <string>°C</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -230,7 +230,7 @@
        <widget class="QLineEdit" name="min_advised_temperature_edit">
         <property name="minimumSize">
          <size>
-          <width>50</width>
+          <width>75</width>
           <height>0</height>
          </size>
         </property>
@@ -245,7 +245,7 @@
       <item>
        <widget class="QLabel" name="min_advised_temperature_unit_label">
         <property name="text">
-         <string>°C</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -272,7 +272,7 @@
        <widget class="QLineEdit" name="min_allowed_temperature_edit">
         <property name="minimumSize">
          <size>
-          <width>50</width>
+          <width>75</width>
           <height>0</height>
          </size>
         </property>
@@ -287,7 +287,7 @@
       <item>
        <widget class="QLabel" name="min_allowed_temperature_unit_label">
         <property name="text">
-         <string>°C</string>
+         <string/>
         </property>
        </widget>
       </item>

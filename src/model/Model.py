@@ -31,6 +31,7 @@ from model.Recipe import Recipe
 from model.Equipment import Equipment
 from model.Session import Session
 from model.FontSet import FontSet
+from model.Unit import Unit
 import view.constants as vcst
 
 
@@ -71,6 +72,7 @@ class Model(object):
         self._update_funcs_equipment=[]
         self._update_funcs_style=[]
         self._update_funcs_fontset=[]
+        self.update_funcs_unit=[]
         
         'read the keys in all the databases'
         self.update_from_db('malt')
@@ -82,6 +84,7 @@ class Model(object):
         self.update_from_db('session')
         self.update_from_db('style')
         self.update_from_db('fontset')
+        self.update_from_db('unit')
         
         'containers for callback functions'
         self._target_func={
@@ -93,7 +96,8 @@ class Model(object):
             'equipment':[],
             'session':[],
             'style':[], 
-            'fontset':[]
+            'fontset':[],
+            'unit':[]
             }
         self.in_use_fonts=None
         
@@ -106,7 +110,8 @@ class Model(object):
         self.update_from_db('equipment')
         self.update_from_db('session')
         self.update_from_db('style')
-        self.update_from_db('fontset')    
+        self.update_from_db('fontset')   
+        self.update_from_db('unit') 
 
     def subscribe_model_changed(self,target_list,func):
         for target in target_list:
@@ -200,7 +205,16 @@ class Model(object):
         
     @font_set_list.setter
     def font_set_list(self,s):
-        self.__font_set_list=s          
+        self.__font_set_list=s    
+    
+    
+    @property
+    def unit_list(self):
+        return self.__unit_list
+        
+    @unit_list.setter
+    def unit_list(self,ul):
+        self.__unit_list=ul          
         
         
     def get_malt(self,key):
@@ -304,6 +318,24 @@ class Model(object):
             return FontSet(fs[0],fs[1])
         else: return None
         
+    def get_unit(self, name):
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        c.execute("""select * from units where name=:name""", {'name':name})
+        u=c.fetchone()
+        c.close()
+        con.close()
+        if u: return Unit(u[0],u[1])    
+        else: return None
+        
+    def drop_units(self):
+        print('dropping units')
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        c.execute('drop table if exists units')
+        c.close()
+        con.close()
+                
     def set_in_use_fonts(self):
         font_set=self.get_active_font_set()
         pf=platform.system()
@@ -426,6 +458,11 @@ class Model(object):
         
     def update_yeast(self,yeast):
         #print('saving yeast with sqlite')
+        print('Here are the temperatuer in update in model')
+        print(yeast.max_allowed_temperature)
+        print(yeast.max_advised_temperature)
+        print(yeast.min_advised_temperature)
+        print(yeast.min_allowed_temperature)
         con = lite.connect('easybeer.db')
         c = con.cursor()
         try:
@@ -433,7 +470,7 @@ class Model(object):
             c.execute("update yeasts set maker=:maker,max_allowed_temperature=:max_allowed_temperature,min_allowed_temperature=:min_allowed_temperature,\
             max_advised_temperature=:max_advised_temperature, min_advised_temperature=:min_advised_temperature, form=:form, attenuation=:attenuation,\
             floculation= :floculation where name=:name",
-                 {'name':yeast.name, 'maker':yeast.maker, 'max_allowed_temperature':yeast.max_allowed_temperature, 'min_allowed_temperature':yeast.min_allowed_temperature,'max_advised_temperature':yeast.max_advised_temperature,'min_advised_temperature':yeast.max_advised_temperature, 'form':yeast.form, 'attenuation':yeast.attenuation, 'floculation':yeast.floculation})
+                 {'name':yeast.name, 'maker':yeast.maker, 'max_allowed_temperature':yeast.max_allowed_temperature, 'min_allowed_temperature':yeast.min_allowed_temperature,'max_advised_temperature':yeast.max_advised_temperature,'min_advised_temperature':yeast.min_advised_temperature, 'form':yeast.form, 'attenuation':yeast.attenuation, 'floculation':yeast.floculation})
             con.commit()
             #c.execute("select * from yeasts")    
         except Error as e :
@@ -938,6 +975,16 @@ class Model(object):
             for fs in fss:
                 self.__font_set_list.append(fs[0])
             self.__font_set_list.sort()  
+            
+        def f_unit():
+            print('updating from db unit')
+            c.execute("""select name from units""")
+            units=list(c.fetchall())
+            self.__unit_list=list()
+            for unit in units:
+                self.__unit_list.append(unit[0])
+            self.__unit_list.sort()
+              
      
         con=lite.connect("easybeer.db")
         c=con.cursor()
@@ -992,6 +1039,9 @@ class Model(object):
             
             sql="""create table if not exists fontsets (category text primary key not null, status text) """#fonts is pickled as it is a list
             c.execute(sql)
+            
+            sql="""create table if not exists units (name text primary key not null, unit text) """
+            c.execute(sql)
         
             con.commit()
            
@@ -1008,7 +1058,8 @@ class Model(object):
             'equipment': f_equipment,
             'session': f_session,
             'style': f_style,
-            'fontset':f_fontset
+            'fontset':f_fontset,
+            'unit':f_unit
             }
         switch_options[target]()
         
@@ -1054,4 +1105,24 @@ class Model(object):
         self.set_in_use_fonts()
         self.update_from_db('fontset')
         self.announce_model_changed('fontset')
+        
+    def update_unit(self,unit):
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        if self.get_unit(unit.name):
+            try:
+                c.execute("update units set unit=:unit where name=:name",{'name':unit.name,'unit':unit.unit})
+                con.commit()
+            except Error as e:
+                print('there was an error while updating unit '+unit.name)
+                print(e)
+        else:
+            try:
+                c.execute("insert into units values  (:name,:unit)",(unit.name,unit.unit))  
+                con.commit() 
+            except Error as e:
+                print('there was an error while inserting unit '+unit.name )             
+            
+        self.update_from_db('unit')
+        self.announce_model_changed('unit')    
         

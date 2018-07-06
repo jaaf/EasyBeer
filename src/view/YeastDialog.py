@@ -147,6 +147,9 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
     def load_selected(self):
         #load the selected yeast
         #using hasattr allows the addition of new properties during development
+        unit=self.model.get_unit('temperature')
+        unit_label=self.util.get_unit_label(unit)
+        
         self.clear_edits()
         if self.yeast_list_widget.currentItem():
             yeastT=self.model.get_yeast(str(self.yeast_list_widget.currentItem().text()))
@@ -157,17 +160,17 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
                 self.maker_edit.setText(yeastT.maker)
                 
             if hasattr(yeastT,'max_allowed_temperature'):    
-                self.max_allowed_temperature_edit.setText(str(yeastT.max_allowed_temperature))
-                
+                self.max_allowed_temperature_edit.setText(str(self.util.convert_to(unit,yeastT.max_allowed_temperature)))
+                self.max_allowed_temperature_unit_label.setText(unit_label)
             if hasattr(yeastT,'min_allowed_temperature'):    
-                self.min_allowed_temperature_edit.setText(str(yeastT.min_allowed_temperature))
-                
+                self.min_allowed_temperature_edit.setText(str(self.util.convert_to(unit,yeastT.min_allowed_temperature)))
+                self.min_allowed_temperature_unit_label.setText(unit_label)
             if hasattr(yeastT,'max_advised_temperature'):    
-                self.max_advised_temperature_edit.setText(str(yeastT.max_advised_temperature))
-                
+                self.max_advised_temperature_edit.setText(str(self.util.convert_to(unit,yeastT.max_advised_temperature)))
+                self.max_advised_temperature_unit_label.setText(unit_label)
             if hasattr(yeastT,'min_advised_temperature'):    
-                self.min_advised_temperature_edit.setText(str(yeastT.min_advised_temperature))
-                
+                self.min_advised_temperature_edit.setText(str(self.util.convert_to(unit,yeastT.min_advised_temperature)))
+                self.min_advised_temperature_unit_label.setText(unit_label)
             if hasattr(yeastT,'form'):
                 idx=self.form_combo.findText(yeastT.form)  
                 self.form_combo.setCurrentIndex(idx) 
@@ -211,22 +214,23 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
          
     def read_input(self):
         #read the inputs of the dialog to new a yeast object
-        name=self.util.check_input(self.name_edit,True,self.tr('Name'),False)
+        unit=self.model.get_unit('temperature')
+        name=self.util.check_input(self.name_edit,True,self.tr('Name'),False,unit)
         if not name: return
         
-        maker=self.util.check_input(self.maker_edit,True,self.tr('Maker'),False)
+        maker=self.util.check_input(self.maker_edit,True,self.tr('Maker'),False,unit)
         if not maker: return
         
-        max_allowed_temperature = self.util.check_input(self.max_allowed_temperature_edit,False,self.tr('Maximum Allowed Temperature'),False,0,35)
+        max_allowed_temperature = self.util.check_input(self.max_allowed_temperature_edit,False,self.tr('Maximum Allowed Temperature'),False,0,35,None,unit)
         if not max_allowed_temperature: return
         
-        min_allowed_temperature = self.util.check_input(self.min_allowed_temperature_edit,False,self.tr('Minimum Allowed Temperature'),False,0,35)
+        min_allowed_temperature = self.util.check_input(self.min_allowed_temperature_edit,False,self.tr('Minimum Allowed Temperature'),False,0,35,None,unit)
         if not min_allowed_temperature: return
         
-        max_advised_temperature = self.util.check_input(self.max_advised_temperature_edit,False,self.tr('Maximum Advised Temperature'),False,0,35)
+        max_advised_temperature = self.util.check_input(self.max_advised_temperature_edit,False,self.tr('Maximum Advised Temperature'),False,0,35,None,unit)
         if not max_advised_temperature: return
         
-        min_advised_temperature = self.util.check_input(self.min_advised_temperature_edit,False,self.tr('Minimum Advised Temperature'),False,0,35)
+        min_advised_temperature = self.util.check_input(self.min_advised_temperature_edit,False,self.tr('Minimum Advised Temperature'),False,0,35,None,unit)
         if not min_advised_temperature: return
         
         form = self.util.check_input(self.form_combo,True,self.tr('Form'),False)
@@ -237,6 +241,10 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         
         floculation = self.util.check_input(self.floculation_combo,True,self.tr('Floculation'),False)
         if not attenuation: return
+        #malt=self.util.convert_from(self.model.get_unit('temperature'),max_allowed_temperature)
+        #mialt=self.util.convert_from(self.model.get_unit('temperature'),min_allowed_temperature)
+        #madt=self.util.convert_from(self.model.get_unit('temperature'),max_advised_temperature)
+        #miadt=self.util.convert_from(self.model.get_unit('temperature'),min_advised_temperature)
         
         return Yeast(name,maker,max_allowed_temperature,min_allowed_temperature,max_advised_temperature,min_advised_temperature,form,attenuation,floculation)
     
@@ -344,11 +352,12 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         'ask the model to save or update the yeast that is defined by the GUI'
         'then set all inputs readonly'
         yeastT=self.read_input()
-        self.current_yeast=yeastT.name # in order to be able to select it back on refresh
-        self.model.update_yeast(yeastT)
-        self.set_read_only()
-        self.set_read_only_style()
-        self.add_button.hide()    
+        if yeastT:
+            self.current_yeast=yeastT.name # in order to be able to select it back on refresh
+            self.model.update_yeast(yeastT)
+            self.set_read_only()
+            self.set_read_only_style()
+            self.add_button.hide()    
         
         
     
@@ -394,6 +403,10 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         self.max_advised_temperature_label.setFont(self.model.in_use_fonts['field'])
         self.max_advised_temperature_edit.setFont(self.model.in_use_fonts['field'])
         self.min_advised_temperature_label.setFont(self.model.in_use_fonts['field'])
+        self.max_allowed_temperature_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.min_allowed_temperature_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.max_advised_temperature_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.min_advised_temperature_unit_label.setFont(self.model.in_use_fonts['field'])
         self.min_advised_temperature_edit.setFont(self.model.in_use_fonts['field'])
         self.form_label.setFont(self.model.in_use_fonts['field'])
         self.form_combo.setFont(self.model.in_use_fonts['field'])

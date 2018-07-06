@@ -51,7 +51,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             
         # register function with model for future model update announcements
         #print('subscribing update from model')
-        self.model.subscribe_model_changed(['equipment'],self.on_model_changed_equipment)
+        self.model.subscribe_model_changed(['equipment','fontset'],self.on_model_changed_equipment)
         self.init_dialog_and_connections()
     
         
@@ -187,6 +187,11 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             self.set_ro()
             self.unset_color() 
                 
+        'we must wait for fonts to be initialized in model'    
+        if target == 'fontset':
+            if (self.model.in_use_fonts):
+                self.set_fonts()    
+                    
     def explain_type(self):
         txt=self.tr('''
         A basic type equipment, is an equipment with a mash tun separate from the boiler.
@@ -205,6 +210,13 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
 
     def load_selected(self):
         
+        v_unit=self.model.get_unit('water_volume')
+        if not v_unit:
+            print('no v_unit in load_selected equipment')
+            return
+        t_unit=self.model.get_unit('temperature')
+        delta_t_unit=self.model.get_unit('delta_temperature')
+        
         #print('loading selected equipment')
         if self.equipment_list_widget.currentItem():
             equipment=self.model.get_equipment(str(self.equipment_list_widget.currentItem().text()))           
@@ -216,24 +228,28 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             if hasattr(equipment,'type'):    
                 if equipment.type ==0:
                     self.basic_type_radiobutton.setChecked(True)
+                    self.basic_type_radiobutton_toggled()
                 elif equipment.type==1:
-                    self.all_in_one_type_radiobutton.setChecked(True)  
-            if hasattr(equipment,'mash_tun_size'):
-                self.mash_tun_size_edit.setText(str(equipment.mash_tun_size))    
-            if hasattr(equipment,'mash_tun_dead_space'):
-                self.mash_tun_dead_space_edit.setText(str(equipment.mash_tun_dead_space))   
-            if hasattr(equipment,'mash_tun_heat_losses'):
-                self.mash_tun_heat_losses_edit.setText(str(equipment.mash_tun_heat_losses))   
+                    self.all_in_one_type_radiobutton.setChecked(True) 
+                    self.all_in_one_type_radiobutton_toggled() 
+            if hasattr(equipment,'mash_tun_size') and equipment.mash_tun_size:
+                self.mash_tun_size_edit.setText(str(self.util.convert_to(v_unit,equipment.mash_tun_size)))    
+            if hasattr(equipment,'mash_tun_dead_space') and equipment.mash_tun_dead_space:
+                self.mash_tun_dead_space_edit.setText(str(self.util.convert_to(v_unit,equipment.mash_tun_dead_space))) 
+            if hasattr(equipment,'mash_tun_heat_losses') and equipment.mash_tun_heat_losses:
+                'as heat losses are always calculates per hour, the ratio is the same as the ratio between °C and °F'
+                self.mash_tun_heat_losses_edit.setText(str(self.util.convert_to(delta_t_unit,equipment.mash_tun_heat_losses)) )  
             if hasattr(equipment,'boiler_size'):                
-                self.boiler_size_edit.setText(str(equipment.boiler_size))
+                self.boiler_size_edit.setText(str(self.util.convert_to(v_unit,equipment.boiler_size)))
             if hasattr(equipment,'boiler_dead_space'):    
-                self.boiler_dead_space_edit.setText(str(equipment.boiler_dead_space))
+                self.boiler_dead_space_edit.setText(str(self.util.convert_to(v_unit,equipment.boiler_dead_space)))
             if hasattr(equipment,'boiler_evaporation_rate'):
-                self.boiler_evaporation_rate_edit.setText(str(equipment.boiler_evaporation_rate))    
+                'as evaporation  is always calculated per hour, the ratio is the same as the ratio between °C and °F'
+                self.boiler_evaporation_rate_edit.setText(str(self.util.convert_to(v_unit,equipment.boiler_evaporation_rate)))    
             if hasattr(equipment,'fermentor_size'):    
-                self.fermentor_size_edit.setText(str(equipment.fermentor_size))
+                self.fermentor_size_edit.setText(str(self.util.convert_to(v_unit,equipment.fermentor_size)))
             if hasattr(equipment,'fermentor_dead_space'):
-                self.fermentor_dead_space_edit.setText(str(equipment.fermentor_dead_space))
+                self.fermentor_dead_space_edit.setText(str(self.util.convert_to(v_unit,equipment.fermentor_dead_space)))
             self.set_ro()
         else:#there is no selection
             self.clear_edits()    
@@ -258,20 +274,24 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         mash_tun_size=None
         mash_tun_dead_space=None 
         mash_tun_heat_losses=None  
+        v_unit=self.model.get_unit('water_volume')
+        t_unit=self.model.get_unit('temperature')
+        delta_t_unit=self.model.get_unit('delta_temperature')
+    
         name = self.util.check_input(self.name_edit,True, self.tr('Name'),False)
         if not name: return
         brewing_efficiency = self.util.check_input(self.brewing_efficiency_edit,False,self.tr('Brewing Efficiency'),False,0,100)
         if not brewing_efficiency: return
-        boiler_size = self.util.check_input(self.boiler_size_edit,False, self.tr('Boiler Size'),False,0,vcst.MAX_MASH_TUN_SIZE)
+        boiler_size = self.util.check_input(self.boiler_size_edit,False, self.tr('Boiler Size'),False,0,vcst.MAX_MASH_TUN_SIZE,None,v_unit)
         if not boiler_size: return
-        boiler_dead_space = self.util.check_input(self.boiler_dead_space_edit,False, self.tr('Boiler Dead Space'),False,0,vcst.MAX_MASH_TUN_SIZE)
+        boiler_dead_space = self.util.check_input(self.boiler_dead_space_edit,False, self.tr('Boiler Dead Space'),False,0,vcst.MAX_MASH_TUN_SIZE,None,v_unit)
         if not boiler_dead_space: return  
-        boiler_evaporation_rate = self.util.check_input(self.boiler_evaporation_rate_edit,False,self.tr('Boiler Evaporation Rate'),\
-                                                        False,0,20)
+        'as evaporation  is always calculated per hour, the ratio is the same as the ratio between °C and °F'
+        boiler_evaporation_rate = self.util.check_input(self.boiler_evaporation_rate_edit,False,self.tr('Boiler Evaporation Rate'),False,0,20,None,v_unit)
         if not boiler_evaporation_rate: return
-        fermentor_size = self.util.check_input(self.fermentor_size_edit,False, self.tr('Fermentor Size'),False,0,vcst.MAX_MASH_TUN_SIZE)
+        fermentor_size = self.util.check_input(self.fermentor_size_edit,False, self.tr('Fermentor Size'),False,0,vcst.MAX_MASH_TUN_SIZE,None,v_unit)
         if not fermentor_size: return 
-        fermentor_dead_space = self.util.check_input(self.fermentor_dead_space_edit,False, self.tr('Boiler Size'),False,0,vcst.MAX_MASH_TUN_SIZE)
+        fermentor_dead_space = self.util.check_input(self.fermentor_dead_space_edit,False, self.tr('Boiler Size'),False,0,vcst.MAX_MASH_TUN_SIZE,None,v_unit)
         if not fermentor_dead_space: return
         
         if self.basic_type_radiobutton.isChecked():
@@ -282,13 +302,14 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
             typ=0   
         try:               
             if typ==0:
-                mash_tun_size = self.util.check_input(self.mash_tun_size_edit,False,self.tr('Mash Tun Size'),False,0,vcst.MAX_MASH_TUN_SIZE)
+                mash_tun_size = self.util.check_input(self.mash_tun_size_edit,False,self.tr('Mash Tun Size'),False,0,vcst.MAX_MASH_TUN_SIZE,None,v_unit)
                 if not mash_tun_size: return
                 mash_tun_dead_space = self.util.check_input(self.mash_tun_dead_space_edit,\
-                    False, self.tr('Mash Tun Deal Space'), False,0,vcst.MAX_MASH_TUN_SIZE/10)
+                    False, self.tr('Mash Tun Dead Space'), False,0,vcst.MAX_MASH_TUN_SIZE/10,None,v_unit)
                 if not mash_tun_dead_space: return
+                'as heat losses are always calculates per hour, the ratio is the same as the ratio between °C and °F'
                 mash_tun_heat_losses = self.util.check_input(self.mash_tun_heat_losses_edit,\
-                    False,self.tr('Mash Tun Heat Losses'),False,0,vcst.MAX_MASH_TUN_HEAT_LOSSES)
+                    False,self.tr('Mash Tun Heat Losses'),False,0,vcst.MAX_MASH_TUN_HEAT_LOSSES,None,delta_t_unit)
                 if not mash_tun_heat_losses: return
                 
             elif typ==1:
@@ -371,19 +392,20 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.all_in_one_type_radiobutton.setText(self.tr('All in one type'))
         self.brewing_efficiency_label.setText(self.tr('Breewing efficiency'))
         self.mash_tun_size_label.setText(self.tr('Mash tun size'))
-        self.mash_tun_size_unit_label.setText(self.tr('liters'))
+        
         self.mash_tun_dead_space_label.setText(self.tr('Mash tun dead space'))
-        self.mash_tun_dead_space_unit_label.setText(self.tr('liters'))
+        
         self.mash_tun_heat_losses_label.setText(self.tr('Mash tun heat losses'))
-        self.mash_tun_heat_losses_unit_label.setText(self.tr('°C/heure'))
+        
         self.boiler_size_label.setText(self.tr('Boiler capacity'))
-        self.boiler_size_unit_label.setText(self.tr('liters'))
+        
         self.boiler_dead_space_label.setText(self.tr('Boiler dead space'))
-        self.boiler_dead_space_unit_label.setText(self.tr('liters'))
+        self.boiler_evaporation_rate_label.setText(self.tr('Boiler evaporation rate'))
+        
         self.fermentor_size_label.setText(self.tr('Fermentor capacity'))
-        self.fermentor_size_unit_label.setText(self.tr('liters'))
+        
         self.fermentor_dead_space_label.setText(self.tr('Fermentor dead space'))
-        self.fermentor_dead_space_unit_label.setText(self.tr('liters'))
+        
         self.name_label.setText(self.tr('Name'))
         self.mash_tun_groupbox.setTitle(self.tr('Mash Tun'))
         self.boiler_groupbox.setTitle(self.tr('Boiler'))
@@ -393,88 +415,84 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.cancel_button.setText(self.tr('Cancel'))
         self.add_button.setText(self.tr('Add Equipment'))
         
+    def set_unit_labels(self):    
+        v_unit=self.model.get_unit('water_volume')
+        if v_unit:
+            v_unit_label=self.util.get_unit_label(v_unit)
+            self.mash_tun_size_unit_label.setText(v_unit_label)
+        
+            self.boiler_dead_space_unit_label.setText(v_unit_label)
+            self.boiler_size_unit_label.setText(v_unit_label)
+            self.boiler_evaporation_rate_unit_label.setText(v_unit_label+self.tr('/hour'))
+            self.mash_tun_dead_space_unit_label.setText(v_unit_label)
+            self.fermentor_size_unit_label.setText(v_unit_label)
+            self.fermentor_dead_space_unit_label.setText(v_unit_label)
+        t_unit=self.model.get_unit('temperature')
+        if t_unit:
+            t_unit_label=self.util.get_unit_label(t_unit)
+            self.mash_tun_heat_losses_unit_label.setText(t_unit_label+self.tr('/hour'))
+        
     def set_fonts(self):
-        pf=platform.system()
-        print ('the platform is '+pf)
+        
         self.add_button.setStyleSheet('background-color:lightgreen;')
         self.update_button.setStyleSheet('background-color:lightgreen;')
         self.cancel_button.setStyleSheet('background-color:pink;')  
         
-        if pf=='Windows':
-            self.add_button.setFont(vcst.BUTTON_FONT_W)
-            self.update_button.setFont(vcst.BUTTON_FONT_W)
-            self.cancel_button.setFont(vcst.BUTTON_FONT_W)  
-            self.edit_button.setFont(vcst.BUTTON_FONT_W) 
-            self.delete_button.setFont(vcst.BUTTON_FONT_W)
-            self.new_button.setFont(vcst.BUTTON_FONT_W)
-            self.close_button.setFont(vcst.BUTTON_FONT_W)
-            self.equipment_list_label.setFont(vcst.BUTTON_FONT_W)
-            self.equipment_properties_label.setFont(vcst.TITLE_FONT_W)
-            self.type_guidance_label.setFont(vcst.TITLE_SLANTED_FONT_W)
-            self.basic_type_radiobutton.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.all_in_one_type_radiobutton.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.brewing_efficiency_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.mash_tun_size_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.mash_tun_size_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.mash_tun_dead_space_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.mash_tun_dead_space_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.mash_tun_heat_losses_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.mash_tun_heat_losses_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.boiler_size_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.boiler_size_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.boiler_dead_space_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.boiler_dead_space_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.fermentor_size_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.fermentor_size_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.fermentor_dead_space_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.fermentor_dead_space_unit_label.setFont(vcst.FIELD_LABEL_FONT_W)
-            self.name_label.setFont(vcst.TITLE_FONT_W)
-            self.mash_tun_groupbox.setFont(vcst.TITLE_FONT_W)
-            self.boiler_groupbox.setFont(vcst.TITLE_FONT_W)
-            self.fermentor_groupbox.setFont(vcst.TITLE_FONT_W)
-            self.general_groupbox.setFont(vcst.TITLE_FONT_W)
-            self.equipment_list_widget.setFont(vcst.FIELD_LABEL_FONT_W)
+       
+        self.add_button.setFont(self.model.in_use_fonts['button'])
+        self.update_button.setFont(self.model.in_use_fonts['button'])
+        self.cancel_button.setFont(self.model.in_use_fonts['button'])
+        self.edit_button.setFont(self.model.in_use_fonts['button'])
+        self.delete_button.setFont(self.model.in_use_fonts['button'])
+        self.new_button.setFont(self.model.in_use_fonts['button'])
+        self.close_button.setFont(self.model.in_use_fonts['button'])
+        self.equipment_list_label.setFont(self.model.in_use_fonts['title_slanted'])
+        self.equipment_properties_label.setFont(self.model.in_use_fonts['title_slanted'])
+        self.type_guidance_label.setFont(self.model.in_use_fonts['title_slanted'])
+        self.basic_type_radiobutton.setFont(self.model.in_use_fonts['field'])
+        self.all_in_one_type_radiobutton.setFont(self.model.in_use_fonts['field'])
+        self.brewing_efficiency_label.setFont(self.model.in_use_fonts['field'])
+        self.brewing_efficiency_edit.setFont(self.model.in_use_fonts['field'])
+        self.brewing_efficiency_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.mash_tun_size_label.setFont(self.model.in_use_fonts['field'])
+        self.mash_tun_size_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.mash_tun_size_edit.setFont(self.model.in_use_fonts['field'])
+        self.mash_tun_dead_space_label.setFont(self.model.in_use_fonts['field'])
+        self.mash_tun_dead_space_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.mash_tun_dead_space_edit.setFont(self.model.in_use_fonts['field'])
+        self.mash_tun_heat_losses_label.setFont(self.model.in_use_fonts['field'])
+        self.mash_tun_heat_losses_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.mash_tun_heat_losses_edit.setFont(self.model.in_use_fonts['field'])
+        self.boiler_size_label.setFont(self.model.in_use_fonts['field'])
+        self.boiler_size_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.boiler_size_edit.setFont(self.model.in_use_fonts['field'])
+        self.boiler_dead_space_label.setFont(self.model.in_use_fonts['field'])
+        self.boiler_dead_space_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.boiler_dead_space_edit.setFont(self.model.in_use_fonts['field'])
+        self.boiler_evaporation_rate_edit.setFont(self.model.in_use_fonts['field'])
+        self.boiler_evaporation_rate_label.setFont(self.model.in_use_fonts['field'])
+        self.boiler_evaporation_rate_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.fermentor_size_label.setFont(self.model.in_use_fonts['field'])
+        self.fermentor_size_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.fermentor_size_edit.setFont(self.model.in_use_fonts['field'])
+        self.fermentor_dead_space_label.setFont(self.model.in_use_fonts['field'])
+        self.fermentor_dead_space_unit_label.setFont(self.model.in_use_fonts['field'])
+        self.fermentor_dead_space_edit.setFont(self.model.in_use_fonts['field'])
+        self.name_label.setFont(self.model.in_use_fonts['field'])
+        self.mash_tun_groupbox.setFont(self.model.in_use_fonts['title_slanted'])
+        self.boiler_groupbox.setFont(self.model.in_use_fonts['title_slanted'])
+        self.fermentor_groupbox.setFont(self.model.in_use_fonts['title_slanted'])
+        self.general_groupbox.setFont(self.model.in_use_fonts['title_slanted'])
+        self.equipment_list_widget.setFont(self.model.in_use_fonts['field'])
             
-        elif pf=='Linux':
-            
-            self.add_button.setFont(vcst.BUTTON_FONT_L)
-            self.update_button.setFont(vcst.BUTTON_FONT_L)
-            self.cancel_button.setFont(vcst.BUTTON_FONT_L)   
-            self.edit_button.setFont(vcst.BUTTON_FONT_L) 
-            self.delete_button.setFont(vcst.BUTTON_FONT_L)
-            self.new_button.setFont(vcst.BUTTON_FONT_L)
-            self.close_button.setFont(vcst.BUTTON_FONT_L)
-            self.equipment_list_label.setFont(vcst.BUTTON_FONT_L)
-            self.equipment_properties_label.setFont(vcst.TITLE_FONT_L)
-            self.type_guidance_label.setFont(vcst.TITLE_SLANTED_FONT_L)
-            self.basic_type_radiobutton.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.all_in_one_type_radiobutton.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.brewing_efficiency_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.mash_tun_size_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.mash_tun_size_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.mash_tun_dead_space_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.mash_tun_dead_space_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.mash_tun_heat_losses_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.mash_tun_heat_losses_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.boiler_size_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.boiler_size_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.boiler_dead_space_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.boiler_dead_space_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.fermentor_size_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.fermentor_size_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.fermentor_dead_space_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.fermentor_dead_space_unit_label.setFont(vcst.FIELD_LABEL_FONT_L)
-            self.name_label.setFont(vcst.TITLE_FONT_L)
-            self.mash_tun_groupbox.setFont(vcst.TITLE_FONT_L)
-            self.boiler_groupbox.setFont(vcst.TITLE_FONT_L)
-            self.fermentor_groupbox.setFont(vcst.TITLE_FONT_L)
-            self.general_groupbox.setFont(vcst.TITLE_FONT_L)
-            self.equipment_list_widget.setFont(vcst.FIELD_LABEL_FONT_L)
+    
       
                
              
         
     def set_ro(self):
+        self.basic_type_radiobutton.setEnabled(False)
+        self.all_in_one_type_radiobutton.setEnabled(False)
         self.name_edit.setReadOnly(True)
         self.brewing_efficiency_edit.setReadOnly(True)
         self.mash_tun_size_edit.setReadOnly(True)
@@ -486,11 +504,12 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.fermentor_size_edit.setReadOnly(True)
         self.fermentor_dead_space_edit.setReadOnly(True)
         self.unset_color()
-     
+        
         
     def showEvent(self,ev):
         self.set_labels()    
         self.set_fonts()
+        self.set_unit_labels()
         
         
     def unset_color(self):
@@ -507,6 +526,8 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
                    
         
     def unset_ro(self):
+        self.basic_type_radiobutton.setEnabled(True)
+        self.all_in_one_type_radiobutton.setEnabled(True)
         self.name_edit.setReadOnly(False)
         self.brewing_efficiency_edit.setReadOnly(False) 
         self.mash_tun_size_edit.setReadOnly(False)

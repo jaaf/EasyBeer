@@ -2032,6 +2032,7 @@
     </property>
     <addaction name="actionCustomize_colors"/>
     <addaction name="actionCustomize_Font_Size"/>
+    <addaction name="actionSet_Units_at_Next_Startup"/>
    </widget>
    <widget class="QMenu" name="menuImport_Export">
     <property name="title">
@@ -2128,6 +2129,16 @@
   <action name="actionCustomize_Font_Size">
    <property name="text">
     <string>Customize Font Size</string>
+   </property>
+  </action>
+  <action name="actionSet_Untis_at_Next_Startup">
+   <property name="text">
+    <string>Set Units at Next Startup</string>
+   </property>
+  </action>
+  <action name="actionSet_Units_at_Next_Startup">
+   <property name="text">
+    <string>Set Units at Next Startup</string>
    </property>
   </action>
  </widget>

@@ -58,6 +58,7 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.rest_key_list=self.model.rest_list        
         self.ensure_unremovable_rests()  
         self.refresh_rest_list_combo()  
+        self.set_translatable_textes()
         #self.set_translatable_texts()  
         
     def cancel(self):
@@ -131,6 +132,9 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
            
         
     def name_combo_current_item_changed(self):
+        unit=self.model.get_unit('temperature')
+        if unit:
+            unit_label=self.util.get_unit_label(unit)
         name=str(self.name_combo.currentText())
         if name:
             rest=self.model.get_rest(name)
@@ -143,7 +147,8 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
             for i in range(self.temperature_layout.count()):
                 item=self.temperature_layout.itemAt(i)
                 if item:
-                    item.widget().setText(str(rest.temperatures[i]))     
+                    item.widget().setText(str(self.util.convert_to(unit,rest.temperatures[i]))  )   
+                    self.temp_unit_label.setText(unit_label)
             self.usage_guidance_edit.setHtml(rest.guidance) 
             if rest.removable=='no':
                 self.usage_guidance_edit.setStyleSheet('color:green')
@@ -158,32 +163,33 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
             
         
     def read_input(self):
+        unit=self.model.get_unit('temperature')
+        
+        print('Reading input in RestDialogCreate')
         name=self.util.check_input(self.name_edit,True,self.tr('Name'),False)
-        if not name: return
+        if not name: 
+            print('returning soon in read_input')
+            return
         phs=[]
         for i in range(self.ph_layout.count()):
             item=self.ph_layout.itemAt(i)
             if item:
                 ph=self.util.check_input(item.widget(),False,self.tr('PH value ' + str(i)), False,0,14)
-                if not ph: return
+                if not ph: 
+                    print('returning after phs')
+                    return
                 else:
-                    phs.append(ph)
-                    
-                    
+                    phs.append(ph)                          
         temperatures=[]
         for i in range(self.temperature_layout.count()):
             item=self.temperature_layout.itemAt(i)
             if item:
-                t=self.util.check_input(item.widget(),False,self.tr('Temperature value ' + str(i)), False,0,80)
+                t=self.util.check_input(item.widget(),False,self.tr('Temperature value ' + str(i)), False,0,80,None,unit)
                 if not t :return
-                else:
-                    temperatures.append(t)        
-                    
+                else: temperatures.append(t)                     
         guidance=self.usage_guidance_edit.toPlainText()                        
-                    
-        
-        
         return Rest(name,phs,temperatures,guidance)    
+    
     
     def refresh_rest_list_combo(self):
         self.name_combo.clear()
@@ -269,7 +275,8 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.temperature_max.setFont(self.model.in_use_fonts['field'])
         self.temperature_min.setFont(self.model.in_use_fonts['field'])
         self.optimal_temperature_max.setFont(self.model.in_use_fonts['field'])
-        self.optimal_temperature_min.setFont(self.model.in_use_fonts['field'])    
+        self.optimal_temperature_min.setFont(self.model.in_use_fonts['field']) 
+        self.temp_unit_label.setFont(self.model.in_use_fonts['field'])   
         self.usage_guidance_edit.setFont(self.model.in_use_fonts['field'])       
             
             
@@ -295,6 +302,7 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.usage_guidance_edit.setStyleSheet(sty.field_styles['read_only'])    
         
     def set_rw(self):
+        
         self.name_combo.setEnabled(True)
         self.name_edit.setReadOnly(False)
         self.name_edit.setStyleSheet(sty.field_styles['editable'])
@@ -311,7 +319,22 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
                 item.widget().setStyleSheet(sty.field_styles['editable'])  
                 
         self.usage_guidance_edit.setReadOnly(False)
-        self.usage_guidance_edit.setStyleSheet(sty.field_styles['editable'])    
+        self.usage_guidance_edit.setStyleSheet(sty.field_styles['editable'])  
+        
+    def set_translatable_textes(self):
+        self.main_label.setText(self.tr('Rest Database'))     
+        self.choose_label.setText(self.tr('Select a rest here or create a new one')) 
+        self.name_label.setText(self.tr('Name'))
+        self.ph_range_label.setText(self.tr('PH range'))
+        self.temperature_label.setText(self.tr('Temperature range'))
+        
+        
+        self.add_button.setText(self.tr('Add this rest'))
+        self.cancel_button.setText(self.tr('Cancel'))
+        self.update_button.setText(self.tr('Update this rest'))
+        self.delete_button.setText(self.tr('Delete'))
+        self.new_button.setText(self.tr('New'))
+        self.edit_button.setText(self.tr('Edit'))
         
     def showEvent(self,e):  
         self.set_fonts()   
@@ -320,12 +343,12 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         'update the rest that is defined by the GUI'
         rest=self.read_input()
         self.current_rest=rest.name # in order to be able to select it back on refresh
-        for i in range(len(rest.phs)):
-            print('ph '+str(i)+' : '+str(rest.phs[i]))
-        for i in range(len(rest.temperatures)):
-            print('temp '+str(i)+' : '+str(rest.temperatures[i]))   
-        print (rest.guidance)
-        print(rest.removable)      
+        #for i in range(len(rest.phs)):
+          #  print('ph '+str(i)+' : '+str(rest.phs[i]))
+        #for i in range(len(rest.temperatures)):
+            #print('temp '+str(i)+' : '+str(rest.temperatures[i]))   
+        #print (rest.guidance)
+       # print(rest.removable)      
         self.model.update_rest(rest)
         self.set_ro()
         #self.set_read_only_style()

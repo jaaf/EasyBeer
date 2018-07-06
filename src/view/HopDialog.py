@@ -274,6 +274,8 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.hop_form_list=['',self.tr('Pellets'),self.tr('Leaves'),self.tr('Cones')]    
         for f in self.hop_form_list:
             self.form_list.addItem(f)    
+            
+         
         
         
     def update_hop(self):

@@ -268,6 +268,9 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         hl.addWidget(form_edit)
         
         vl1=QVBoxLayout()
+        unit=self.model.get_unit('temperature')
+        if unit:
+            unit_label=self.util.get_unit_label(unit)
         temp_label=QLabel(self.tr('Temperature range'),alignment=4)
         temp_label.setAccessibleName('temp_label')
         vl1.addWidget(temp_label)
@@ -278,7 +281,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         min_allowed_temperature_edit.setMaximumSize(50,30)
         min_allowed_temperature_edit.setStyleSheet(sty.field_styles['min_max_allowed'])
         min_allowed_temperature_edit.setReadOnly(True)
-        min_allowed_temperature_edit.setText(str(yeastT.min_allowed_temperature))
+        
+        min_allowed_temperature_edit.setText(str(self.util.convert_to(unit,yeastT.min_allowed_temperature)))
         hl1.addWidget(min_allowed_temperature_edit)
         
         min_advised_temperature_edit=QLineEdit()
@@ -287,7 +291,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         min_advised_temperature_edit.setMaximumSize(50,30)
         min_advised_temperature_edit.setStyleSheet(sty.field_styles['min_max_advised'])
         min_advised_temperature_edit.setReadOnly(True)
-        min_advised_temperature_edit.setText(str(yeastT.min_advised_temperature))
+        min_advised_temperature_edit.setText(str(self.util.convert_to(unit,yeastT.min_advised_temperature)))
         hl1.addWidget(min_advised_temperature_edit)
         
         max_advised_temperature_edit=QLineEdit()
@@ -296,7 +300,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         max_advised_temperature_edit.setMaximumSize(50,30)
         max_advised_temperature_edit.setStyleSheet(sty.field_styles['min_max_advised'])
         max_advised_temperature_edit.setReadOnly(True)
-        max_advised_temperature_edit.setText(str(yeastT.max_advised_temperature))
+        max_advised_temperature_edit.setText(str(self.util.convert_to(unit,yeastT.max_advised_temperature)))
         hl1.addWidget(max_advised_temperature_edit)
         
         max_allowed_temperature_edit=QLineEdit()
@@ -305,7 +309,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         max_allowed_temperature_edit.setMaximumSize(50,30)
         max_allowed_temperature_edit.setStyleSheet(sty.field_styles['min_max_allowed'])
         max_allowed_temperature_edit.setReadOnly(True)
-        max_allowed_temperature_edit.setText(str(yeastT.max_allowed_temperature))
+        max_allowed_temperature_edit.setText(str(self.util.convert_to(unit,yeastT.max_allowed_temperature)))
         hl1.addWidget(max_allowed_temperature_edit)
         vl1.addLayout(hl1)
         hl.addLayout(vl1)
@@ -399,7 +403,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
     def alerte_sum_percentage(self,val): 
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
-        msg.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
+        msg.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)     
         text=self.tr('Sum of percentage for malts must be 100, presently it is : ')+str(float(val))
         msg.setText(text)
         msg.setWindowTitle(self.tr("Warning percentages"))
@@ -409,6 +413,11 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
 
     def add_hop_rate(self,layout,value=None):
         'add an input for hop rate in the layout'
+        print('adding hop_rate')
+        unit=self.model.get_unit('hop_rate')
+        if unit: 
+            unit_label=self.util.get_unit_label(unit)
+        else:print('Unit not found in model')
         hop_rate_edit=QLineEdit()
         hop_rate_edit.setAccessibleName('hop_rate')
         hop_rate_edit.setFont(self.model.in_use_fonts['field'])
@@ -420,7 +429,10 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         hop_rate_unit_label.setAccessibleName('hop_rate_unit')
         hop_rate_unit_label.setFont(self.model.in_use_fonts['field'])
         layout.addWidget(hop_rate_unit_label)
-        if value: hop_rate_edit.setText(str(value))            
+        hop_rate_unit_label.setText(unit_label)
+        if value: 
+            
+            hop_rate_edit.setText(str(self.util.convert_to(unit,value)))            
                                
     def clear_edits(self):
         self.recipe_name_edit.setText('')
@@ -491,7 +503,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                 self.update_hop_view(recipe)    
                 
             if hasattr(recipe,'targeted_original_gravity'):
-                self.targeted_original_gravity_edit.setText(str(recipe.targeted_original_gravity))   
+                value=recipe.targeted_original_gravity
+                self.targeted_original_gravity_edit.setText(str(('{0:.3f}'.format(value))))   
                 
             if hasattr(recipe,'targeted_bitterness'):
                 self.targeted_bitterness_edit.setText(str(recipe.targeted_bitterness))   
@@ -583,7 +596,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         if sum_percentage != 100 :
             self.alerte_sum_percentage(sum_percentage) 
             return  
-        name=util.check_input(self.recipe_name_edit,True,self.tr('Repipe name'))
+        name=util.check_input(self.recipe_name_edit,True,self.tr('Recipe name'))
         if not name:
             print('return at 2 in prepare_a_recipe_to_save')
             return
@@ -602,6 +615,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         
         'Rests'
         self.rest_list=[]
+        unit=self.model.get_unit('temperature')
+        
         for i in range(self.rest_layout.count()):
             item=self.rest_layout.itemAt(i)#get a row item
             if item:
@@ -614,7 +629,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                 if not duration: return
                 
                 w_temperature=self.util.get_by_name(item.layout(),'temperature')
-                temperature=util.check_input(w_temperature,False,self.tr('Rest temperature'),False,0,100)
+                temperature=util.check_input(w_temperature,False,self.tr('Rest temperature'),False,0,100,None,unit)
                 if not temperature: return
                 
                 rest=RestInRecipe(purpose, duration,temperature)
@@ -624,6 +639,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         'Hops in recipe'
         #print('reaching hops in recipe')
         self.list_hop_in_recipe=[]
+        unit=self.model.get_unit('hop_rate')
         for i in range(self.hop_layout.count()):
             item=self.hop_layout.itemAt(i)
             if item:
@@ -634,7 +650,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                 if not hop_rate_edit: 
                     self.alerte(self.tr('Hop rate is not accessible'))
                     return
-                hop_rate=util.check_input(hop_rate_edit,False,self.tr('Hop rate'),False, 0,100)
+                hop_rate=util.check_input(hop_rate_edit,False,self.tr('Hop rate'),False, 0,100,None,unit)
    
                 'in the database we store the key name, not the translated string'
                 'This way of doing things allows to change the language even after hops have been stored in the database'
@@ -1090,6 +1106,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                   
                 
     def update_hop_view(self,recipe):
+     
+        
         self.list_hop_in_recipe.clear()
         self.util.clearLayout(self.hop_layout)
         for h in recipe.hops_in_recipe:
@@ -1166,16 +1184,20 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
             hl.addWidget(duration_unit)
             duration_unit.setFont(self.model.in_use_fonts['field'])
             
+            unit=self.model.get_unit('temperature')
+            if unit:
+                unit_label=self.util.get_unit_label(unit)
             temperature = QLineEdit()
             temperature.setAccessibleName('temperature')
             temperature.setMaximumSize(60,30)
             temperature.setStyleSheet(edit_style)
             temperature.setReadOnly(ro)  
             hl.addWidget(temperature)
-            temperature.setText(str(r.temperature))
+            temperature.setText(str(self.util.convert_to(unit,r.temperature)))
             temperature.setFont(self.model.in_use_fonts['field'])
             
-            temperature_unit =QLabel('°C')
+            temperature_unit =QLabel()
+            temperature_unit.setText(unit_label)
             temperature_unit.setMaximumSize(40,30)
             temperature_unit.setAccessibleName('temperature_unit')
             hl.addWidget(temperature_unit)

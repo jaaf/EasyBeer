@@ -37,15 +37,12 @@ class Utils(QWidget):
     def init_hop_usage_dic(self):
         d=collections.OrderedDict()
         d[vcst.HOP_USAGE_UNDEFINED]= ''
-        print('voici vcst.HOP_MASH_HOPPING : '+vcst.HOP_MASH_HOPPING)
         d[vcst.HOP_MASH_HOPPING]=self.tr('Mash hopping')
         d[vcst.HOP_FIRST_WORT_HOPPING]=self.tr('First wort hopping')
         d[vcst.HOP_BOILING_HOPPING]=self.tr('Boil hopping')
         d[vcst.HOP_HOP_BACK_HOPPING]=self.tr('Hop back hopping')
         d[vcst.HOP_DRY_HOPPING]=self.tr('Dry hopping')
         self.hop_usage_dic=d
-        print('printing dic')
-        print(d) 
                     
     def alerte(self,message,icon=QMessageBox.Information, title=None):
         msg = QMessageBox()
@@ -59,7 +56,6 @@ class Utils(QWidget):
         
   
     def alerte_bad_input(self,txt=''): 
-        #print(MW.tr('translated indirectly'))
         msg = QMessageBox()   
         msg.setIcon(QMessageBox.Warning)
         msg.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
@@ -70,25 +66,21 @@ class Utils(QWidget):
         
     
    
-    def check_input(self,w,flag_txt=True,info='',acceptNone=False,min_value=0.0,max_value=0.0,calculated_value=None):
+    def check_input(self,w,flag_txt=True,info='',acceptNone=False,min_value=0.0,max_value=0.0,calculated_value=None,unit=None):
   
         '''
         w is the widget whose value is checked
         flag_txt: True if text expected, False if num expected
         info: additional text to the basic message of alerte_bad_input
         acceptNone: accept None value silently (no alert)
-        '''    
-       
+        if unit given, convert the value
+        '''  
         if isinstance(w,QComboBox):
-            t=w.currentText()  
-            
+            t=w.currentText()     
         else: 
-            t=w.text()
-         
-            
+            t=w.text()   
         #case nothing entered    
         if acceptNone and not t:
-            #print('None accepted')
             return ''    
         
         #case of string
@@ -100,12 +92,18 @@ class Utils(QWidget):
         #case on numerical value
         elif ((not flag_txt) and t):
             try:
-                value=float(t)
+                raw=float(t)
             except :
                 tx=self.tr('Value for '+info+self.tr('was not convertible to float.Please check your input.'))  
                 w.setStyleSheet(vcst.EDIT_ALERTE_STYLE)
                 self.alerte_bad_input(tx)
                 return None  
+            
+            if unit:
+                value=self.convert_from(unit,raw)
+            else:
+                value=raw    
+                
             
             if isinstance(value, float):#if value and value >=0.0:
                 if value <min_value or value>max_value:
@@ -115,10 +113,10 @@ class Utils(QWidget):
                     self.alerte_bad_input(tx)
                     return None
                 
-                #print('testing calculated_value')
+       
                 if calculated_value: w.setStyleSheet(sty.field_styles['calculated'])
                 else: w.setStyleSheet(sty.field_styles['editable'])
-                return float(w.text())#why not return(value)
+                return value
     
             tx=self.tr('Input for ')+info+ self.tr(' is not a readable value')+str(value)
             w.setStyleSheet(vcst.EDIT_ALERTE_STYLE)
@@ -139,8 +137,115 @@ class Utils(QWidget):
         
         return(question.exec_())
         
-
-
+    def convert_to(self,unit,value):
+        'convert a mksa value in db into an other unit for display'
+        target=unit.unit
+        if unit.name=='temperature':
+            if target == 'Farenheit':
+                ret=(value*1.8)+32
+                return ('{0:.1f}'.format(ret))
+                
+               
+            else: 
+                return ('{0:.1f}'.format(value))
+            
+        if unit.name=='delta_temperature':
+            if target=='Farenheit':
+                ret=value*1.8
+                return ('{0:.1f}'.format(ret) )
+            else: return ('{0:.1f}'.format(value))
+                 
+            
+        if unit.name=='malt_mass':
+            if target== 'Pound':
+                ret=value*2.2046244202
+                return ('{0:.1f}'.format(ret) ) 
+            else: return ('{0:.1f}'.format(value))
+            
+        if unit.name =='yeast_mass':
+            if target == 'Ounce':
+                ret=value*0.0352739907
+                return ('{0:.2f}'.format(ret))
+            else: return ('{0:.1f}'.format(value )) 
+            
+        if unit.name=='water_volume':
+            if target=='Gallon':
+                ret=value*0.2641721769
+                return ('{0:.2f}'.format(ret))
+            if  target =='Quart':
+                ret=value*1.0566887074
+                return ('{0:.1f}'.format(ret))
+            if target =='Pint':
+                ret=value*2.1133774149
+                return ('{0:.1f}'.format(ret))
+            if target =='Liter':
+                return ('{0:.1f}'.format(value))
+            return ('{0:.1f}'.format(value))
+        
+        if unit.name=='hop_rate':
+            if target=='Gram per liter':
+                return ('{0:.1f}'.format(value))
+            if target=='Gram per gallon':
+                ret=value*3.78541
+                return ('{0:.1f}'.format(ret))
+            if target=='Ounce per gallon':
+                ret=value*0.133526
+                return ('{0:.3f}'.format(ret))
+            
+        if unit.name=='hop_mass':
+            if target=='Gram':
+                return ('{0:.2f}'.format(value))
+            if target=='Ounce':
+                return ('{0:.2f}'.format(value*0.0352739907))
+            
+    def convert_from(self,unit,value): 
+        origin=unit.unit
+        if unit.name=='temperature':
+            if origin == 'Farenheit':
+                return ((value-32)/1.8)
+            else: 
+                return value
+            
+        if unit.name=='delta_temperature':
+            if origin =='Farenheit':
+                return value/1.8
+            if origin =='Celsius':    
+                return value
+            
+        if unit.name=='malt_mass':
+            if origin== 'Pound':
+                return value*0.453592 
+            else: return value
+            
+        if unit.name =='yeast_mass':
+            if origin == 'Ounce':
+                return value    *28.3495
+            else: return value  
+        if unit.name=='water_volume':
+            if origin=='Gallon':
+                return value*3.78541
+            if  origin =='Quart':
+                return value*0.9463525
+            if origin =='Pint':
+                return value*0.47317625
+            if origin =='Liter':
+                return value
+            return value  
+        
+        if unit.name=='hop_rate':
+            if origin=='Gram per liter':
+                return value
+            if origin=='Gram per gallon':
+                return value*0.2641721769
+            if origin=='Ounce per gallon':
+                return value*7.4891
+            
+        if unit.name=='hop_mass':
+            if origin=='Gram':
+                return value
+            if origin=='Ounce':
+                return value*28.3495    
+             
 
     'list all widgets included in a layout recursively'
     def get_included_widgets(self,layout):
@@ -154,6 +259,22 @@ class Utils(QWidget):
                 result=result+tampon
         return result        
     
+    
+    def get_unit_label(self,unit):
+        if unit.unit=='Farenheit': return '°F'
+        if unit.unit=='Celsius': return '°C'
+        if unit.unit=='Gram per liter' : return 'g/l'
+        if unit.unit=='Gram per gallon': return 'g/gal.'
+        if unit.unit=='Ounce per gallon': return 'oz./gal.'
+        if unit.unit=='Liter': return 'l'
+        if unit.unit=='Gallon':return 'gal.'
+        if unit.unit=='Quart': return 'quart'   
+        if unit.unit=='Pound':return 'lb'
+        if unit.unit=='Kilogram': return 'kg' 
+        if unit.unit=='Gram': return 'g'
+        if unit.unit=='Ounce': return 'oz.'
+        
+        
     def clearLayout(self, layout):
         if layout:
             while layout.count():
@@ -196,17 +317,13 @@ class Utils(QWidget):
 
     def get_containing_layout(self,layout,name):
         'Find a layout in a layout that contains the widget the name of which is given: Recursive'
-        #print ('trying to find a containing layout')
         for i in range(layout.count()):
             item = layout.itemAt(i)
             if item.widget():
-                #print('get_containing :'+item.widget().accessibleName())
                 if item.widget().accessibleName()==name:
-                    #print ('returning a layout')
                     return layout
             
             if item.layout():
-                    #print('looping on found layout')
                     return self.get_containing_layout(item.layout(), name)
   
         return None 
