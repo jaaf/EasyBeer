@@ -403,6 +403,12 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.recipe_edit_button.hide()
         self.recipe_delete_button.hide()
         self.recipe_new_button.show()      
+        
+    def changeEvent(self, event):
+        print('changeEvent triggered in RecipeDialog')
+        if event.type() == QtCore.QEvent.LanguageChange:
+            self.retranslateUi(self)  
+            
                                
     def clear_edits(self):
         self.recipe_name_edit.setText('')
@@ -620,6 +626,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                     self.alerte(self.tr('Hop rate is not accessible'))
                     return
                 hop_rate=util.check_input(hop_rate_edit,False,self.tr('Hop rate'),False, 0,100,None,unit)
+                if not hop_rate: return
    
                 'in the database we store the key name, not the translated string'
                 'This way of doing things allows to change the language even after hops have been stored in the database'
@@ -974,7 +981,8 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                 
     def set_subscriptions(self):
         self.model.subscribe_model_changed(['recipe','fontset'],self.on_model_changed_recipe)
-                         
+     
+    '''                     
     def set_translatable_textes(self):
         self.setWindowTitle(self.tr('Create a Recipe'))
         self.recipe_list_label.setText(self.tr('Recipe Database List'))
@@ -992,12 +1000,12 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.mash_rests_label.setText(self.tr('Mash Rests'))
         #self.add_subdialog_buttons()
         self.recipe_close_button.setText(self.tr('Close'))
-
+    '''
         
    
     def showEvent(self,e):  
-        self.set_translatable_textes()
-        #self.add_subdialog_buttons#already done, just to refresh translation
+        #self.set_translatable_textes()
+        self.add_subdialog_buttons#already done, just to refresh translation
         self.set_ro_and_color()
         self.set_fonts()
    

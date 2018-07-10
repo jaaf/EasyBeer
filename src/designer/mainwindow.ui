@@ -290,7 +290,31 @@
              <string notr="true">background-color:lightgreen; margin-bottom: 10px</string>
             </property>
             <property name="text">
-             <string>Save Brewing Session</string>
+             <string>Record this session</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="edit_feedback_button">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>FreeSans</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:lightgreen; margin-bottom: 10px</string>
+            </property>
+            <property name="text">
+             <string>Edit selected session feedback</string>
             </property>
            </widget>
           </item>
@@ -326,6 +350,12 @@
           </item>
           <item>
            <widget class="QLabel" name="batch_volume_label">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>FreeSans</family>
@@ -363,7 +393,7 @@
              </font>
             </property>
             <property name="text">
-             <string>liters</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -382,6 +412,12 @@
           </item>
           <item>
            <widget class="QLabel" name="grain_temperature_label">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>FreeSans</family>
@@ -422,7 +458,7 @@
              </font>
             </property>
             <property name="text">
-             <string>°C</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -511,6 +547,12 @@
               </item>
               <item>
                <widget class="QLabel" name="targeted_original_gravity_label">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="font">
                  <font>
                   <family>FreeSans</family>
@@ -520,7 +562,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Original Gravity Target</string>
+                 <string>Targeted Original Gravity</string>
                 </property>
                </widget>
               </item>
@@ -553,6 +595,12 @@
               </item>
               <item>
                <widget class="QLabel" name="targeted_bitterness_label">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="font">
                  <font>
                   <family>FreeSans</family>
@@ -561,16 +609,25 @@
                   <bold>false</bold>
                  </font>
                 </property>
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
                 <property name="text">
-                 <string>Bitterness Target</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="targeted_bitterness_value">
-                <property name="maximumSize">
+                <property name="minimumSize">
                  <size>
                   <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -582,12 +639,18 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>21.4</string>
+                 <string>Targeted Bitterness</string>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="targeted_bitterness_unit_label">
+                <property name="minimumSize">
+                 <size>
+                  <width>40</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="maximumSize">
                  <size>
                   <width>40</width>
@@ -603,7 +666,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>IBU</string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -622,6 +685,12 @@
               </item>
               <item>
                <widget class="QLabel" name="boiling_time_label">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="font">
                  <font>
                   <family>FreeSans</family>
@@ -631,7 +700,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Boiling time</string>
+                 <string>Boiling Time</string>
                 </property>
                </widget>
               </item>
@@ -752,8 +821,17 @@
                   <bold>false</bold>
                  </font>
                 </property>
+                <property name="accessibleName">
+                 <string/>
+                </property>
+                <property name="midLineWidth">
+                 <number>0</number>
+                </property>
                 <property name="text">
-                 <string>Brewing Efficiency</string>
+                 <string>Brewing Efficiency </string>
+                </property>
+                <property name="textFormat">
+                 <enum>Qt::AutoText</enum>
                 </property>
                </widget>
               </item>
@@ -1033,6 +1111,12 @@
             </item>
             <item>
              <widget class="QLabel" name="mash_water_volume_unit_label">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>FreeSans</family>
@@ -1042,7 +1126,7 @@
                </font>
               </property>
               <property name="text">
-               <string>liters</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -1104,6 +1188,12 @@
             </item>
             <item>
              <widget class="QLabel" name="strike_temperature_unit_label">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>FreeSans</family>
@@ -1113,7 +1203,7 @@
                </font>
               </property>
               <property name="text">
-               <string>°C</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -1163,6 +1253,12 @@
             </item>
             <item>
              <widget class="QLabel" name="mash_sparge_water_volume_unit_label">
+              <property name="minimumSize">
+               <size>
+                <width>20</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>FreeSans</family>
@@ -1172,7 +1268,7 @@
                </font>
               </property>
               <property name="text">
-               <string>liters</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -1477,13 +1573,13 @@
            <widget class="QLabel" name="pitching_rate_bar_label">
             <property name="minimumSize">
              <size>
-              <width>350</width>
+              <width>550</width>
               <height>0</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>450</width>
+              <width>550</width>
               <height>16777215</height>
              </size>
             </property>
@@ -1574,419 +1670,17 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox">
-          <property name="minimumSize">
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
            <size>
-            <width>0</width>
-            <height>400</height>
+            <width>20</width>
+            <height>40</height>
            </size>
           </property>
-          <property name="title">
-           <string/>
-          </property>
-          <widget class="QWidget" name="layoutWidget">
-           <property name="geometry">
-            <rect>
-             <x>30</x>
-             <y>40</y>
-             <width>1351</width>
-             <height>311</height>
-            </rect>
-           </property>
-           <layout class="QVBoxLayout" name="feedback_groupbox_layout">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <item>
-               <widget class="QLabel" name="feedback_label">
-                <property name="maximumSize">
-                 <size>
-                  <width>300</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>FreeSans</family>
-                  <pointsize>18</pointsize>
-                  <weight>75</weight>
-                  <italic>true</italic>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Feedback</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_25">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QPushButton" name="edit_button">
-                <property name="font">
-                 <font>
-                  <family>FreeSans</family>
-                  <pointsize>10</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Edit</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="feedback_save_button">
-                <property name="minimumSize">
-                 <size>
-                  <width>300</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>300</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>FreeSans</family>
-                  <pointsize>10</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">background-color:lightgreen</string>
-                </property>
-                <property name="text">
-                 <string>Save Feedback</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_26">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="QLabel" name="feedback_water_treatment_label">
-              <property name="font">
-               <font>
-                <family>FreeSans</family>
-                <pointsize>14</pointsize>
-                <weight>75</weight>
-                <italic>false</italic>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Water treatment</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QTextEdit" name="feedback_water_treatment_textedit">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>100</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="feedback_observed_data_label">
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <family>FreeSans</family>
-                <pointsize>14</pointsize>
-                <weight>75</weight>
-                <italic>true</italic>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Observed Data</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_13">
-              <item>
-               <widget class="QLabel" name="feedback_mash_PH_label_2">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>1</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>FreeSans</family>
-                  <pointsize>10</pointsize>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Mash PH</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="feedback_mash_PH_edit_2">
-                <property name="minimumSize">
-                 <size>
-                  <width>60</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_13">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="feedback_preboil_volume_label_2">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>1</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>FreeSans</family>
-                  <pointsize>10</pointsize>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Pre-boil volume</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="feedback_preboil_volume_edit_2">
-                <property name="minimumSize">
-                 <size>
-                  <width>60</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="feedback_preboil_volume_unit_label_2">
-                <property name="font">
-                 <font>
-                  <family>FreeSans</family>
-                  <pointsize>10</pointsize>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>liters</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_19">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="feedback_original_gravity_label_2">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>1</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>FreeSans</family>
-                  <pointsize>10</pointsize>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Original gravity</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="feedback_original_gravity_edit_2">
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_20">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="feedback_fermentor_volume_label_2">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>1</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>FreeSans</family>
-                  <pointsize>10</pointsize>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Fermentor volume</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="feedback_fermentor_volume_edit">
-                <property name="minimumSize">
-                 <size>
-                  <width>60</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="feedback_fermentor_volume_unit_label_2">
-                <property name="font">
-                 <font>
-                  <family>FreeSans</family>
-                  <pointsize>10</pointsize>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>liters</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-         </widget>
+         </spacer>
         </item>
        </layout>
       </widget>

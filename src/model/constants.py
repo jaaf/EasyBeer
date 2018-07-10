@@ -50,6 +50,17 @@ STYLE_DB =os.path.join(db_path,'style.db')
 WATER_DENSITY_20 = 0.998 # in kg / l
 MALT_WATER_RETENTION_RATIO = 1 # in l/kg
 WATER_GRAIN_RATIO = 3 # in l/kg
+
+TEXT_REST_BETA_GLUCANASE='''
+<h1>This rest cannot be edited or deleted</h1>
+<h2>Beta-glucanase Rest</h2>
+<p>When using a significant amount of unmalted barley, and/or rye, oatmeal, wheat the mash may become too stiff and
+cause lautering difficulties. The stiffness comes from beta-glucan polysaccharides. Beta-glucan polysaccharides can be 
+broken down using a rest of about 20_min. at 104-118°F (40-48°C). </p>
+<p>Such a rest is recommended when using more than 20% of unmalted or flaked barley, oatmeal or wheat in the grain bill.
+It is optional when this percentage is betwee 10% and 20`.
+
+'''
 TEXT_REST_PROTEIN='''
 <h1>This rest cannot be edited or deleted</h1>
 <h2>Protein Rest</h2>

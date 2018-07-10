@@ -33,6 +33,7 @@ from view.ColorDialog import ColorDialog
 from view.FontSizeDialog import FontSetDialog
 from view.HelpWindow import HelpWindow
 from view.UnitSetter import UnitSetter
+from view.Feedback import Feedback
 from view.Utils import Utils
 import view.constants as vcst
 import view.styles as sty
@@ -45,6 +46,7 @@ from PyQt5.QtGui import QFont
 
      
 import sys
+import time
 import datetime
 import os
 import platform
@@ -89,7 +91,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             (filepath,filename)=os.path.split(__file__)
             self.trad_path=os.path.join(filepath,'..','translate')
         
-        self.util=Utils()
+        self.util=Utils(self.model)
         self.util.init_hop_usage_dic()
         self.controller = Controller(self.model)
         #colors must be set before all dialogs
@@ -104,6 +106,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.equipmentDialog = EquipmentDialog(self.model,self.controller,self.util)
         self.fontSizeDialog=FontSetDialog(self.model,self.controller,self.util)
         self.unitSetter=UnitSetter(self.model,self.util,self)
+        self.feedback=Feedback(self.model,self.util)
         'if running in a bundle may be the user wants to save or restore their databases'
         if self.frozen=='yes':
             self.importExportDbDialog=ImportExportDb(self.model,self.controller,self.util,self.bundle_dir)
@@ -125,6 +128,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.init_session_combo()
         self.new_session()
         self.init_font_set_db()
+        
         
         
         
@@ -311,7 +315,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
               
         self.malt_layout.addLayout(hl)
         
-    def add_yeast_view(self,yeast_type,rate=None,creation_mode=True):  
+    def add_yeast_view(self,yeast_type,rate=None,amount=None,creation_mode=True):  
         self.util.clearLayout(self.yeast_layout)
         yeastT=yeast_type
         hl=QHBoxLayout()#create an horizontal layout to host widgets for the yeast
@@ -395,6 +399,13 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         hl.addStretch()
         
         vl2=QVBoxLayout()
+        
+        yr_unit=self.model.get_unit('yeast_rate')
+        yr_unit_label=self.util.get_unit_label(yr_unit)
+        ya_unit=self.model.get_unit('yeast_mass')
+        ya_unit_label=self.util.get_unit_label(ya_unit)
+        
+        
         if creation_mode:
             hl21=QHBoxLayout()
             hl22=QHBoxLayout()
@@ -402,29 +413,29 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             pitch_label=QLabel('',alignment=4)
             pitch_label.setText(self.tr('Recommended Pitching rate'))
             pitch_label.setAccessibleName('recommended_pitching_label')
-            
             hl21.addWidget(pitch_label)
+ 
+            'in this mode, only the rate is given, amount has to be calculated'
             calculate_amount_button=QPushButton(self.tr('Calculate'))
             calculate_amount_button.setAccessibleName('calculate_button')
             calculate_amount_button.setMaximumSize(120, 30)
             calculate_amount_button.clicked.connect(self.calculate_yeast_amount)
             hl21.addWidget(calculate_amount_button)
             vl2.addLayout(hl21)
-        
+            
             rate_edit=QLineEdit()
             rate_edit.setAccessibleName('rate')
             rate_edit.setMaximumSize(60,30)
+            'in session creation mode, rate is given by the recipe: see load_recipe'
+            if rate: rate_edit.setText(self.util.convert_to(yr_unit,rate))
             rate_edit.setStyleSheet(sty.field_styles['read_only'])
-            hl22.addWidget(rate_edit)
-            if rate:
-                rate_edit.setText(str(rate))
-        
-            rate_unit=QLabel('billions/°P/liter')   
+            rate_unit=QLabel()   
             rate_unit.setAccessibleName('rate_unit')
-            #rate_unit.setMaximumSize(100,30)
-            #rate_unit.setStyleSheet("font-size: 14px;")
+            rate_unit.setText(yr_unit_label)
+            hl22.addWidget(rate_edit)
             hl22.addWidget(rate_unit) 
             
+            'amount is calculated from rate when button clicked '
             y_unit=self.model.get_unit('yeast_mass')
             calculated_amount_edit=QLineEdit()
             calculated_amount_edit.setAccessibleName('calculated_amount')
@@ -437,9 +448,9 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             calculated_amount_unit.setText(self.util.get_unit_label(y_unit))
             calculated_amount_unit.setMaximumSize(30,30)
             hl22.addWidget(calculated_amount_unit) 
-
             vl2.addLayout(hl22)
-            #4 lines to add an horizontal separator
+            
+            
             hline=QFrame()
             hline.setFrameShape(QFrame.HLine)
             hline.setFrameShadow(QFrame.Sunken)
@@ -448,19 +459,17 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             adopted_pitch_label.setAccessibleName('adopted_pitching_label')
             adopted_pitch_label.setText(self.tr('Adopted Pitching rate'))
             vl2.addWidget(adopted_pitch_label)
-            calculated_rate_edit=QLineEdit()
-            calculated_rate_edit.setAccessibleName('calculated_pitching_rate')
-            calculated_rate_edit.setMaximumSize(60,30)
-            calculated_rate_edit.setStyleSheet(sty.field_styles['calculated'])
-            calculated_rate_edit.setReadOnly(True)
-            hl23.addWidget(calculated_rate_edit)
-            calculated_rate_unit=QLabel()
-            calculated_rate_unit.setText('billions/°P/liter')
-            calculated_rate_unit.setAccessibleName('calculated_rate_unit')
-            #calculated_rate_unit.setMaximumSize(100,30)
-            #calculated_rate_unit.setStyleSheet("font-size: 14px")
-            hl23.addWidget(calculated_rate_unit)
-            
+            'adopted_rate will be calculated after editing the adopted amount. See calculate_adopted_pitching_rate()'
+            adopted_rate_edit=QLineEdit()
+            adopted_rate_edit.setAccessibleName('adopted_pitching_rate')
+            adopted_rate_edit.setMaximumSize(60,30)
+            adopted_rate_edit.setStyleSheet(sty.field_styles['calculated'])
+            adopted_rate_edit.setReadOnly(True)
+            hl23.addWidget(adopted_rate_edit)
+            adopted_rate_unit=QLabel()
+            adopted_rate_unit.setText(yr_unit_label)
+            adopted_rate_unit.setAccessibleName('calculated_rate_unit')
+            hl23.addWidget(adopted_rate_unit)
             
             adopted_amount_edit=QLineEdit()
             adopted_amount_edit.setAccessibleName('adopted_amount')
@@ -486,42 +495,44 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             calculated_amount_edit.setFont(self.model.in_use_fonts['field'])
             calculated_amount_unit.setFont(self.model.in_use_fonts['field'])
             rate_unit.setFont(self.model.in_use_fonts['field'])
-            calculated_rate_unit.setFont(self.model.in_use_fonts['field'])
+            adopted_rate_unit.setFont(self.model.in_use_fonts['field'])
+            
+              
         else:
+            'Here we display a session from database.It includes rate and amount in yeast_in_session object'
             hl23=QHBoxLayout()
             adopted_pitch_label=QLabel(self.tr('Adopted Pitching rate'),alignment=4)
             adopted_pitch_label.setAccessibleName('adopted_pitching_label')
             vl2.addWidget(adopted_pitch_label)
-            calculated_rate_edit=QLineEdit()
-            calculated_rate_edit.setAccessibleName('calculated_pitching_rate')
-            calculated_rate_edit.setMaximumSize(60,30)
-            calculated_rate_edit.setStyleSheet(sty.field_styles['read_only'])
-            calculated_rate_edit.setReadOnly(True)
-            hl23.addWidget(calculated_rate_edit)
-            calculated_rate_unit=QLabel()
-            calculated_rate_unit.setText('billions/°P/liter')
-            calculated_rate_unit.setAccessibleName('calculated_rate_unit')
-            #calculated_rate_unit.setStyleSheet("font-size: 14px")
-            hl23.addWidget(calculated_rate_unit)
+            adopted_rate_edit=QLineEdit()
+            #calculated_rate_edit.setAccessibleName('calculated_pitching_rate')
+            adopted_rate_edit.setMaximumSize(60,30)
+            adopted_rate_edit.setStyleSheet(sty.field_styles['read_only'])
+            adopted_rate_edit.setReadOnly(True)
+            adopted_rate_edit.setText(self.util.convert_to(yr_unit,rate))
+            #calculated_rate_edit.setText(self.util.convert_from(yr_unit, )
+            hl23.addWidget(adopted_rate_edit)
+            adopted_rate_unit=QLabel()
+            adopted_rate_unit.setText(yr_unit_label)
+            hl23.addWidget(adopted_rate_unit)
             adopted_amount_edit=QLineEdit()
             adopted_amount_edit.setAccessibleName('adopted_amount')
             adopted_amount_edit.setStyleSheet(sty.field_styles['read_only'])
             adopted_amount_edit.setReadOnly(True)
-            adopted_amount_edit.editingFinished.connect(self.calculate_adopted_pitching_rate)
+            adopted_amount_edit.setText(self.util.convert_to(ya_unit,amount))
             adopted_amount_edit.setMaximumSize(60,30)
             hl23.addWidget(adopted_amount_edit)
             adopted_amount_unit=QLabel()
-            adopted_amount_unit.setAccessibleName('adopted_amount_unit')
-            adopted_amount_unit.setText('g')
+            adopted_amount_unit.setText(ya_unit_label)
             adopted_amount_unit.setMaximumSize(30,30)
-      
-            hl23.addWidget(adopted_amount_unit) 
-        
+            hl23.addWidget(adopted_amount_unit)
             vl2.addLayout(hl23)  
+            adopted_rate_unit.setFont(self.model.in_use_fonts['field'])
+            adopted_rate_edit.setFont(self.model.in_use_fonts['field'])
+            adopted_pitch_label.setFont(self.model.in_use_fonts['field'])
 
         hl.addLayout(vl2)
         hl.addStretch()
-        
         maker_edit.setFont(self.model.in_use_fonts['field'])
         name_edit.setFont(self.model.in_use_fonts['field'])
         form_edit.setFont(self.model.in_use_fonts['field'])
@@ -532,39 +543,35 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         max_allowed_temperature_edit.setFont(self.model.in_use_fonts['field'])
         adopted_amount_edit.setFont(self.model.in_use_fonts['field'])
         adopted_amount_unit.setFont(self.model.in_use_fonts['field'])
-        calculated_rate_unit.setFont(self.model.in_use_fonts['field'])
-        calculated_rate_edit.setFont(self.model.in_use_fonts['field'])
-        adopted_pitch_label.setFont(self.model.in_use_fonts['field'])
-        
-        
         self.yeast_layout.addLayout(hl)   
      
-          
         
     def batch_volume_changed(self): 
         self.clean_results()
-        self.set_aroma_amounts() 
+        #self.set_aroma_amounts() 
         
         
     def calculate_adopted_pitching_rate(self):
+        'used to calculate the pitching rate in creation mode. In display session, mode it is already included into YeasInSesson object'
         v_unit=self.model.get_unit('water_volume')
         y_unit=self.model.get_unit('yeast_mass')
-        batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1, 100,None,v_unit) 
+        yr_unit=self.model.get_unit('yeast_rate')
+        yr_unit_label=self.util.get_unit_label(yr_unit)
+        batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1, vcst.MAX_VOLUME,None,v_unit) 
         if not batch_volume:#alert is given in check_input
             return
-        original_gravity=self.util.check_input(self.targeted_original_gravity_value,False,self.tr('Targeted Original Gravity'),False,1.000,1.110 )
+        original_gravity=self.util.check_input(self.targeted_original_gravity_value,False,self.tr('Targeted Original Gravity'),False,1.000,vcst.MAX_OG)
         if not original_gravity:#alert is given in check_input
             return
         widgt=self.util.get_by_name_recursive(self.yeast_layout,'adopted_amount')
-        a = self.util.check_input(widgt,False,self.tr('Adopted yeast Amount'),False, 0,100,None,y_unit)
+        a = self.util.check_input(widgt,False,self.tr('Adopted yeast Amount'),False, 0,vcst.MAX_VOLUME*vcst.MAX_PITCHING_RATE,None,y_unit)
         if not a: return
         advised_rate= self.recipe.yeast_in_recipe.pitching_rate
         billions=a *100/11
         platos=(original_gravity -1)*1000/4
         pitching_rate=  billions / batch_volume / platos
-        val='{0:.2f}'.format(pitching_rate)
-        calculated_p_rate_edit=self.util.get_by_name_recursive(self.yeast_layout,'calculated_pitching_rate')
-        calculated_p_rate_edit.setText(val)
+        adopted_p_rate_edit=self.util.get_by_name_recursive(self.yeast_layout,'adopted_pitching_rate')
+        adopted_p_rate_edit.setText(self.util.convert_to(yr_unit,pitching_rate))
         self.update_pitching_bar(advised_rate,pitching_rate)      
         
     def calculate_hop_amounts(self): 
@@ -573,9 +580,10 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         'It sets values both in the advised and the adopted fields'
         v_unit=self.model.get_unit('water_volume')
         'batch_size always in liter hence the conversion from display unit'
-        batch_size=self.util.check_input(self.batch_volume_edit,False,self.tr('Batch Volume'),False, 0,100,None,v_unit)
+        batch_size=self.util.check_input(self.batch_volume_edit,False,self.tr('Batch Volume'),False, 0,vcst.MAX_VOLUME,None,v_unit)
         if not batch_size:
             return
+        print('batch size is '+str(batch_size))
         if not self.equipment:
             warning_text='Warning : Hop Amount Calculation'
             self.util.alerte(self.tr('Please select an equipment'),QMessageBox.Warning, warning_text)
@@ -590,11 +598,12 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             #w_advised_amount=self.util.get_by_name(hl,'advised_amount')
             w_hidden_rate=self.util.get_by_name(hl, 'hidden_hop_rate')
             'rate always in g/liters'
-            rate=self.util.check_input(w_hidden_rate, False, self.tr(' Hop rate '+str(i)), False, 0, 50, True,hr_unit)
+            rate=self.util.check_input(w_hidden_rate, False, self.tr(' Hop rate '+str(i)), False, 0, vcst.MAX_HOP_RATE, True,hr_unit)
+            print('rate is '+str(rate))
             if not rate:
                 return
             w_advised=self.util.get_by_name(hl,'advised_amount')
-            
+            print('end boil volume = '+str(end_boiling_volume))
             advised_value=self.util.convert_to(ha_unit, rate*end_boiling_volume)
             #advised_value_formated='{0:.2f}'.format(advised_value)
             #display_value='{0:.2f}'.format(advised_value)
@@ -646,7 +655,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             return 
         v_unit=self.model.get_unit('water_volume')
         'get the batch volume in liters'
-        batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1, 100,None,v_unit) 
+        batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1,vcst.MAX_VOLUME,None,v_unit) 
         if not batch_volume:
             widg.setText('') 
             return 
@@ -657,7 +666,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         #flag calculated determines the default style for the widget
         ha_unit=self.model.get_unit('hop_mass')
         'get the mass in g whatever the display unit'
-        mass=self.util.check_input(widg, False, self.tr('Hop amount'), False, 0, 1000,None,ha_unit)
+        mass=self.util.check_input(widg, False, self.tr('Hop amount'), False, 0, vcst.MAX_VOLUME*vcst.MAX_HOP_RATE,None,ha_unit)
         if not(isinstance(mass,float)):#if not mass: 
             widg.setText('')
             return
@@ -709,9 +718,9 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             return
         if not self.equipment:
             self.util.alerte(self.tr('Please select an equipment'),QMessageBox.Warning, warning_text)
-        self.batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1, 100,None,v_unit) 
+        self.batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1, vcst.MAX_VOLUME,None,v_unit) 
         if not self.batch_volume: return 
-        self.grain_temperature = self.util.check_input(self.grain_temperature_edit, False, 'Grain temperature', False, 0,35,None,t_unit) 
+        self.grain_temperature = self.util.check_input(self.grain_temperature_edit, False, 'Grain temperature', False, 0,vcst.MAX_GRAIN_TEMPERATURE,None,t_unit) 
         if not self.grain_temperature: return
         
         first_rest=self.rest_layout.itemAt(0)
@@ -746,10 +755,10 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
     def calculate_yeast_amount(self):
         v_unit=self.model.get_unit('water_volume')
         y_unit=self.model.get_unit('yeast_mass')
-        batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1, 100,None,v_unit) 
+        batch_volume = self.util.check_input(self.batch_volume_edit, False, self.tr('Batch volume'), False, 1, vcst.MAX_VOLUME,None,v_unit) 
         if not batch_volume:#alert is given in check_input
             return
-        original_gravity=self.util.check_input(self.targeted_original_gravity_value,False,self.tr('Targeted Original Gravity'),False,1.000,1.110 )
+        original_gravity=self.util.check_input(self.targeted_original_gravity_value,False,self.tr('Targeted Original Gravity'),False,1.000,vcst.MAX_OG )
         if not original_gravity:#alert is given in check_input
             return
         pitching_rate = self.recipe.yeast_in_recipe.pitching_rate
@@ -770,8 +779,11 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
        
         
     def changeEvent(self, event):
+        print('changeEvent triggered')
         if event.type() == QtCore.QEvent.LanguageChange:
             self.retranslateUi(self)
+            #self.set_translatable_textes()
+            
  
  
     def clear_inputs(self):
@@ -928,7 +940,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             if item:
                 val_edit=self.util.get_by_name(item.layout(), 'amount')
                 val=self.util.check_input(val_edit, False, self.tr('Hop amount at line'+str(i)+' is not readable. Please check your \
-                input'), False, 0, 100)
+                input'), False, 0, vcst.MAX_VOLUME*vcst.MAX_HOP_RATE)
                 l.append(val)
         return l   
     
@@ -936,12 +948,12 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         widgets=self.util.get_included_widgets(self.current_session_intro_layout)
         for w in widgets:
             w.hide()   
-            
+    '''        
     def hide_session_feedback(self):
         widgets=self.util.get_included_widgets(self.feedback_groupbox_layout)
         for w in widgets:
             w.hide()       
-     
+     '''
     def init_dialog_and_connections(self):
         self.actionEdit_Malt_Database.triggered.connect(self.show_malt_dialog)
         self.actionEdit_Hop_Database.triggered.connect(self.show_hop_dialog)
@@ -969,9 +981,10 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.pitching_bar_button.clicked.connect(self.explain_yeast_bar)
         self.add_button.clicked.connect(self.save_session)
         self.new_button.clicked.connect(self.new_session)
-        self.delete_button.clicked.connect(self.remove_session)   
-        self.edit_button.clicked.connect(self.edit_session)  
-        self.feedback_save_button.clicked.connect(self.save_session_feedback)   
+        self.delete_button.clicked.connect(self.remove_session)  
+        self.edit_feedback_button.clicked.connect(self.show_feedback) 
+        #self.edit_button.clicked.connect(self.edit_session)  
+        #self.feedback_save_button.clicked.connect(self.save_session_feedback)   
         self.batch_volume_edit.editingFinished.connect(self.calculate_hop_amounts)
         
                  
@@ -1026,7 +1039,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.session_combo.addItem('')
         for key in self.session_key_list:
             session=self.model.get_session(key)
-            self.session_combo.addItem(session.designation)
+            self.session_combo.addItem(session.name)
         self.session_combo.currentIndexChanged.connect(self.load_session)
         
         self.session_combo.setStyleSheet(vcst.MAIN_COMBO_SELECTION_STYLE)
@@ -1099,8 +1112,9 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             h_unit=self.model.get_unit('hop_mass')
             self.mode_session='view'
             session=self.model.get_session(str(self.session_combo.currentText())) 
+            self.util.create_session_sheet(session)
             self.set_ro_session()
-            self.designation_edit.setText(session.designation)
+            self.designation_edit.setText(session.name)
             self.show_session_designation()
             self.add_button.hide()
             
@@ -1185,7 +1199,8 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             self.util.clearLayout(self.yeast_layout)
             yeast=self.model.get_yeast(yis.name)
             if yeast: 
-                self.add_yeast_view(yeast,None,False)
+                self.add_yeast_view(yeast,yis.recommended_pitching_rate,yis.amount,False)
+            '''    
             adopted_amount=self.util.get_by_name_recursive(self.yeast_layout, 'adopted_amount')    
             if adopted_amount: 
                 adopted_amount.setText(str(session.yeast_in_session.amount))
@@ -1202,7 +1217,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                self.update_pitching_bar(session.yeast_in_session.recommended_pitching_rate,pitching_rate)
             except:
                 self.util.alerte('There is something wrong in the arguments of pitching rate calculation') 
-                
+            '''    
             
              
             
@@ -1215,7 +1230,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                     if calculated_ibu_w: calculated_ibu_w.setText(val)
                  
             self.update_ibu_bar(session.targeted_bitterness)
-                 
+            '''        
             if hasattr(session,'feedback_water_treatment_text'):
                 self.feedback_water_treatment_textedit.setText(session.feedback_water_treatment_text)
                
@@ -1236,15 +1251,20 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                     self.feedback_fermentor_volume_edit.setText(str(session.feedback_fermentor_volume))
                 else: self.feedback_fermentor_volume_edit.setText('')         
             self.show_session_feedback()   
-    
+            '''
+            self.edit_feedback_button.setEnabled(True)
+            
+            
     def new_session(self):
         'the hop_calculate_button can be hidden when displaying a past session'
         self.hop_calculate_button.show()
         self.init_session_combo()#to make the previous selection disappear
-        self.hide_session_feedback()
+        #self.hide_session_feedback()
+        '''
         widgets=self.util.get_included_widgets(self.feedback_groupbox_layout)
         for w in widgets:
             w.hide()        
+        '''    
         self.hide_session_designation() 
         self.set_editable_session()
         self.mode_session='create'
@@ -1290,7 +1310,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.set_disable_session()
         self.clear_layouts()
         self.clear_inputs()
-        self.hide_session_feedback()
+        #self.hide_session_feedback()
                 
         
     def save_session(self):
@@ -1312,10 +1332,10 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         formated_date=today.strftime(format)
         designation= formated_date+' — '+recipe+ ' – '+equipment
         
-        batch_volume=self.util.check_input(self.batch_volume_edit, False, self.tr('Batch Volume'),False, 0, 100,None,v_unit) 
+        batch_volume=self.util.check_input(self.batch_volume_edit, False, self.tr('Batch Volume'),False, 0, vcst.MAX_VOLUME,None,v_unit) 
         if not batch_volume: return#alert message is included in check_input
         
-        grain_temperature=self.util.check_input(self.grain_temperature_edit, False,self.tr('Grain Temperature'), False, 0, 60,None,t_unit)
+        grain_temperature=self.util.check_input(self.grain_temperature_edit, False,self.tr('Grain Temperature'), False, 0,vcst.MAX_GRAIN_TEMPERATURE,None,t_unit)
         if not grain_temperature: return
         
         #all the following values are not entered by user
@@ -1335,7 +1355,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                 if percentage_w: percentage=float(percentage_w.text())
                 amount_w=self.util.get_by_name(item.layout(), 'calculated_mass')
                 if amount_w:
-                    amount=self.util.check_input(amount_w, False, self.tr('Malt Amount '+str(i)), False, 0, 50, True,m_unit)
+                    amount=self.util.check_input(amount_w, False, self.tr('Malt Amount '+str(i)), False, 0, vcst.MAX_VOLUME*vcst.MAX_MALT_RATE, True,m_unit)
                     if not amount:return
                 mis=MaltInSession(name,percentage,amount)
                 malts_in_session.append(mis)
@@ -1368,21 +1388,27 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                 
                 'Only boiling case has duration'
                 if duration_w and usage== vcst.HOP_BOILING_HOPPING: 
-                    duration=self.util.check_input(duration_w,False, self.tr('Hop duration '+str(i)), False, 0, 200)
+                    duration=self.util.check_input(duration_w,False, self.tr('Hop duration '+str(i)), False, 0, vcst.MAX_BOILING_TIME)
                     if not duration: return
                     
                 amount_w=self.util.get_by_name(item.layout(), 'amount')
                 if amount_w:
-                    amount=self.util.check_input(amount_w, False, self.tr('Hop Amount '+str(i)),False, 0, 200,None,h_unit)
+                    amount=self.util.check_input(amount_w, False, self.tr('Hop Amount '+str(i)),False, 0, vcst.MAX_VOLUME*vcst.MAX_HOP_RATE,None,h_unit)
                     if not amount: return
                 his=HopInSession(name,usage,duration,amount)
                 hops_in_session.append(his)
                       
         'SAVE YEAST VALUES'   
+        ya_unit=self.model.get_unit('yeast_mass')
+        ya_unit_label=self.util.get_unit_label(ya_unit)
+        yr_unit=self.model.get_unit('yeast_rate')
+        yr_unit_label=self.util.get_unit_label(yr_unit)
         yeast_name_w=self.util.get_by_name_recursive(self.yeast_layout, 'name')
         if yeast_name_w: yeast_name=yeast_name_w.text()
-        rate_edit=self.util.get_by_name_recursive(self.yeast_layout, 'rate')
-        if rate_edit: rate=float(rate_edit.text())
+        rate_edit=self.util.get_by_name_recursive(self.yeast_layout, 'adopted_pitching_rate')
+        if rate_edit: 
+    
+            rate=self.util.check_input(rate_edit, False,self.tr('Adopted Pitching Rate'), False,0,2,None,yr_unit)#float(rate_edit.text())
         
         adopted_yeast_amount_edit=self.util.get_by_name_recursive(self.yeast_layout,'adopted_amount')
         if not adopted_yeast_amount_edit: 
@@ -1390,21 +1416,24 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             return
         else:
             adopted_yeast_amount=self.util.check_input(adopted_yeast_amount_edit, False, self.tr('Adopted Yeast Amount. \
-             Please use the calculate button and if you want change the value '), False,0,100)
+             Please use the calculate button and if you want change the value '), False,0,vcst.MAX_VOLUME*vcst.MAX_PITCHING_RATE,None,ya_unit)
             if not isinstance(adopted_yeast_amount,float):
                 return
             yeast_in_session=YeastInSession(yeast_name,adopted_yeast_amount,rate)
         
         'all what will reside in db is in liter'    
-        mash_water_volume=self.util.check_input(self.mash_water_volume_edit,False, self.tr('Mash Water Volume'),False,0,100,None,v_unit)    
+        mash_water_volume=self.util.check_input(self.mash_water_volume_edit,False, self.tr('Mash Water Volume'),False,0,vcst.MAX_VOLUME,None,v_unit)    
         if not mash_water_volume: return
         strike_temperature=self.util.check_input(self.strike_temperature_edit, False, self.tr('Strike Température'), False,0,100,None,t_unit)
         if not strike_temperature: return
-        mash_sparge_water_volume=self.util.check_input(self.mash_sparge_water_volume_edit, False, self.tr('Sparge Water Volume'), False, 0,100,None,v_unit)
+        mash_sparge_water_volume=self.util.check_input(self.mash_sparge_water_volume_edit, False, self.tr('Sparge Water Volume'), False, 0,vcst.MAX_VOLUME,None,v_unit)
         equipment_object=self.model.get_equipment(equipment)   
         if equipment: boiler_dead_space=equipment_object.boiler_dead_space
+        ts=time.time()
+        print('recipe before save ')
+        print(recipe)
         
-        session=Session(designation,recipe,equipment,batch_volume,grain_temperature,
+        session=Session(designation,ts,recipe,equipment,batch_volume,grain_temperature,
                         targeted_original_gravity,targeted_bitterness,boiling_time,brewing_efficiency,
                         malts_in_session,rests_in_session,hops_in_session,yeast_in_session,
                         mash_water_volume,strike_temperature,mash_sparge_water_volume,boiler_dead_space)
@@ -1414,8 +1443,12 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         index = self.session_combo.findText(designation, QtCore.Qt.MatchFixedString)
         if index >= 0:
             self.session_combo.setCurrentIndex(index)
+        #self.util.create_session_sheet(session)
+        
+            
             
     def save_session_feedback(self):
+        
         designation=self.designation_edit.text()
         session=self.model.get_session(designation)
         if not session: 
@@ -1424,11 +1457,11 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         session.feedback_water_treatment_text=feedback_water_treatment_text
         feedback_mash_ph=self.util.check_input(self.feedback_mash_PH_edit_2, False, self.tr('Feedback Mash PH'), True, 3, 7)
         session.feedback_mash_ph=feedback_mash_ph
-        feedback_preboil_volume=self.util.check_input(self.feedback_preboil_volume_edit_2, False, self.tr('Feedback Preboil Volume'), True, 0, 100)
+        feedback_preboil_volume=self.util.check_input(self.feedback_preboil_volume_edit_2, False, self.tr('Feedback Preboil Volume'), True, 0, vcst.MAX_VOLUME)
         session.feedback_preboil_volume=feedback_preboil_volume
-        feedback_original_gravity=self.util.check_input(self.feedback_original_gravity_edit_2, False, self.tr('Feedback Original Gravity'), True, 1, 2)
+        feedback_original_gravity=self.util.check_input(self.feedback_original_gravity_edit_2, False, self.tr('Feedback Original Gravity'), True, 1, vcst.MAX_OG)
         session.feedback_original_gravity=feedback_original_gravity
-        feedback_fermentor_volume=self.util.check_input(self.feedback_fermentor_volume_edit, False, self.tr('Feedback Fermentor Volume'), True, 0, 100)
+        feedback_fermentor_volume=self.util.check_input(self.feedback_fermentor_volume_edit, False, self.tr('Feedback Fermentor Volume'), True, 0, vcst.MAX_VOLUME)
         session.feedback_fermentor_volume=feedback_fermentor_volume
         self.model.save_session(session)
         self.show_session_feedback()
@@ -1468,20 +1501,21 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         sty.field_styles['min_max_advised']="background-color:"+self.active_colors['min_max_advised'][0]+\
         ";color:"+self.active_colors['min_max_advised'][1]+";"    
         sty.field_colors['min_max_advised']=[self.active_colors['min_max_advised'][0],self.active_colors['min_max_advised'][1]]   
-        
+     
+    '''   
     def set_aroma_amounts(self):
         for  i in range(self.hop_layout.count()):
             item =self.hop_layout.itemAt(i)
             if item:
                 hidden_hop_rate=self.util.get_by_name_recursive(item.layout(),'hidden_hop_rate')
                 if not hidden_hop_rate : continue
-                else: hop_rate=self.util.check_input(hidden_hop_rate,False,self.tr('Hop rate'),False,0,4)
+                else: hop_rate=self.util.check_input(hidden_hop_rate,False,self.tr('Hop rate'),False,0,vcst.MAX_HOP_RATE)
                 if not hop_rate: continue
                 
                 hop_amount_edit=self.util.get_by_name_recursive(item.layout(),'amount')
                 if not hop_amount_edit: continue
                 else:
-                    batch_size=self.util.check_input(self.batch_volume_edit,False,self.tr('Batch Volume'),False, 0,100)
+                    batch_size=self.util.check_input(self.batch_volume_edit,False,self.tr('Batch Volume'),False, 0,vcst.MAX_VOLUME)
                     if  batch_size:
                         hop_amount=batch_size * hop_rate
                         val='{0:.1f}'.format(hop_amount)
@@ -1489,7 +1523,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                         hop_amount_edit.setStyleSheet(sty.field_styles['calculated'])
                         self.calculate_IBU(hop_amount_edit)
                         
-                        
+    '''                    
     def set_calculated_style(self):
         
         self.mash_water_volume_edit.setStyleSheet(sty.field_styles['calculated'])
@@ -1651,6 +1685,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.yeast_label.setFont(self.model.in_use_fonts['title'])
         self.pitching_rate_bar_label.setFont(self.model.in_use_fonts['field'])
         
+        '''
         self.feedback_label.setFont(self.model.in_use_fonts['very_big_title'])
         self.feedback_water_treatment_label.setFont(self.model.in_use_fonts['big_title'])
         self.feedback_observed_data_label.setFont(self.model.in_use_fonts['big_title'])
@@ -1661,6 +1696,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.feedback_fermentor_volume_label_2.setFont(self.model.in_use_fonts['field'])
         self.feedback_fermentor_volume_unit_label_2.setFont(self.model.in_use_fonts['field']) 
         self.feedback_save_button.setFont(self.model.in_use_fonts['button'])
+        '''
             
         self.set_malt_fonts() 
         self.set_hop_fonts()
@@ -1739,13 +1775,15 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         app.removeTranslator(self.translator)
         self.translator.load(os.path.join(self.trad_path,'ja_JP'))
         app.installTranslator(self.translator)
+        self.model.set_language({'name':'japanese','code':'ja_JP'})
    
          
     def set_language_en(self):
         app=QApplication.instance()
         app.removeTranslator(self.translator)
         self.translator.load(os.path.join(self.trad_path,'en_EN'))
-        app.installTranslator(self.translator)   
+        app.installTranslator(self.translator)  
+        self.model.set_language({'name':'english','code':'en_EN'}) 
         
         
     def set_language_fr(self):
@@ -1755,6 +1793,17 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         '''reinstall of translator triggers an changeEvent that should be used in each widget that 
         needs translation. See changeEvent function in each widget'''
         app.installTranslator(self.translator)
+        self.model.set_language({'name':'french','code':'fr_FR'})
+        
+    def set_language(self,code):
+        print('language in set_language is '+code)
+        app=QApplication.instance()
+        app.removeTranslator(self.translator)
+        self.translator.load(os.path.join(self.trad_path,code))
+        '''reinstall of translator triggers an changeEvent that should be used in each widget that 
+        needs translation. See changeEvent function in each widget'''
+        app.installTranslator(self.translator)
+            
         
     def set_rest_fonts(self):
         for i in range(self.rest_layout.count()):
@@ -1849,7 +1898,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
              '\nFermentor dead space: '+str(self.equipment.fermentor_dead_space)
             self.equipment_combo.setToolTip(text)
             
-            
+    '''       
     def set_translatable_textes(self):
         self.menuFile.setTitle(self.tr("File"))
         self.menuDatabase.setTitle(self.tr("Database"))
@@ -1867,7 +1916,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.actionFrench.setText(self.tr('French'))
         self.actionEnglish.setText(self.tr('English'))
         self.actionJapanese.setText(self.tr('Japanese'))
-        self.edit_button.setText(self.tr('Edit'))
+        #self.edit_button.setText(self.tr('Edit'))
         self.delete_button.setText(self.tr('Delete'))
         self.new_button.setText(self.tr('New'))
         self.designation_label.setText(self.tr('Designation'))
@@ -1891,7 +1940,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.targeted_original_gravity_label.setText(self.tr('Targeted Original Gravity'))
         self.targeted_bitterness_label.setText(self.tr('Targeted Bitterness'))
         self.targeted_bitterness_unit_label.setText(self.tr('IBU'))
-        self.brewing_efficiency_label.setText(self.tr('Brewing Efficiency'))
+        #self.brewing_efficiency_label.setText(self.tr('Brewing Efficiency'))
         
         self.mash_label.setText(self.tr('Mashing'))
         self.malt_label.setText(self.tr('Malts'))
@@ -1918,16 +1967,17 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.yeast_label.setText(self.tr('Yeast'))
         self.pitching_rate_bar_label.setText(self.tr('Current Pitching Rate vs. Recommendation'))
         
-        self.feedback_label.setText(self.tr('Feedback'))
-        self.feedback_water_treatment_label.setText(self.tr('Water Treatment'))
-        self.feedback_observed_data_label.setText(self.tr('Observed Data'))
-        self.feedback_mash_PH_label_2.setText(self.tr('Mash PH'))
-        self.feedback_preboil_volume_label_2.setText(self.tr('Preboil Volume'))
-        self.feedback_preboil_volume_unit_label_2.setText(self.tr('liters'))
-        self.feedback_original_gravity_label_2.setText(self.tr('Original Gravity'))
-        self.feedback_fermentor_volume_label_2.setText(self.tr('Fermentor Volume'))
-        self.feedback_fermentor_volume_unit_label_2.setText(self.tr('liters')) 
-        self.feedback_save_button.setText(self.tr('Save Feedback'))     
+        #self.feedback_label.setText(self.tr('Feedback'))
+        #self.feedback_water_treatment_label.setText(self.tr('Water Treatment'))
+        #self.feedback_observed_data_label.setText(self.tr('Observed Data'))
+        #self.feedback_mash_PH_label_2.setText(self.tr('Mash PH'))
+        #self.feedback_preboil_volume_label_2.setText(self.tr('Preboil Volume'))
+        #self.feedback_preboil_volume_unit_label_2.setText(self.tr('liters'))
+        #self.feedback_original_gravity_label_2.setText(self.tr('Original Gravity'))
+        #self.feedback_fermentor_volume_label_2.setText(self.tr('Fermentor Volume'))
+        #self.feedback_fermentor_volume_unit_label_2.setText(self.tr('liters')) 
+        #self.feedback_save_button.setText(self.tr('Save Feedback'))     
+    '''    
        
     def set_units(self,units):
         for u in units:
@@ -2029,7 +2079,10 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             
     def show_color_dialog(self):
         self.colorDialog.show()   
-        
+    
+    
+    def show_feedback(self):
+        self.feedback.show()    
     def show_font_size_dialog(self):
         self.fontSizeDialog.show()     
         
@@ -2077,7 +2130,8 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.equipmentDialog.show()  
         
     def showEvent(self,ev):
-        self.set_translatable_textes()
+        print('showEvent in mainWindow')
+        #self.set_translatable_textes()
         
         self.set_fonts()
         mypb=CustomProgressBar()
@@ -2095,11 +2149,12 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.yeast_header_layout.insertWidget(3,pitching_pb)
         date=datetime.datetime.now()
         self.set_disable_session()
-        self.hide_session_feedback()
+        #self.hide_session_feedback()
+        '''
         widgets=self.util.get_included_widgets(self.feedback_groupbox_layout)
         for w in widgets:
             w.hide()
-            
+         '''   
         self.hide_session_designation() 
         self.set_fonts()
         'if the user as asked for setting units, all units have been removed from db'
@@ -2108,6 +2163,11 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             'default units will be applied if dialog cancelled, or new units if apply button clicked'
             self.unitSetter.show()#will call set_unit_labels() once units set in model
         else: self.set_unit_labels() 
+        
+        if self.model.language:
+            print('language in DB is '+self.model.language[1])
+            self.set_language(self.model.language[1])
+        else : print('no language set')    
 
         
     def  show_folder_chooser(self):
@@ -2152,6 +2212,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         
         
     def update_pitching_bar(self,target,value):
+        yr_unit=self.model.get_unit('yeast_rate')
         mypb=self.util.get_by_name(self.yeast_header_layout,'pitching')
         mypb.setRange(0,target *2*100)
         if value<=target*2:
@@ -2159,8 +2220,8 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         else:
             mypb.setValue(value*2*100)  
                       
-        val_rate='{0:.2f}'.format(value)
-        val_target='{0:.2f}'.format(target)
+        val_rate=self.util.convert_to(yr_unit, value)
+        val_target=self.util.convert_to(yr_unit,target)
         self.pitching_rate_bar_label.setText(self.tr('Current Pitching Rate vs. Recommended Rate ⇒ ') + val_rate+' / '+val_target)   
                   
         

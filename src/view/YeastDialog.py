@@ -369,7 +369,7 @@ class YeastDialog(QWidget,YeastDialogUI.Ui_Form ):
         self.setWindowTitle(self.tr('Yeast Database Edition'))
         #self.yeast_list_label.setText(self.tr('Yeast List'))
         self.detail_label.setText(self.tr('Selected Yeast Details'))
-        self.add_button.setText(self.tr('Ajouter cette levure'))
+        self.add_button.setText(self.tr('Add this yeast'))
         self.name_label.setText(self.tr('Name'))
         self.maker_label.setText(self.tr('Maker'))
         self.max_allowed_temperature_label.setText(self.tr('Maximum Allowed Temperature'))

@@ -42,7 +42,7 @@ class YeastChooser(QWidget,YeastChooserUI.Ui_Form ):
         
     def add_yeast_view(self):
         yeastT=self.owner.model.get_yeast(str(self.yeast_list_widget.currentItem().text()))
-        self.owner.set_yeast_view(yeastT)      
+        self.owner.add_yeast_view(yeastT)      
     
    
         

@@ -169,7 +169,7 @@
               </font>
              </property>
              <property name="text">
-              <string>TextLabel</string>
+              <string>Recipe Name</string>
              </property>
             </widget>
            </item>

@@ -22,12 +22,13 @@ from model.Recipe import Recipe
 #from lxml.html.builder import STRIKE
 class Session(object):
     
-    def __init__(self,designation, recipe, equipment, batch_volume,grain_temperature, targeted_original_gravity,
+    def __init__(self,name, timestamp,recipe, equipment, batch_volume,grain_temperature, targeted_original_gravity,
                  targeted_bitterness, boiling_time, brewing_efficiency, malts_in_session,rests_in_session,hops_in_session, 
                  yeast_in_session,mash_water_volume, strike_temperature, mash_sparge_water_volume,boiler_dead_space,
                  feedback_water_treatment_text=None,feedback_mash_ph=None, feedback_preboil_volume=None,
                  feedback_original_gravity=None,feedback_fermentor_volume=None):
-        self.designation = designation
+        self.name = name
+        self.timestamp =timestamp
         #self.session_date = session_date
         self.recipe=recipe
         self.equipment = equipment

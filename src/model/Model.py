@@ -38,7 +38,7 @@ import view.constants as vcst
 
 import shelve, inspect
 from pycparser.c_ast import Switch
-from pip._vendor.requests.sessions import session
+#from pip._vendor.requests.sessions import session
 from cgitb import small
 import platform
 
@@ -57,6 +57,7 @@ class Model(object):
         Constructor
         '''
         'bundle_dir is available only in the frozen bundled environment'
+        self.language=None
         self.bundle_dir=bundle_dir
         if self.bundle_dir:
             self.database_path=self.bundle_dir
@@ -84,6 +85,7 @@ class Model(object):
         self.update_from_db('style')
         self.update_from_db('fontset')
         self.update_from_db('unit')
+        self.update_from_db('language')
         
         'containers for callback functions'
         self._target_func={
@@ -111,6 +113,7 @@ class Model(object):
         self.update_from_db('style')
         self.update_from_db('fontset')   
         self.update_from_db('unit') 
+        self.update_from_db('language')
 
     def subscribe_model_changed(self,target_list,func):
         for target in target_list:
@@ -125,9 +128,18 @@ class Model(object):
     def announce_model_changed(self,target):
         for func in self._target_func[target]:     
             func(target)
-      
+            
+          
+    '''  
  
-        
+    @property
+    def language(self):
+        return self.language
+    
+    @language.setter
+    def language(self,l):
+        self.language=l
+    '''    
     @property
     def malt_list(self):
         return self.__malt_list
@@ -213,6 +225,43 @@ class Model(object):
     def unit_list(self,ul):
         self.__unit_list=ul          
         
+    def set_language(self,lang):
+        self.drop_languages()
+        self.update_from_db('language')
+        
+        con=lite.connect("easybeer.db")
+        c=con.cursor()
+        try:
+            c.execute("insert into languages values ( :name, :code)",{'name':lang['name'], 'code':lang['code']})
+            con.commit()
+        except Error as e:
+            print('There was an error in setting language in DB')
+            print(e)
+        c.close()
+        con.close()    
+            
+    def clean_languages(self):
+        con=lite.connect("easybeer.db")
+        c=con.cursor()
+        try:
+            c.execute('select * from languages')
+            ls=list(c.fetchall())
+            for l in ls:
+                print('this is l[0] in clean_languages()'+l[0])
+                c.execute("""delete from languages where name=:name""",{'name':l[0]}) 
+        except Error as e:
+            print(e)
+            
+        c.close() 
+        con.close()           
+    
+    def drop_languages(self):
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        c.execute('drop table if exists languages')
+        c.close()
+        con.close()                 
+            
         
     def add_equipment(self,equipment):
         eq=equipment
@@ -340,16 +389,20 @@ class Model(object):
         return equipment
     
     def get_session(self,key):
-        'return a session given its designation'
+        'return a session given its name'
         con=lite.connect('easybeer.db')
         c=con.cursor()
-        c.execute("""select * from sessions where designation=:designation""",{'designation':key})
+        c.execute("""select * from sessions where name=:name""",{'name':key})
         s=c.fetchone()
-        mis=pickle.loads(s[9])#malts_in_session'
-        ris=pickle.loads(s[10])#rests in session
-        his=pickle.loads(s[11])#hops in session
-        yis=pickle.loads(s[12])#yeast in session
-        session=Session(s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7],s[8],mis,ris,his,yis,s[13],s[14],s[15],s[16],s[17],s[18],s[19],s[20],s[21])
+        mis=pickle.loads(s[10])#malts_in_session'
+        #print('printing mis')
+        #print('mis')
+        ris=pickle.loads(s[11])#rests in session
+        #print('printing ris')
+        #print(ris)
+        his=pickle.loads(s[12])#hops in session
+        yis=pickle.loads(s[13])#yeast in session
+        session=Session(s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7],s[8],s[9],mis,ris,his,yis,s[14],s[15],s[16],s[17],s[18],s[19],s[20],s[21],s[22])
         return session
         
     
@@ -399,8 +452,31 @@ class Model(object):
         y=c.fetchone()
         yeast=Yeast(y[0],y[1],y[2],y[3],y[4],y[5],y[6],y[7],y[8])     
         return yeast    
-        
+       
     def is_used(self,malt_name):
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        try:
+            c.execute("""select * from recipes""")
+            l=list(c.fetchall())
+            r=False
+            for recipe in l:
+                malts=pickle.loads(recipe[1])
+                for m in malts:
+                    if m.malt==malt_name:
+                        r=True
+                        break
+                        break
+            c.close()
+            con.close()
+            return r
+        except Error as e:
+            print('Error met while scanning db in is_used(malt_name)')    
+            print(e)   
+        return r          
+                    
+                    
+        ''' 
         recipe_base=shelve.open(os.path.join(self.database_path,'recipe.db'))#(mcst.RECIPE_DB)
         for key in recipe_base:
             recipe=recipe_base[key]
@@ -410,6 +486,7 @@ class Model(object):
         return False        
                
         recipe_base.close()
+        '''
         
     def remove_equipment(self,key):
         'remove an equipment from db given its name' 
@@ -487,7 +564,7 @@ class Model(object):
         con=lite.connect('easybeer.db')
         c = con.cursor()  
         try:
-            c.execute("""delete from sessions where designation=:designation""",{'designation':key})
+            c.execute("""delete from sessions where name=:name""",{'name':key})
             con.commit()
         except Error as e:
             print(e)    
@@ -592,13 +669,15 @@ class Model(object):
         s=session
         con=lite.connect('easybeer.db')
         c=con.cursor()
+        
         mis=pickle.dumps(s.malts_in_session)#malts_in_session'
         ris=pickle.dumps(s.rests_in_session)#rests in session
         his=pickle.dumps(s.hops_in_session)#hops in session
         yis=pickle.dumps(s.yeast_in_session)#yeast in session
         try:
             c.execute("insert into sessions values (\
-            :designation,\
+            :name,\
+            :timestamp,\
             :recipe,\
             :equipment,\
             :batch_volume,\
@@ -621,7 +700,8 @@ class Model(object):
             :feedback_original_gravity,\
             :feedback_fermentor_volume)",
             (
-            s.designation,
+            s.name,
+            s.timestamp,
             s.recipe,
             s.equipment,
             s.batch_volume,
@@ -859,6 +939,31 @@ class Model(object):
         self.update_from_db('rest')
         self.announce_model_changed('rest')   
         
+    def update_session(self,session):
+        con=lite.connect('easybeer.db')
+        c=con.cursor()
+        
+        try:
+            c.execute("update sessions set feedback_water_treatment=:feedback_water_treatment,\
+            feedback_mash_ph=:feedback_mash_ph,\
+            feedback_preboil_volume=:feedback_preboil_volume,\
+            feedback_original_gravity ,\
+            feedback_fermentor_volume=:feedback_fermentor_volume where name=:name ",
+            {'name':session.name,
+             'feedback_treatment':session.feedback_water_treatment,
+             'feedback_mash_py':session.feedback_mash_ph,
+             'feedback_preboil_volume':session.feedback_preboil_volume,
+             'feedback_original_gravity':session.feedback_original_gravity,
+             'feelback_fermentor_volume':session.feedback_fermentor_volume})
+        except Error as e:
+            print('there was an error while updating session')
+            print(e)   
+        c.close()
+        con.close()
+        self.update_from_db('session') #reread the actual key state of db
+        self.announce_model_changed('session')      
+            
+        
     def update_yeast(self,yeast):
         con = lite.connect('easybeer.db')
         c = con.cursor()
@@ -948,12 +1053,12 @@ class Model(object):
             
         
         def f_session():
-            c.execute("""select designation from sessions""")
+            c.execute("""select name from sessions order by timestamp DESC""")
             ses=list(c.fetchall())
             self.__session_list=list()
             for s in ses:
                 self.__session_list.append(s[0])
-            self.__session_list.sort()    
+            #self.__session_list.sort()    
            
         
         def f_style():
@@ -979,6 +1084,11 @@ class Model(object):
             for unit in units:
                 self.__unit_list.append(unit[0])
             self.__unit_list.sort()
+            
+        def f_language():
+            c.execute("""select * from languages""")
+            lang=c.fetchone()
+            self.language    =lang
               
      
         con=lite.connect("easybeer.db")
@@ -1005,7 +1115,8 @@ class Model(object):
             c.execute(sql)      
             
             sql = """create table if not exists sessions (\
-            designation text primary key not null,\
+            name text primary key not null,\
+            timestamp text,\
             recipe text,\
             equipment text,\
             batch_volume real,\
@@ -1037,6 +1148,10 @@ class Model(object):
             
             sql="""create table if not exists units (name text primary key not null, unit text) """
             c.execute(sql)
+            
+            sql="""create table if not exists languages (name text primary key not null, code text)"""
+            c.execute(sql)
+            
         
             con.commit()
            
@@ -1054,7 +1169,8 @@ class Model(object):
             'session': f_session,
             'style': f_style,
             'fontset':f_fontset,
-            'unit':f_unit
+            'unit':f_unit,
+            'language':f_language
             }
         switch_options[target]()
         

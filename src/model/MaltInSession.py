@@ -24,6 +24,4 @@ class MaltInSession(object):
         self.percentage = percentage # the percentage in total malt mass
         self.amount=amount
 
-    def __repr__(self):
-        return ('MaltInSession[name=%s, percentage=%d, amount=%d]' % 
-        ( self.name, self.percentage),self.amount )
+   

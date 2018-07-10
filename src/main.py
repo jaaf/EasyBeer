@@ -29,8 +29,8 @@ if __name__=='__main__':
 
     translator = QtCore.QTranslator()
     (filepath,filename)=os.path.split(__file__)
-    trad_path=os.path.join(filepath,'translate','fr_FR.qm')
-    translator.load(os.path.join(trad_path))
+    #trad_path=os.path.join(filepath,'translate','fr_FR.qm')
+    #translator.load(os.path.join(trad_path))
    
     app.installTranslator(translator)
     mainWindow = MainWindow(translator)

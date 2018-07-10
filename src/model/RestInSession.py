@@ -24,7 +24,3 @@ class RestInSession(object):
         self.purpose = purpose  
         self.duration = duration 
         self.temperature=temperature
-
-    def __repr__(self):
-        return ('RestInSession[purpose=%s, duration=%d, temperature=%d]' % 
-        ( self.purpose, self.duruation,self.temperature ))

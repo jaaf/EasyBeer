@@ -83,8 +83,10 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.usage_guidance_edit.setText('')        
      
     def create_unremovable_rests(self):
-        self.prot_rest=Rest('Protein Rest',[4.5, 5, 6, 7],[65,66,68,70],self.tr(mcst.TEXT_REST_PROTEIN),'no')
-        self.sach_rest=Rest('Saccharification Rest',[4.5, 5, 6, 7],[65,66,68,70],self.tr(mcst.TEXT_REST_SACH),'no') 
+        self.beta_glucan_rest=Rest('Beta-glucanase Rest',[4.5,5,5.5,6],[28,40,48,49],self.tr(mcst.TEXT_REST_BETA_GLUCANASE),'no')
+        self.prot_rest=Rest('Protein Rest',[4.4, 5, 6, 6.1],[27,45,55,65],self.tr(mcst.TEXT_REST_PROTEIN),'no')
+        self.sach_rest_LB=Rest('Saccharification Rest Light Body',[5, 5.2, 5.6, 6],[55,62,65,75],self.tr(mcst.TEXT_REST_SACH),'no') 
+        self.sach_rest_HB=Rest('Saccharification Rest Heavy Body',[5, 5.2, 5.6, 6],[55,68,72,75],self.tr(mcst.TEXT_REST_SACH),'no') 
         
     def create_rest(self):
         self.set_rw()
@@ -122,10 +124,14 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
        
     def ensure_unremovable_rests(self):
         self.create_unremovable_rests()
+        if not('Beta-glucanase Rest' in self.rest_key_list):
+            self.model.save_rest(self.beta_glucan_rest)
         if not ('Protein Rest' in self.rest_key_list):
             self.model.save_rest(self.prot_rest)
-        if not('Saccharification Rest' in self.rest_key_list):
-            self.model.save_rest(self.sach_rest)    
+        if not('Saccharification Rest_LB' in self.rest_key_list):
+            self.model.save_rest(self.sach_rest_LB)   
+        if not('Saccharification Rest_HB' in self.rest_key_list):
+            self.model.save_rest(self.sach_rest_HB)        
             
            
         

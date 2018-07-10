@@ -198,7 +198,7 @@ FONT_SET_L_HUGE={'title':TITLE_FONT_L_HUGE,
 
 
 
-
+'''
 
 'QFont(QString family, int pointSize = -1, int weight = -1, bool italic = False)'
 TITLE_FONT_W=QFont('Helvetica',16,QFont.Bold)
@@ -215,3 +215,17 @@ FIELD_LABEL_FONT_L=QFont('FreeSans',14,QFont.Normal)
 TITLE_SLANTED_FONT_L=QFont('FreeSans',16,QFont.Normal,True)
 BIG_TITLE_FONT_L=QFont('FreeSans',20,QFont.Bold)
 VERY_BIG_TITLE_FONT_L=QFont('FreeSans',24,QFont.Normal,True)
+
+'''
+
+
+MAX_VOLUME=50
+MAX_OG=1.110
+MAX_PITCHING_RATE=1#in g/l
+MAX_HOP_RATE=3#in g/l
+MAX_GRAIN_TEMPERATURE=35
+MAX_MALT_RATE=0.5 #in kg/l
+MAX_BOILING_TIME=120
+
+
+

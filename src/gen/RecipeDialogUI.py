@@ -450,7 +450,7 @@ class Ui_Form(object):
         self.recipe_edit_button.setText(_translate("Form", "Edit"))
         self.recipe_delete_button.setText(_translate("Form", "Delete"))
         self.recipe_new_button.setText(_translate("Form", "New"))
-        self.recipe_name_label.setText(_translate("Form", "TextLabel"))
+        self.recipe_name_label.setText(_translate("Form", "Recipe Name"))
         self.targets_name_label.setText(_translate("Form", "Targets"))
         self.targeted_original_gravity_label.setText(_translate("Form", "Orignal gravity"))
         self.targeted_original_gravity_unit_label.setText(_translate("Form", "SG"))

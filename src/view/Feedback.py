@@ -17,11 +17,21 @@
 #along with this program; if not, write to the Free Software
 #Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-class YeastInSession(object):
-    'A class to store a malt\'s attributes in a breewing session'
-    def __init__(self,name, amount,adopted_pitching_rate):
-        self.name = name
-        self.amount = amount
-        self.recommended_pitching_rate= adopted_pitching_rate
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import  QDialog, QMessageBox
+from gen import FeedbackUI
+from model.Hop import Hop
+import view.styles as sty
+import platform
+import view.constants as vcst
+from model.Unit import Unit
 
- 
+#from PyQt4.QtGui import QStandardItemModel,QStandardItem,QItemSelectionModel
+
+class Feedback(QDialog,FeedbackUI.Ui_Dialog ):
+    
+    def __init__(self,model,util,parent=None):
+        QDialog.__init__(self,None,QtCore.Qt.WindowStaysOnTopHint)
+        self.setupUi(self)
+        
+        

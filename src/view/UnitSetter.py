@@ -122,6 +122,7 @@ class UnitSetter(QDialog,UnitSetterUI.Ui_Dialog ):
         u.append(Unit('hop_rate',hop_rate))
         hop_mass=self.hop_mass_combo.currentText()
         u.append(Unit('hop_mass',hop_mass))
+        u.append(Unit('yeast_rate','Billion/°P/'+water_volume))
         return u
         
     def set_connections(self):
