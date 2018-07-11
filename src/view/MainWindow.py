@@ -50,6 +50,7 @@ import sys
 import time
 import datetime
 import os
+import webbrowser
 import platform
 
 from model.Session import Session
@@ -981,8 +982,9 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.actionEdit_Equipment_Database.triggered.connect(self.show_equipment_dialog)
         self.actionView_Help.triggered.connect(self.show_help)
         
-
         
+
+        self.view_session_button.clicked.connect(self.open_session_sheet)
         self.calculate_button.clicked.connect(self.calculate_malt_amounts)
         self.hop_calculate_button.clicked.connect(self.calculate_hop_amounts)
         self.batch_volume_edit.editingFinished.connect(self.batch_volume_changed)    
@@ -1311,7 +1313,11 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         if target == 'fontset':
             if (self.model.in_use_fonts):
                 self.set_fonts()  
-                    
+    
+    def open_session_sheet(self):
+         if(os.path.isfile('session_sheet.html')):
+             webbrowser.open('session_sheet.html')
+                        
                     
     def remove_session(self):
         session=self.session_combo.currentText()
@@ -1642,6 +1648,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.equipment_combo.setFont(self.model.in_use_fonts['field'])
         
         self.delete_button.setFont(self.model.in_use_fonts['button'])
+        self.view_session_button.setFont(self.model.in_use_fonts['button'])
         self.new_button.setFont(self.model.in_use_fonts['button'])
         self.designation_label.setFont(self.model.in_use_fonts['field'])
         
