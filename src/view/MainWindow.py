@@ -1487,28 +1487,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         ";color:"+self.active_colors['min_max_advised'][1]+";"    
         sty.field_colors['min_max_advised']=[self.active_colors['min_max_advised'][0],self.active_colors['min_max_advised'][1]]   
      
-    '''   
-    def set_aroma_amounts(self):
-        for  i in range(self.hop_layout.count()):
-            item =self.hop_layout.itemAt(i)
-            if item:
-                hidden_hop_rate=self.util.get_by_name_recursive(item.layout(),'hidden_hop_rate')
-                if not hidden_hop_rate : continue
-                else: hop_rate=self.util.check_input(hidden_hop_rate,False,self.tr('Hop rate'),False,0,vcst.MAX_HOP_RATE)
-                if not hop_rate: continue
-                
-                hop_amount_edit=self.util.get_by_name_recursive(item.layout(),'amount')
-                if not hop_amount_edit: continue
-                else:
-                    batch_size=self.util.check_input(self.batch_volume_edit,False,self.tr('Batch Volume'),False, 0,vcst.MAX_VOLUME)
-                    if  batch_size:
-                        hop_amount=batch_size * hop_rate
-                        val='{0:.1f}'.format(hop_amount)
-                        hop_amount_edit.setText(str(val))
-                        hop_amount_edit.setStyleSheet(sty.field_styles['calculated'])
-                        self.calculate_IBU(hop_amount_edit)
-                        
-    '''                    
+                  
     def set_calculated_style(self):
         
         self.mash_water_volume_edit.setStyleSheet(sty.field_styles['calculated'])
