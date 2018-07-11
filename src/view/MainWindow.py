@@ -134,7 +134,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.set_tooltips()
         self.set_subscriptions()
         'set the way various controls respond'
-        self.init_dialog_and_connections()
+        self.set_connections()
         self.targeted_original_gravity =None
         self.brewing_efficiency=None   
         self.init_session_combo()
@@ -966,38 +966,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         for w in widgets:
             w.hide()       
      '''
-    def init_dialog_and_connections(self):
-        self.actionEdit_Malt_Database.triggered.connect(self.show_malt_dialog)
-        self.actionEdit_Hop_Database.triggered.connect(self.show_hop_dialog)
-        self.actionEdit_Rest_Database.triggered.connect(self.show_rest_dialog_create)
-        self.actionEdit_Yeast_Database.triggered.connect(self.show_yeast_dialog)
-        self.actionCustomize_colors.triggered.connect(self.show_color_dialog)
-        self.actionCustomize_Font_Size.triggered.connect(self.show_font_size_dialog)
-        
-        
-        self.actionSet_Units_at_Next_Startup.triggered.connect(self.set_units_at_startup)
-        self.actionChange_language.triggered.connect(self.request_change_language)
-        self.actionImport_Export_Databases.triggered.connect(self.show_import_export_dialog)
-        self.actionEdit_Recipe_Database.triggered.connect(self.show_recipe_dialog)
-        self.actionEdit_Equipment_Database.triggered.connect(self.show_equipment_dialog)
-        self.actionView_Help.triggered.connect(self.show_help)
-        
-        
-
-        self.view_session_button.clicked.connect(self.open_session_sheet)
-        self.calculate_button.clicked.connect(self.calculate_malt_amounts)
-        self.hop_calculate_button.clicked.connect(self.calculate_hop_amounts)
-        self.batch_volume_edit.editingFinished.connect(self.batch_volume_changed)    
-        self.bar_button.clicked.connect(self.explain_ibu_bar)
-        self.main_help_button.clicked.connect(self.explain_current_brewing_session)
-        self.pitching_bar_button.clicked.connect(self.explain_yeast_bar)
-        self.add_button.clicked.connect(self.save_session)
-        self.new_button.clicked.connect(self.new_session)
-        self.delete_button.clicked.connect(self.remove_session)  
-        self.edit_feedback_button.clicked.connect(self.show_feedback) 
-        #self.edit_button.clicked.connect(self.edit_session)  
-        #self.feedback_save_button.clicked.connect(self.save_session_feedback)   
-        self.batch_volume_edit.editingFinished.connect(self.calculate_hop_amounts)
+    
         
                  
     def init_equipment_combo(self):
@@ -1548,6 +1517,40 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.strike_temperature_edit.setReadOnly(True)
         self.mash_sparge_water_volume_edit.setStyleSheet(sty.field_styles['calculated'])
         self.mash_sparge_water_volume_edit.setReadOnly(True)
+        
+        
+    def set_connections(self):
+        self.actionEdit_Malt_Database.triggered.connect(self.show_malt_dialog)
+        self.actionEdit_Hop_Database.triggered.connect(self.show_hop_dialog)
+        self.actionEdit_Rest_Database.triggered.connect(self.show_rest_dialog_create)
+        self.actionEdit_Yeast_Database.triggered.connect(self.show_yeast_dialog)
+        self.actionCustomize_colors.triggered.connect(self.show_color_dialog)
+        self.actionCustomize_Font_Size.triggered.connect(self.show_font_size_dialog)
+        
+        
+        self.actionSet_Units_at_Next_Startup.triggered.connect(self.set_units_at_startup)
+        self.actionChange_language.triggered.connect(self.request_change_language)
+        self.actionImport_Export_Databases.triggered.connect(self.show_import_export_dialog)
+        self.actionEdit_Recipe_Database.triggered.connect(self.show_recipe_dialog)
+        self.actionEdit_Equipment_Database.triggered.connect(self.show_equipment_dialog)
+        self.actionView_Help.triggered.connect(self.show_help)
+        
+        
+
+        self.view_session_button.clicked.connect(self.open_session_sheet)
+        self.calculate_button.clicked.connect(self.calculate_malt_amounts)
+        self.hop_calculate_button.clicked.connect(self.calculate_hop_amounts)
+        self.batch_volume_edit.editingFinished.connect(self.batch_volume_changed)    
+        self.bar_button.clicked.connect(self.explain_ibu_bar)
+        self.main_help_button.clicked.connect(self.explain_current_brewing_session)
+        self.pitching_bar_button.clicked.connect(self.explain_yeast_bar)
+        self.add_button.clicked.connect(self.save_session)
+        self.new_button.clicked.connect(self.new_session)
+        self.delete_button.clicked.connect(self.remove_session)  
+        self.edit_feedback_button.clicked.connect(self.show_feedback) 
+        #self.edit_button.clicked.connect(self.edit_session)  
+        #self.feedback_save_button.clicked.connect(self.save_session_feedback)   
+        self.batch_volume_edit.editingFinished.connect(self.calculate_hop_amounts)    
      
     def set_disable_session(self):
             self.hide_session_designation()
@@ -2002,7 +2005,22 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
            
     def set_units_at_startup(self):
         self.model.drop_units()   
-        self.util.alerte(self.tr('Your request for changing the unit system has been taken into account. Please restart the application and you will be invited to enter your new units.'), QMessageBox.Warning, 'Request for changing units') 
+        #self.util.alerte(self.tr('Your request for changing the unit system has been taken into account. Please restart the application and you will be invited to enter your new units.'), QMessageBox.Warning, 'Request for changing units') 
+        mb=QMessageBox()
+        mb.setIcon(QMessageBox.Warning)
+        mb.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
+        mb.setText(self.tr('You made a request to change units!'))
+        mb.setInformativeText(self.tr('Do you really want to change them? If no, just use the Ignore button. \
+        Otherwise use the Ok button and the application will restart instantly.'))
+        mb.setStandardButtons(QMessageBox.Ok|QMessageBox.Ignore)
+        
+        ret =mb.exec_()
+        
+        if ret==QMessageBox.Ok:
+            app=QApplication.instance()
+            app.exit( MainWindow.EXIT_CODE_REBOOT )
+        
+        
         
     def set_unit_labels(self):
         t_unit=self.model.get_unit('temperature')
