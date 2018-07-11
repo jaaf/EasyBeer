@@ -1181,27 +1181,6 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             yeast=self.model.get_yeast(yis.name)
             if yeast: 
                 self.add_yeast_view(yeast,yis.recommended_pitching_rate,yis.amount,False)
-            '''    
-            adopted_amount=self.util.get_by_name_recursive(self.yeast_layout, 'adopted_amount')    
-            if adopted_amount: 
-                adopted_amount.setText(str(session.yeast_in_session.amount))
-                try:
-                    adopted_amount.editingFinished.disconnect()
-                except:
-                    pass   
-            adopted_pitching_rate=self.util.get_by_name_recursive(self.yeast_layout, 'calculated_pitching_rate')
-            plato=(session.targeted_original_gravity-1)*1000/4
-            try:
-               pitching_rate=session.yeast_in_session.amount/session.batch_volume/plato*100/11
-               val='{0:.2f}'.format(pitching_rate)
-               adopted_pitching_rate.setText(val)
-               self.update_pitching_bar(session.yeast_in_session.recommended_pitching_rate,pitching_rate)
-            except:
-                self.util.alerte('There is something wrong in the arguments of pitching rate calculation') 
-            '''    
-            
-             
-            
           
             for i in range(len(hops)):
                 item=self.hop_layout.itemAt(i)
