@@ -231,8 +231,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         
     def add_subdialog_buttons(self):
         caption=self.tr('+ Add a malt')
-        self.show_malt_chooser_button = customLabel('')
-        self.show_malt_chooser_button.setText('+ Add a malt')
+        self.show_malt_chooser_button = customLabel(caption)
         self.show_malt_chooser_button.clicked.connect(self.malt_chooser_show)
         self.malt_header_layout.insertWidget(1,self.show_malt_chooser_button)
         caption=self.tr('+ Add a hop')
@@ -247,7 +246,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.show_rest_dialog_button = customLabel(caption)
         self.show_rest_dialog_button.clicked.connect(self.rest_dialog_show)
         self.rest_header_layout.insertWidget(1,self.show_rest_dialog_button)  
-        caption='+ Select or change the yeast'
+        caption=self.tr('+ Select or change the yeast')
         self.show_yeast_chooser_button =customLabel(caption)
         self.show_yeast_chooser_button.clicked.connect(self.yeast_chooser_show)
         self.yeast_header_layout.insertWidget(1,self.show_yeast_chooser_button)  

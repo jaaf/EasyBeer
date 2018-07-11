@@ -130,16 +130,16 @@ class Model(object):
             func(target)
             
           
-    '''  
+   
  
     @property
     def language(self):
-        return self.language
+        return self.__language
     
     @language.setter
     def language(self,l):
-        self.language=l
-    '''    
+        self.__language=l
+      
     @property
     def malt_list(self):
         return self.__malt_list
@@ -239,6 +239,7 @@ class Model(object):
             print(e)
         c.close()
         con.close()    
+        self.update_from_db('language')
             
     def clean_languages(self):
         con=lite.connect("easybeer.db")

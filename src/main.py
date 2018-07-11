@@ -25,14 +25,17 @@ import encodings
  
 
 if __name__=='__main__':
-    app = QApplication(sys.argv)
-
-    translator = QtCore.QTranslator()
-    (filepath,filename)=os.path.split(__file__)
-    #trad_path=os.path.join(filepath,'translate','fr_FR.qm')
-    #translator.load(os.path.join(trad_path))
+    current_exit_code=MainWindow.EXIT_CODE_REBOOT
+    while current_exit_code == MainWindow.EXIT_CODE_REBOOT:
+        app = QApplication(sys.argv)
+        translator = QtCore.QTranslator()
+        (filepath,filename)=os.path.split(__file__)
+        #trad_path=os.path.join(filepath,'translate','fr_FR.qm')
+        #translator.load(os.path.join(trad_path))
    
-    app.installTranslator(translator)
-    mainWindow = MainWindow(translator)
-    MainWindow.show(mainWindow)
-    sys.exit(app.exec_())
+        app.installTranslator(translator)
+        mainWindow = MainWindow(translator)
+        MainWindow.show(mainWindow)
+        #sys.exit(app.exec_())
+        current_exit_code=app.exec_()
+        app=None

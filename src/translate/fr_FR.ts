@@ -226,6 +226,16 @@
         <source>Beer quality</source>
         <translation></translation>
     </message>
+    <message>
+        <location filename="../gen/LanguageSetterUI.py" line="32"/>
+        <source>&lt;div&gt;Icons made by &lt;a href=&quot;http://www.freepik.com&quot; title=&quot;Freepik&quot;&gt;Freepik&lt;/a&gt; from &lt;a href=&quot;https://www.flaticon.com/&quot; title=&quot;Flaticon&quot;&gt;www.flaticon.com&lt;/a&gt; is licensed by &lt;a href=&quot;http://creativecommons.org/licenses/by/3.0/&quot; title=&quot;Creative Commons BY 3.0&quot; target=&quot;_blank&quot;&gt;CC 3.0 BY&lt;/a&gt;&lt;/div&gt;</source>
+        <translation>&lt;div&gt;Icons réalisées par &lt;a href=&quot;http://www.freepik.com&quot; title=&quot;Freepik&quot;&gt;Freepik&lt;/a&gt; from &lt;a href=&quot;https://www.flaticon.com/&quot; title=&quot;Flaticon&quot;&gt;www.flaticon.com&lt;/a&gt; is licensed by &lt;a href=&quot;http://creativecommons.org/licenses/by/3.0/&quot; title=&quot;Creative Commons BY 3.0&quot; target=&quot;_blank&quot;&gt;CC 3.0 BY&lt;/a&gt;&lt;/div&gt;</translation>
+    </message>
+    <message>
+        <location filename="../gen/LanguageSetterUI.py" line="33"/>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>EquipmentDialog</name>
@@ -974,7 +984,7 @@
     <message>
         <location filename="../gen/YeastChooserUI.py" line="263"/>
         <source>°C</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1183,47 +1193,47 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="826"/>
+        <location filename="../gen/MainWindowUI.py" line="823"/>
         <source>Display or delete an existing brewing session</source>
         <translation>Afficher ou supprimer une session de brassage existante</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="827"/>
+        <location filename="../gen/MainWindowUI.py" line="824"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="828"/>
+        <location filename="../gen/MainWindowUI.py" line="825"/>
         <source>Create a new brewing session</source>
         <translation>Créer une nouvelle session de brassage</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="829"/>
+        <location filename="../gen/MainWindowUI.py" line="826"/>
         <source>New</source>
         <translation>Nouvelle</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="830"/>
+        <location filename="../gen/MainWindowUI.py" line="827"/>
         <source>Current Brewing Session</source>
         <translation>Session de brassage courante</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="864"/>
+        <location filename="../gen/MainWindowUI.py" line="861"/>
         <source>?</source>
         <translation>?</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="832"/>
+        <location filename="../gen/MainWindowUI.py" line="829"/>
         <source>Designation</source>
         <translation>Appellation</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="837"/>
+        <location filename="../gen/MainWindowUI.py" line="834"/>
         <source>Recipe</source>
         <translation>Recette</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="844"/>
+        <location filename="../gen/MainWindowUI.py" line="841"/>
         <source>Equipment</source>
         <translation>Équipement</translation>
     </message>
@@ -1233,27 +1243,27 @@
         <translation type="obsolete">Efficacité du brassage</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="848"/>
+        <location filename="../gen/MainWindowUI.py" line="845"/>
         <source>Mashing</source>
         <translation>Brassage</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="849"/>
+        <location filename="../gen/MainWindowUI.py" line="846"/>
         <source>Malts </source>
         <translation>Malts</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="850"/>
+        <location filename="../gen/MainWindowUI.py" line="847"/>
         <source>Calculate Mash Data</source>
         <translation>Calculer les données relatives au brassage</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="851"/>
+        <location filename="../gen/MainWindowUI.py" line="848"/>
         <source>Mash Rests</source>
         <translation>Paliers de brassage</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="852"/>
+        <location filename="../gen/MainWindowUI.py" line="849"/>
         <source>Mash Water Volume</source>
         <translation>Volume d’eau de brassage</translation>
     </message>
@@ -1263,177 +1273,177 @@
         <translation type="obsolete">litres</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="853"/>
+        <location filename="../gen/MainWindowUI.py" line="850"/>
         <source>Strike temperature</source>
         <translation>Température d’attaque</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="854"/>
+        <location filename="../gen/MainWindowUI.py" line="851"/>
         <source>Mash Sparge Water Volume</source>
         <translation>Volume d’eau de rinçage</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="855"/>
+        <location filename="../gen/MainWindowUI.py" line="852"/>
         <source>Boiling</source>
         <translation>Ébulition</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="856"/>
+        <location filename="../gen/MainWindowUI.py" line="853"/>
         <source>Hops </source>
         <translation>Houblons</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="857"/>
+        <location filename="../gen/MainWindowUI.py" line="854"/>
         <source>Calculate</source>
         <translation>Calculer</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="858"/>
+        <location filename="../gen/MainWindowUI.py" line="855"/>
         <source>Current bitterness vs. target </source>
         <translation>Amertume courante vs. cible</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="860"/>
+        <location filename="../gen/MainWindowUI.py" line="857"/>
         <source>Adjuncts</source>
         <translation>Suppléments</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="861"/>
+        <location filename="../gen/MainWindowUI.py" line="858"/>
         <source>Pitching</source>
         <translation>Ensemencement</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="862"/>
+        <location filename="../gen/MainWindowUI.py" line="859"/>
         <source>Yeast</source>
         <translation>Levure</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="863"/>
+        <location filename="../gen/MainWindowUI.py" line="860"/>
         <source>Current pitching rate vs recommendation </source>
         <translation>Taux d’ensemencement courant vs. recommandation</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="865"/>
+        <location filename="../gen/MainWindowUI.py" line="862"/>
         <source>File</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="866"/>
+        <location filename="../gen/MainWindowUI.py" line="863"/>
         <source>Database</source>
         <translation>Base de données</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="867"/>
+        <location filename="../gen/MainWindowUI.py" line="864"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="868"/>
+        <location filename="../gen/MainWindowUI.py" line="865"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="869"/>
+        <location filename="../gen/MainWindowUI.py" line="866"/>
         <source>Import Export</source>
         <translation>Import Export</translation>
     </message>
     <message>
         <location filename="../gen/MainWindowUI.py" line="870"/>
         <source>Choose Language</source>
-        <translation>Choisir la langue</translation>
+        <translation type="obsolete">Choisir la langue</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="873"/>
+        <location filename="../gen/MainWindowUI.py" line="869"/>
         <source>Edit Equipment Database</source>
         <translation>Éditer la base de données des équipements</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="874"/>
+        <location filename="../gen/MainWindowUI.py" line="870"/>
         <source>Edit Hop Database</source>
         <translation>Éditer la base de données des houblons</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="875"/>
+        <location filename="../gen/MainWindowUI.py" line="871"/>
         <source>Edit Yeast Database</source>
         <translation>Éditer la base de données des levures</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="876"/>
+        <location filename="../gen/MainWindowUI.py" line="872"/>
         <source>View Help</source>
         <translation>Afficher l’aide</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="879"/>
+        <location filename="../gen/MainWindowUI.py" line="875"/>
         <source>Customize colors</source>
         <translation>Personnaliser les couleurs</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="881"/>
+        <location filename="../gen/MainWindowUI.py" line="877"/>
         <source>Import Export Databases</source>
         <translation>Importer ou exporter la base de données</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="882"/>
+        <location filename="../gen/MainWindowUI.py" line="878"/>
         <source>French</source>
         <translation>Français</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="883"/>
+        <location filename="../gen/MainWindowUI.py" line="879"/>
         <source>English</source>
         <translation>Anglais</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="884"/>
+        <location filename="../gen/MainWindowUI.py" line="880"/>
         <source>Japanese</source>
         <translation>Japonais</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="885"/>
+        <location filename="../gen/MainWindowUI.py" line="881"/>
         <source>Customize Font Size</source>
         <translation>Personnaliser la taille des caractères</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="887"/>
+        <location filename="../gen/MainWindowUI.py" line="883"/>
         <source>Set Units at Next Startup</source>
         <translation>Définir les unités au prochain démarrage</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="833"/>
+        <location filename="../gen/MainWindowUI.py" line="830"/>
         <source>Record this session</source>
         <translation>Enregistrer cette session</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="834"/>
+        <location filename="../gen/MainWindowUI.py" line="831"/>
         <source>Edit selected session feedback</source>
         <translation>Modifier le retour d’expérience de la session sélectionnée</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="835"/>
+        <location filename="../gen/MainWindowUI.py" line="832"/>
         <source>Batch Volume</source>
         <translation>Volume du lot</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="836"/>
+        <location filename="../gen/MainWindowUI.py" line="833"/>
         <source>Grain temperature</source>
         <translation>Température du grain</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="838"/>
+        <location filename="../gen/MainWindowUI.py" line="835"/>
         <source>Targeted Original Gravity</source>
         <translation>Densité spécifique visée</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="840"/>
+        <location filename="../gen/MainWindowUI.py" line="837"/>
         <source>Targeted Bitterness</source>
         <translation>Amertume visée</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="841"/>
+        <location filename="../gen/MainWindowUI.py" line="838"/>
         <source>Boiling Time</source>
         <translation>Temps d’ébulition</translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="845"/>
+        <location filename="../gen/MainWindowUI.py" line="842"/>
         <source>Brewing Efficiency </source>
         <translation>Efficacité du brassage</translation>
     </message>
@@ -1453,77 +1463,77 @@
         <translation type="obsolete">Éditer la base de données des paliers</translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="180"/>
+        <location filename="../view/MainWindow.py" line="191"/>
         <source>Advised by recipe</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="200"/>
+        <location filename="../view/MainWindow.py" line="211"/>
         <source>Adopted</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="353"/>
+        <location filename="../view/MainWindow.py" line="364"/>
         <source>Temperature range in </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="414"/>
+        <location filename="../view/MainWindow.py" line="425"/>
         <source>Recommended Pitching rate</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="504"/>
+        <location filename="../view/MainWindow.py" line="515"/>
         <source>Adopted Pitching rate</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="759"/>
+        <location filename="../view/MainWindow.py" line="770"/>
         <source>Batch volume</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="567"/>
+        <location filename="../view/MainWindow.py" line="578"/>
         <source>Adopted yeast Amount</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="721"/>
+        <location filename="../view/MainWindow.py" line="732"/>
         <source>Please select an equipment</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="601"/>
+        <location filename="../view/MainWindow.py" line="612"/>
         <source> Hop rate </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="623"/>
+        <location filename="../view/MainWindow.py" line="634"/>
         <source>Warning : IBU Calculation</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="625"/>
+        <location filename="../view/MainWindow.py" line="636"/>
         <source>You need to select an equipment prior to IBU calculation.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="669"/>
+        <location filename="../view/MainWindow.py" line="680"/>
         <source>Hop amount</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="715"/>
+        <location filename="../view/MainWindow.py" line="726"/>
         <source>Warning : Malt Amount Calculation</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="718"/>
+        <location filename="../view/MainWindow.py" line="729"/>
         <source>Please select a recipe</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="843"/>
+        <location filename="../view/MainWindow.py" line="854"/>
         <source>
     &lt;h2&gt;Brewing session dialog explanation&lt;/h2&gt;
         
@@ -1554,12 +1564,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="877"/>
+        <location filename="../view/MainWindow.py" line="888"/>
         <source>Info : Using the Current Brewing Session Dialog?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="881"/>
+        <location filename="../view/MainWindow.py" line="892"/>
         <source>
         &lt;h2&gt;IBU bar explanation &lt;/h2&gt;
         &lt;p&gt;IBU stands for International Bitterness Unit&lt;/p&gt;
@@ -1585,15 +1595,31 @@
         wort. Its contribution, according to John Palmer is roughly 110% of 
         a 60 min boil of the same amount.&lt;/p&gt;
         </source>
-        <translation></translation>
+        <translation type="unfinished"> &lt;h2&gt;Explications de la barre des IBU &lt;/h2&gt;
+        &lt;p&gt;IBU signifie « International Bitterness Unit » soit « Unité Internationale d’amertume ».&lt;/p&gt;
+        &lt;p&gt;Avant d’utiliser le dialogue des houblons vous devez sélectioner
+        une recette et un équipement et définir le volume du lot.&lt;/p&gt;
+        
+        &lt;p&gt;Dans le dialogue des houblons, lorsque vous entrez une quantité de houblon dans le champ « Adoptée », l&apos;amertume totale est recalculée.&lt;/p&gt;
+        
+        &lt;p&gt;La barre d’amertume démarre à zéro et va jusqu’à deux fois la cible d’amertume de la recette. Ainsi, la cible de la recette est juste au milieu de la barre et est figurée par un petit rectangle noir..&lt;/p&gt;
+        
+        &lt;p&gt;Quoi qu’il en soit, vous pouvez décider de modifier la quantité de houblon à tout moment. À ce moment, l’amertume est recalculée et la barre est mise à jour.
+
+        La barre passe en vert si l’amertume réelle est dans la plage des +-10 % de la cible. Sinon, elle est rouge. &lt;/p&gt;
+        
+        &lt;p&gt;Seuls le houblonnage au bouillon et au rinçage sont considérés comme apportant de l’amertume.
+
+        Le houblonnage au rinçage consiste à introduire le houblon juste au moment de l’égouttage et du rinçage des drèches. Sa contribution, selon John Palmenr est estimée à 110 % de ce que produirait un bouillon de 60 min. de la même quantité..&lt;/p&gt;
+        </translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="907"/>
+        <location filename="../view/MainWindow.py" line="918"/>
         <source>Info : Using the Hop dialog?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="912"/>
+        <location filename="../view/MainWindow.py" line="923"/>
         <source>
         &lt;h2&gt;Yeast Dialog explanation&lt;/h2&gt;
         
@@ -1618,134 +1644,149 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="934"/>
+        <location filename="../view/MainWindow.py" line="945"/>
         <source>Info : Using the yeast dialog?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="943"/>
+        <location filename="../view/MainWindow.py" line="954"/>
         <source>Hop amount at line</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1324"/>
+        <location filename="../view/MainWindow.py" line="1334"/>
         <source>You have not chosen a recipe. Please chose one</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1328"/>
+        <location filename="../view/MainWindow.py" line="1338"/>
         <source>You have not chosen an equipment. Please chose one</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1339"/>
+        <location filename="../view/MainWindow.py" line="1349"/>
         <source>Grain Temperature</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1359"/>
+        <location filename="../view/MainWindow.py" line="1369"/>
         <source>Malt Amount </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1392"/>
+        <location filename="../view/MainWindow.py" line="1402"/>
         <source>Hop duration </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1397"/>
+        <location filename="../view/MainWindow.py" line="1407"/>
         <source>Hop Amount </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1412"/>
+        <location filename="../view/MainWindow.py" line="1422"/>
         <source>Adopted Pitching Rate</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1416"/>
+        <location filename="../view/MainWindow.py" line="1426"/>
         <source>Could not find the adopted yeast amount. This should never happen. Please file a bug</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1419"/>
+        <location filename="../view/MainWindow.py" line="1429"/>
         <source>Adopted Yeast Amount.              Please use the calculate button and if you want change the value </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1428"/>
+        <location filename="../view/MainWindow.py" line="1438"/>
         <source>Strike TempÃ©rature</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1430"/>
+        <location filename="../view/MainWindow.py" line="1440"/>
         <source>Sparge Water Volume</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1459"/>
+        <location filename="../view/MainWindow.py" line="1469"/>
         <source>Feedback Mash PH</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1461"/>
+        <location filename="../view/MainWindow.py" line="1471"/>
         <source>Feedback Preboil Volume</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1463"/>
+        <location filename="../view/MainWindow.py" line="1473"/>
         <source>Feedback Original Gravity</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1465"/>
+        <location filename="../view/MainWindow.py" line="1475"/>
         <source>Feedback Fermentor Volume</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="1989"/>
+        <location filename="../view/MainWindow.py" line="1998"/>
         <source>Your request for changing the unit system has been taken into account. Please restart the application and you will be invited to enter your new units.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="2212"/>
+        <location filename="../view/MainWindow.py" line="2221"/>
         <source>Calculated IBUs vs. Target â </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/MainWindow.py" line="2226"/>
+        <location filename="../view/MainWindow.py" line="2235"/>
         <source>Current Pitching Rate vs. Recommended Rate â </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="825"/>
+        <location filename="../gen/MainWindowUI.py" line="822"/>
         <source>EASYBEER </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="839"/>
+        <location filename="../gen/MainWindowUI.py" line="836"/>
         <source>1.000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="842"/>
+        <location filename="../gen/MainWindowUI.py" line="839"/>
         <source>120</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="843"/>
+        <location filename="../gen/MainWindowUI.py" line="840"/>
         <source>min.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="846"/>
+        <location filename="../gen/MainWindowUI.py" line="843"/>
         <source>??</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gen/MainWindowUI.py" line="847"/>
+        <location filename="../gen/MainWindowUI.py" line="844"/>
         <source>%</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../view/MainWindow.py" line="1797"/>
+        <source>You made a request to change the language!</source>
+        <translation>Vous avez fait une demande de changement de langue !</translation>
+    </message>
+    <message>
+        <location filename="../view/MainWindow.py" line="1798"/>
+        <source>Do you really change it? If no just use the Ignore button. Otherwise use the Ok button and the application will restart instantly.</source>
+        <translation>Voulez-vous traiment changer de langue ? Si non, cliquez simplement sur le bouton Ignore. Autrement, utiisez le bouton OK et l’application redémarrera immédiatement.</translation>
+    </message>
+    <message>
+        <location filename="../gen/MainWindowUI.py" line="884"/>
+        <source>Change language</source>
+        <translation>Modifier la langue</translation>
     </message>
 </context>
 <context>
@@ -1911,7 +1952,7 @@
     <message>
         <location filename="../gen/MaltDialogUI.py" line="306"/>
         <source>%</source>
-        <translation type="unfinished">
+        <translation>
 
 </translation>
     </message>
@@ -1924,115 +1965,119 @@
         <translation>+ Ajouter un malt</translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="238"/>
+        <location filename="../view/RecipeDialog.py" line="237"/>
         <source>+ Add a hop</source>
-        <translation>+ 
-Ajouter un houblon</translation>
+        <translation>+ Ajouter un houblon</translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="242"/>
+        <location filename="../view/RecipeDialog.py" line="241"/>
         <source>+ Add an adjunct</source>
-        <translation></translation>
+        <translation>+Ajouter un supplément</translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="246"/>
+        <location filename="../view/RecipeDialog.py" line="245"/>
         <source>+ Add a rest</source>
-        <translation></translation>
+        <translation>+Ajouter un palier</translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="291"/>
+        <location filename="../view/RecipeDialog.py" line="290"/>
         <source>Temperature range</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="336"/>
+        <location filename="../view/RecipeDialog.py" line="335"/>
         <source>Pitching rate</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="380"/>
+        <location filename="../view/RecipeDialog.py" line="379"/>
         <source>Warning Text</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="389"/>
+        <location filename="../view/RecipeDialog.py" line="388"/>
         <source>Sum of percentage for malts must be 100, presently it is : </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="391"/>
+        <location filename="../view/RecipeDialog.py" line="390"/>
         <source>Warning percentages</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="440"/>
+        <location filename="../view/RecipeDialog.py" line="439"/>
         <source>Add this recipe</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="516"/>
+        <location filename="../view/RecipeDialog.py" line="515"/>
         <source>Record this new recipe</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="563"/>
+        <location filename="../view/RecipeDialog.py" line="562"/>
         <source>Percentage</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="574"/>
+        <location filename="../view/RecipeDialog.py" line="573"/>
         <source>Recipe name</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="580"/>
+        <location filename="../view/RecipeDialog.py" line="579"/>
         <source>Targeted Original Gravity</source>
         <translation>Densité spécifique visée</translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="583"/>
+        <location filename="../view/RecipeDialog.py" line="582"/>
         <source>Targeted bitterness</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="1101"/>
+        <location filename="../view/RecipeDialog.py" line="1100"/>
         <source>Boiling Time</source>
         <translation>Temps d’ébulition</translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="599"/>
+        <location filename="../view/RecipeDialog.py" line="598"/>
         <source>Rest purpose</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="603"/>
+        <location filename="../view/RecipeDialog.py" line="602"/>
         <source>Rest duration</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="607"/>
+        <location filename="../view/RecipeDialog.py" line="606"/>
         <source>Rest temperature</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="626"/>
+        <location filename="../view/RecipeDialog.py" line="625"/>
         <source>Hop rate is not accessible</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="628"/>
+        <location filename="../view/RecipeDialog.py" line="627"/>
         <source>Hop rate</source>
         <translation>Taux de houblonnage</translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="637"/>
+        <location filename="../view/RecipeDialog.py" line="636"/>
         <source>Hop Duration</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../view/RecipeDialog.py" line="655"/>
+        <location filename="../view/RecipeDialog.py" line="654"/>
         <source>Pitching Rate</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../view/RecipeDialog.py" line="249"/>
+        <source>+ Select or change the yeast</source>
+        <translation>+ Choisir ou changer la levure</translation>
     </message>
 </context>
 <context>
@@ -2235,7 +2280,7 @@ Ajouter un houblon</translation>
     <message>
         <location filename="../view/Utils.py" line="47"/>
         <source>Boil hopping</source>
-        <translation></translation>
+        <translation>À l’ébulition</translation>
     </message>
     <message>
         <location filename="../view/Utils.py" line="48"/>

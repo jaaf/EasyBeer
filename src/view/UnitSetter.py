@@ -33,13 +33,13 @@ class UnitSetter(QDialog,UnitSetterUI.Ui_Dialog ):
        class docs
     """   
     
-    def __init__(self,model,util,parent=None):
+    def __init__(self,model,parent=None):
         QDialog.__init__(self,None,QtCore.Qt.WindowStaysOnTopHint)
         self.setupUi(self)
         #self.unit_list=self.model.unit_list
         self.parent=parent
         self.model=model
-        self.util=util
+        #self.util=util
         self.init_combos()
         self.set_connections()
         self.model.subscribe_model_changed(['unit'],self.on_model_changed)

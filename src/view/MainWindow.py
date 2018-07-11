@@ -33,6 +33,7 @@ from view.ColorDialog import ColorDialog
 from view.FontSizeDialog import FontSetDialog
 from view.HelpWindow import HelpWindow
 from view.UnitSetter import UnitSetter
+from view.LanguageSetter import LanguageSetter
 from view.Feedback import Feedback
 from view.Utils import Utils
 import view.constants as vcst
@@ -68,9 +69,11 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
     '''
     classdocs
     '''
+    EXIT_CODE_REBOOT = -12345678
     def __init__(self, translator,parent=None):
         super(MainWindow,self).__init__(parent)
         self.setupUi(self)
+        
         self.translator=translator
         
         'Folder structure is quite different when running in a bundle'
@@ -91,10 +94,18 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             (filepath,filename)=os.path.split(__file__)
             self.trad_path=os.path.join(filepath,'..','translate')
         
+        
+        self.controller = Controller(self.model)
+        self.unitSetter=UnitSetter(self.model,self)
+        self.language_setter=LanguageSetter(self.model,self)
+        if not self.model.language:
+            self.language_setter.setModal(True)
+            self.language_setter.show()  
+        else: self.set_language(self.model.language[1]) 
+        #colors must be set before all dialogs
+        'due to the translation into util.init_hop_usage_dic , util should be created after setting the language'
         self.util=Utils(self.model)
         self.util.init_hop_usage_dic()
-        self.controller = Controller(self.model)
-        #colors must be set before all dialogs
         self.style_key_list=self.model.style_list
         self.set_active_colors() 
         self.maltDialog = MaltDialog(self.model,self.controller,self.util)
@@ -105,7 +116,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.colorDialog = ColorDialog(self.model,self.controller,self.util)
         self.equipmentDialog = EquipmentDialog(self.model,self.controller,self.util)
         self.fontSizeDialog=FontSetDialog(self.model,self.controller,self.util)
-        self.unitSetter=UnitSetter(self.model,self.util,self)
+        
         self.feedback=Feedback(self.model,self.util)
         'if running in a bundle may be the user wants to save or restore their databases'
         if self.frozen=='yes':
@@ -964,13 +975,12 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         
         
         self.actionSet_Units_at_Next_Startup.triggered.connect(self.set_units_at_startup)
+        self.actionChange_language.triggered.connect(self.request_change_language)
         self.actionImport_Export_Databases.triggered.connect(self.show_import_export_dialog)
         self.actionEdit_Recipe_Database.triggered.connect(self.show_recipe_dialog)
         self.actionEdit_Equipment_Database.triggered.connect(self.show_equipment_dialog)
         self.actionView_Help.triggered.connect(self.show_help)
-        self.actionFrench.triggered.connect(self.set_language_fr)
-        self.actionEnglish.triggered.connect(self.set_language_en)
-        self.actionJapanese.triggered.connect(self.set_language_jp)
+        
 
         
         self.calculate_button.clicked.connect(self.calculate_malt_amounts)
@@ -1622,7 +1632,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.menuFile.setFont(self.model.in_use_fonts['field'])
         self.menuDatabase.setFont(self.model.in_use_fonts['field'])
         self.menuImport_Export.setFont(self.model.in_use_fonts['field'])
-        self.menuChoose_Language.setFont(self.model.in_use_fonts['field'])
+        #self.menuChoose_Language.setFont(self.model.in_use_fonts['field'])
         self.batch_volume_edit.setFont(self.model.in_use_fonts['field'])
         self.grain_temperature_edit.setFont(self.model.in_use_fonts['field'])
         self.mash_water_volume_edit.setFont(self.model.in_use_fonts['field'])
@@ -1769,31 +1779,31 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                 amount_unit_w=self.util.get_by_name(item.layout(),'calculated_mass_unit')
                 if amount_unit_w:amount_unit_w.setFont(self.model.in_use_fonts['field'])        
         
-    
+    '''
     def set_language_jp(self):
         app=QApplication.instance()
         app.removeTranslator(self.translator)
         self.translator.load(os.path.join(self.trad_path,'ja_JP'))
         app.installTranslator(self.translator)
         self.model.set_language({'name':'japanese','code':'ja_JP'})
-   
+    '''
          
-    def set_language_en(self):
-        app=QApplication.instance()
-        app.removeTranslator(self.translator)
-        self.translator.load(os.path.join(self.trad_path,'en_EN'))
-        app.installTranslator(self.translator)  
-        self.model.set_language({'name':'english','code':'en_EN'}) 
+    def request_change_language(self):
+        self.model.drop_languages()
+        mb=QMessageBox()
+        mb.setIcon(QMessageBox.Warning)
+        mb.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
+        mb.setText(self.tr('You made a request to change the language!'))
+        mb.setInformativeText(self.tr('Do you really want to change it? If no, just use the Ignore button. \
+        Otherwise use the Ok button and the application will restart instantly.'))
+        mb.setStandardButtons(QMessageBox.Ok|QMessageBox.Ignore)
+        ret =mb.exec_()
         
-        
-    def set_language_fr(self):
-        app=QApplication.instance()
-        app.removeTranslator(self.translator)
-        self.translator.load(os.path.join(self.trad_path,'fr_FR'))
-        '''reinstall of translator triggers an changeEvent that should be used in each widget that 
-        needs translation. See changeEvent function in each widget'''
-        app.installTranslator(self.translator)
-        self.model.set_language({'name':'french','code':'fr_FR'})
+        if ret==QMessageBox.Ok:
+            app=QApplication.instance()
+            app.exit( MainWindow.EXIT_CODE_REBOOT )
+       
+   
         
     def set_language(self,code):
         print('language in set_language is '+code)
@@ -2163,12 +2173,12 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             'default units will be applied if dialog cancelled, or new units if apply button clicked'
             self.unitSetter.show()#will call set_unit_labels() once units set in model
         else: self.set_unit_labels() 
-        
-        if self.model.language:
-            print('language in DB is '+self.model.language[1])
-            self.set_language(self.model.language[1])
-        else : print('no language set')    
-
+        '''
+        if not self.model.language:
+            self.language_setter.setModal(True)
+            self.language_setter.show()  
+        else: self.set_language(self.model.language[1])     
+         '''
         
     def  show_folder_chooser(self):
         

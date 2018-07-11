@@ -1727,6 +1727,7 @@
     <addaction name="actionCustomize_colors"/>
     <addaction name="actionCustomize_Font_Size"/>
     <addaction name="actionSet_Units_at_Next_Startup"/>
+    <addaction name="actionChange_language"/>
    </widget>
    <widget class="QMenu" name="menuImport_Export">
     <property name="title">
@@ -1734,20 +1735,11 @@
     </property>
     <addaction name="actionImport_Export_Databases"/>
    </widget>
-   <widget class="QMenu" name="menuChoose_Language">
-    <property name="title">
-     <string>Choose Language</string>
-    </property>
-    <addaction name="actionFrench"/>
-    <addaction name="actionEnglish"/>
-    <addaction name="actionJapanese"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDatabase"/>
    <addaction name="menuHelp"/>
    <addaction name="menuSettings"/>
    <addaction name="menuImport_Export"/>
-   <addaction name="menuChoose_Language"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionEdit_Malt_Database">
@@ -1833,6 +1825,11 @@
   <action name="actionSet_Units_at_Next_Startup">
    <property name="text">
     <string>Set Units at Next Startup</string>
+   </property>
+  </action>
+  <action name="actionChange_language">
+   <property name="text">
+    <string>Change language</string>
    </property>
   </action>
  </widget>
