@@ -1,0 +1,6 @@
+src/*/__pycache__/*.pyc
+
+dist/**/**
+build/**/**
+.settings/**/**
+
