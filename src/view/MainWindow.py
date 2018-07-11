@@ -1789,14 +1789,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                 amount_unit_w=self.util.get_by_name(item.layout(),'calculated_mass_unit')
                 if amount_unit_w:amount_unit_w.setFont(self.model.in_use_fonts['field'])        
         
-    '''
-    def set_language_jp(self):
-        app=QApplication.instance()
-        app.removeTranslator(self.translator)
-        self.translator.load(os.path.join(self.trad_path,'ja_JP'))
-        app.installTranslator(self.translator)
-        self.model.set_language({'name':'japanese','code':'ja_JP'})
-    '''
+   
          
     def request_change_language(self):
         self.model.drop_languages()
