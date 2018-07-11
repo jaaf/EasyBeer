@@ -960,14 +960,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         widgets=self.util.get_included_widgets(self.current_session_intro_layout)
         for w in widgets:
             w.hide()   
-    '''        
-    def hide_session_feedback(self):
-        widgets=self.util.get_included_widgets(self.feedback_groupbox_layout)
-        for w in widgets:
-            w.hide()       
-     '''
-    
-        
+  
                  
     def init_equipment_combo(self):
         self.equipment_combo.clear()  
