@@ -1211,28 +1211,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                     if calculated_ibu_w: calculated_ibu_w.setText(val)
                  
             self.update_ibu_bar(session.targeted_bitterness)
-            '''        
-            if hasattr(session,'feedback_water_treatment_text'):
-                self.feedback_water_treatment_textedit.setText(session.feedback_water_treatment_text)
-               
-            if hasattr(session,'feedback_mash_ph'):
-                if session.feedback_mash_ph:
-                    self.feedback_mash_PH_edit_2.setText(str(session.feedback_mash_ph)) 
-                else: self.feedback_mash_PH_edit_2.setText('')      
-            if hasattr(session,'feedback_preboil_volume'):
-                if session.feedback_preboil_volume:
-                    self.feedback_preboil_volume_edit_2.setText(str(session.feedback_preboil_volume))  
-                else:  self.feedback_preboil_volume_edit_2.setText('')                
-            if hasattr(session,'feedback_original_gravity'):
-                if session.feedback_original_gravity:
-                    self.feedback_original_gravity_edit_2.setText(str(session.feedback_original_gravity))  
-                else: self.feedback_original_gravity_edit_2.setText('')      
-            if hasattr(session,'feedback_fermentor_volume'):
-                if session.feedback_fermentor_volume:
-                    self.feedback_fermentor_volume_edit.setText(str(session.feedback_fermentor_volume))
-                else: self.feedback_fermentor_volume_edit.setText('')         
-            self.show_session_feedback()   
-            '''
+           
             self.edit_feedback_button.setEnabled(True)
             
             
