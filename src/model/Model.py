@@ -62,6 +62,7 @@ class Model(object):
         if self.bundle_dir:
             self.database_path=self.bundle_dir
         else: self.database_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),'..' ) 
+        print('the database path is '+ self.database_path)
       
         'below are the lists of function that are subscribed by widgets as callbacks whenever the model changes'
         self._update_funcs_malt = []
@@ -109,6 +110,7 @@ class Model(object):
         self.update_from_db('rest')
         self.update_from_db('recipe')
         self.update_from_db('equipment')
+        
         self.update_from_db('session')
         self.update_from_db('style')
         self.update_from_db('fontset')   
@@ -257,7 +259,7 @@ class Model(object):
         con.close()           
     
     def drop_languages(self):
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         c.execute('drop table if exists languages')
         c.close()
@@ -266,7 +268,7 @@ class Model(object):
         
     def add_equipment(self,equipment):
         eq=equipment
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         try:
             c.execute("insert into equipments values (?,?,?,?,?,?,?,?,?,?,?)",(eq.name,eq.brewing_efficiency,eq.boiler_size,eq.boiler_dead_space,eq.boiler_evaporation_rate,eq.fermentor_size,eq.fermentor_dead_space,eq.type,eq.mash_tun_size,eq.mash_tun_dead_space,eq.mash_tun_heat_losses))
@@ -282,7 +284,7 @@ class Model(object):
             
     def add_recipe(self,recipe):
        
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         mim=pickle.dumps(recipe.malts_in_mash)
         hir=pickle.dumps(recipe.hops_in_recipe)
@@ -322,7 +324,7 @@ class Model(object):
         self.announce_model_changed('recipe')
     
     def change_active_font_set(self, category):
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         c.execute("""select * from fontsets where status=:status""",{'status':'active'})
         l=c.fetchall()
@@ -333,7 +335,7 @@ class Model(object):
         
         
     def drop_units(self):
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         c.execute('drop table if exists units')
         c.close()
@@ -341,7 +343,7 @@ class Model(object):
             
     def get_malt(self,key):
         'return a malt given its name'   
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()  
         c.execute("""select * from malts where name=:name""",{'name':key})
         m=c.fetchone()
@@ -350,7 +352,7 @@ class Model(object):
     
     def get_hop(self,key):
         'return a hop given its name'   
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()  
         c.execute("""select * from hops where name=:name""",{'name':key})
         h=c.fetchone()
@@ -361,7 +363,7 @@ class Model(object):
     
     def get_rest(self,key):
         'return a rest given a key'
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()  
         c.execute("""select * from rests where name=:name""",{'name':key})
         r=c.fetchone()
@@ -372,7 +374,7 @@ class Model(object):
     
     def get_recipe(self,key):
         recipe=None
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()
         c.execute("""select * from recipes where name=:name""",{'name':key})
         rcp=c.fetchone()
@@ -382,7 +384,7 @@ class Model(object):
            
     def get_equipment(self,key):
         'return an equipment given its name'
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         c.execute("""select * from equipments where name=:name""",{'name':key})
         eq=c.fetchone()
@@ -391,7 +393,7 @@ class Model(object):
     
     def get_session(self,key):
         'return a session given its name'
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         c.execute("""select * from sessions where name=:name""",{'name':key})
         s=c.fetchone()
@@ -409,7 +411,7 @@ class Model(object):
     
     def get_style(self,category):
         'return a style given its category'
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         c.execute("""select * from styles where category=:category""",{'category':category})
         s=c.fetchone()
@@ -427,7 +429,7 @@ class Model(object):
         '''
     def get_active_font_set(self):
         'return a fontset given its category'
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         c.execute("""select * from fontsets where status=:status""",{'status':'active'})
         fs=c.fetchone()
@@ -436,7 +438,7 @@ class Model(object):
         else: return None
         
     def get_unit(self, name):
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         c.execute("""select * from units where name=:name""", {'name':name})
         u=c.fetchone()
@@ -447,7 +449,7 @@ class Model(object):
         
     def get_yeast(self,key):
         'return a yeast given its name'   
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()  
         c.execute("""select * from yeasts where name=:name""",{'name':key})
         y=c.fetchone()
@@ -455,7 +457,7 @@ class Model(object):
         return yeast    
        
     def is_used(self,malt_name):
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         try:
             c.execute("""select * from recipes""")
@@ -491,7 +493,7 @@ class Model(object):
         
     def remove_equipment(self,key):
         'remove an equipment from db given its name' 
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()  
         try:
             c.execute("""delete from equipments where name=:name""",{'name':key})
@@ -505,7 +507,7 @@ class Model(object):
                 
     def remove_hop(self,key):
         'remove a hop from db given its name' 
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()  
         try:
             c.execute("""delete from hops where name=:name""",{'name':key})
@@ -520,7 +522,7 @@ class Model(object):
     
     def remove_malt(self,key):
         'remove a malt from db given its name' 
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()  
         try:
             c.execute("""delete from malts where name=:name""",{'name':key})
@@ -534,7 +536,7 @@ class Model(object):
         
     def remove_recipe(self,key):
         'remove a recipe from db given its key' 
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()  
         try:
             c.execute("""delete from recipes where name=:name""",{'name':key})
@@ -548,7 +550,7 @@ class Model(object):
         
     def remove_rest(self,key):
         'remove a rest from db given its key'
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()  
         try:
             c.execute("""delete from rests where name=:name""",{'name':key})
@@ -562,7 +564,7 @@ class Model(object):
         
     def remove_session(self,key):
         'remove a brewing session from db' 
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()  
         try:
             c.execute("""delete from sessions where name=:name""",{'name':key})
@@ -577,7 +579,7 @@ class Model(object):
         
     def remove_yeast(self,key):
         'remove a yeast from db given its name' 
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()  
         try:
             c.execute("""delete from yeasts where name=:name""",{'name':key})
@@ -598,7 +600,7 @@ class Model(object):
     
         
     def save_font_set(self,font_set):
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         'fonts is a list and needs pickling'
         
@@ -616,7 +618,7 @@ class Model(object):
     
 
     def save_hop(self,hop):
-        con = lite.connect('easybeer.db')
+        con = lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()
         try:
             'hops table already exists as created in self.update_from_db'
@@ -633,7 +635,7 @@ class Model(object):
         
   
     def save_malt(self,malt):
-        con = lite.connect('easybeer.db')
+        con = lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()
         try:
             'malts table already exists as created in self.update_from_db'
@@ -649,7 +651,7 @@ class Model(object):
         self.announce_model_changed('malt') 
         
     def save_rest(self,rest):
-        con = lite.connect('easybeer.db')
+        con = lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()
         try:
             'rests table already exists as created in self.update_from_db'
@@ -668,7 +670,7 @@ class Model(object):
     def save_session(self,session):
         'save or update a session'
         s=session
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         
         mis=pickle.dumps(s.malts_in_session)#malts_in_session'
@@ -736,7 +738,7 @@ class Model(object):
 
         
     def save_style(self,category, value):
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         'value is a list and needs pickling'
         v=pickle.dumps(value)
@@ -754,7 +756,7 @@ class Model(object):
         
         
     def save_yeast(self,yeast):
-        con = lite.connect('easybeer.db')
+        con = lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()
         try:
             'yeasts table already exists as created in self.update_from_db'
@@ -825,7 +827,7 @@ class Model(object):
         
     def update_equipment(self,equipment):
         eq=equipment
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         try:
             c.execute("update equipments set brewing_efficiency=:brewing_efficiency,boiler_size=:boiler_size,\
@@ -847,7 +849,7 @@ class Model(object):
         self.announce_model_changed('equipment')    
         
     def update_malt(self,malt):
-        con = lite.connect('easybeer.db')
+        con = lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()
         try:
             'malts table already exists as created in self.update_from_db'
@@ -865,7 +867,7 @@ class Model(object):
         
     def update_hop(self,hop):
         print('updating a hop in model')
-        con = lite.connect('easybeer.db')
+        con = lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()
         try:
              
@@ -882,7 +884,7 @@ class Model(object):
         self.announce_model_changed('malt')      
         
     def update_recipe(self,recipe): 
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         mim=pickle.dumps(recipe.malts_in_mash)
         hir=pickle.dumps(recipe.hops_in_recipe)
@@ -920,7 +922,7 @@ class Model(object):
         self.announce_model_changed('recipe')
         
     def update_rest(self, rest):
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         phs=pickle.dumps(rest.phs)
         tps=pickle.dumps(rest.temperatures)
@@ -941,7 +943,7 @@ class Model(object):
         self.announce_model_changed('rest')   
         
     def update_session(self,session):
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         
         try:
@@ -966,7 +968,7 @@ class Model(object):
             
         
     def update_yeast(self,yeast):
-        con = lite.connect('easybeer.db')
+        con = lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()
         try:
             'yeasts table already exists as created in self.update_from_db'
@@ -984,7 +986,7 @@ class Model(object):
         self.announce_model_changed('yeast')         
         
     def update_font_set(self,font_set):
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         try:
             c.execute("update fontsets set status = :status  where category=:category",{'category':font_set.category,'status':font_set.status})
@@ -1178,7 +1180,7 @@ class Model(object):
         
         
     def update_style(self,category, value):
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         'value is a list and needs pickling'
         v=pickle.dumps(value)
@@ -1197,7 +1199,7 @@ class Model(object):
     
         
     def update_unit(self,unit):
-        con=lite.connect('easybeer.db')
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         if self.get_unit(unit.name):
             try:
