@@ -140,6 +140,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.init_session_combo()
         self.new_session()
         self.init_font_set_db()
+        self.view_session_button.setEnabled(False)
         
         
         
@@ -1079,7 +1080,9 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
        
         
         if self.session_combo.currentText():
+            self.current_session=self.session_combo.currentText()
             #to prevent GUI refresh on recipe or equipment change in DB
+            self.view_session_button.setEnabled(True)
             v_unit=self.model.get_unit('water_volume')
             t_unit=self.model.get_unit('temperature')
             ma_unit=self.model.get_unit('malt_mass')
@@ -1186,7 +1189,9 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
            
             self.edit_feedback_button.setEnabled(True)
             
-            
+        else: self.view_session_button.setEnabled(False)   
+        
+        
     def new_session(self):
         'the hop_calculate_button can be hidden when displaying a past session'
         self.hop_calculate_button.show()
@@ -2026,13 +2031,13 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
               
                 
                 adopted_pitching_label_w=self.util.get_by_name_recursive(item.layout(), 'adopted_pitching_label')
-                adopted_pitching_label_w.setFont(self.model.in_use_fonts['field'])
+                if adopted_pitching_label_w : adopted_pitching_label_w.setFont(self.model.in_use_fonts['field'])
                 
                 adopted_amount_w=self.util.get_by_name_recursive(item.layout(), 'adopted_amount')
-                adopted_amount_w.setFont(self.model.in_use_fonts['field'])
+                if adopted_amount_w: adopted_amount_w.setFont(self.model.in_use_fonts['field'])
                 
                 adopted_amount_unit_w=self.util.get_by_name_recursive(item.layout(), 'adopted_amount_unit')
-                adopted_amount_unit_w.setFont(self.model.in_use_fonts['field'])
+                if adopted_amount_unit_w : adopted_amount_unit_w.setFont(self.model.in_use_fonts['field'])
         
             
     def show_color_dialog(self):
@@ -2040,7 +2045,10 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
     
     
     def show_feedback(self):
+        self.feedback.set_session_name(self.current_session)
         self.feedback.show()    
+        
+        
     def show_font_size_dialog(self):
         self.fontSizeDialog.show()     
         

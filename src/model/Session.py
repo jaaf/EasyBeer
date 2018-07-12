@@ -26,7 +26,9 @@ class Session(object):
                  targeted_bitterness, boiling_time, brewing_efficiency, malts_in_session,rests_in_session,hops_in_session, 
                  yeast_in_session,mash_water_volume, strike_temperature, mash_sparge_water_volume,boiler_dead_space,
                  feedback_water_treatment_text=None,feedback_mash_ph=None, feedback_preboil_volume=None,
-                 feedback_original_gravity=None,feedback_fermentor_volume=None):
+                 feedback_fermentor_volume=None,feedback_original_gravity=None,feedback_intermediate_gravity=None,
+                 feedback_final_gravity=None,feedback_IG_time_elapsed=None,feedback_FG_time_elapsed=None,
+                 feedback_fermentation_observation=None,feedback_beer_quality_observation=None):
         self.name = name
         self.timestamp =timestamp
         #self.session_date = session_date
@@ -50,8 +52,17 @@ class Session(object):
         self.feedback_water_treatment_text=feedback_water_treatment_text
         self.feedback_mash_ph=feedback_mash_ph
         self.feedback_preboil_volume=feedback_preboil_volume
-        self.feedback_original_gravity=feedback_original_gravity
+        
         self.feedback_fermentor_volume=feedback_fermentor_volume
+        self.feedback_original_gravity=feedback_original_gravity
+        self.feedback_original_gravity=feedback_original_gravity
+        self.feedback_intermediate_gravity=feedback_intermediate_gravity
+        self.feedback_final_gravity=feedback_final_gravity
+        self.feedback_IG_time_elapsed=feedback_IG_time_elapsed
+        self.feedback_FG_time_elapsed=feedback_FG_time_elapsed
+        self.feedback_fermentation_observation=feedback_fermentation_observation
+        self.feedback_beer_quality_observation=feedback_beer_quality_observation
+        
         
         
         

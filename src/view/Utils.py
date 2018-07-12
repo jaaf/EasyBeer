@@ -84,7 +84,7 @@ class Utils(QWidget):
         else: 
             t=w.text()   
         #case nothing entered    
-        if acceptNone and not t:
+        if acceptNone and t=='':
             return ''    
         
         #case of string
@@ -498,21 +498,22 @@ class Utils(QWidget):
     
     
     def get_unit_label(self,unit):
-        if unit.unit=='Farenheit': return '°F'
-        if unit.unit=='Celsius': return '°C'
-        if unit.unit=='Gram per liter' : return 'g/l'
-        if unit.unit=='Gram per gallon': return 'g/gal.'
-        if unit.unit=='Ounce per gallon': return 'oz./gal.'
-        if unit.unit=='Liter': return 'l'
-        if unit.unit=='Gallon':return 'gal.'
-        if unit.unit=='Quart': return 'quart'   
-        if unit.unit=='Pound':return 'lb'
-        if unit.unit=='Kilogram': return 'kg' 
-        if unit.unit=='Gram': return 'g'
-        if unit.unit=='Ounce': return 'oz.'
-        if unit.unit=='Billion/°P/Liter': return 'Billion/°P/l'
-        if unit.unit=='Billion/°P/Gallon': return 'Billion/°P/gal.'
-    
+        if unit:
+            if unit.unit=='Farenheit': return '°F'
+            if unit.unit=='Celsius': return '°C'
+            if unit.unit=='Gram per liter' : return 'g/l'
+            if unit.unit=='Gram per gallon': return 'g/gal.'
+            if unit.unit=='Ounce per gallon': return 'oz./gal.'
+            if unit.unit=='Liter': return 'l'
+            if unit.unit=='Gallon':return 'gal.'
+            if unit.unit=='Quart': return 'quart'   
+            if unit.unit=='Pound':return 'lb'
+            if unit.unit=='Kilogram': return 'kg' 
+            if unit.unit=='Gram': return 'g'
+            if unit.unit=='Ounce': return 'oz.'
+            if unit.unit=='Billion/°P/Liter': return 'Billion/°P/l'
+            if unit.unit=='Billion/°P/Gallon': return 'Billion/°P/gal.'
+        else: return ''
     
     def get_usage_key(self,v):
         for key,val in   self.hop_usage_dic.items():

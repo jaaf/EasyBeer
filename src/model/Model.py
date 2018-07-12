@@ -700,8 +700,14 @@ class Model(object):
             :feedback_water_treatment_text,\
             :feedback_mash_ph,\
             :feedback_preboil_volume,\
+            :feedback_fermentor_volume,\
             :feedback_original_gravity,\
-            :feedback_fermentor_volume)",
+            :feedback_intermediate_gravity,\
+            :feedback_final_gravity,\
+            :feedback_IG_time_elapsed,\
+            :feedback_FG_time_elapsed,\
+            :feedback_fermentation_observation,\
+            :feedback_beer_quality_observation)",
             (
             s.name,
             s.timestamp,
@@ -724,8 +730,15 @@ class Model(object):
             s.feedback_water_treatment_text,
             s.feedback_mash_ph,
             s.feedback_preboil_volume,
+            
+            s.feedback_fermentor_volume,
             s.feedback_original_gravity,
-            s.feedback_fermentor_volume
+            s.feedback_intermediate_gravity,
+            s.feedback_final_gravity,
+            s.feedback_IG_time_elapsed,
+            s.feedback_FG_time_elapsed,
+            s.feedback_fermentation_observation,
+            s.feedback_beer_quality_observation
              ))
             con.commit()
         except Error as e:
@@ -942,22 +955,37 @@ class Model(object):
         self.update_from_db('rest')
         self.announce_model_changed('rest')   
         
-    def update_session(self,session):
+    def update_session(self,feedback):
+        'we cannot update the firt part of a session, only the feedback'
         con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         
         try:
-            c.execute("update sessions set feedback_water_treatment=:feedback_water_treatment,\
+            c.execute("update sessions set \
+            feedback_water_treatment_text=:feedback_water_treatment_text,\
             feedback_mash_ph=:feedback_mash_ph,\
             feedback_preboil_volume=:feedback_preboil_volume,\
-            feedback_original_gravity ,\
-            feedback_fermentor_volume=:feedback_fermentor_volume where name=:name ",
-            {'name':session.name,
-             'feedback_treatment':session.feedback_water_treatment,
-             'feedback_mash_py':session.feedback_mash_ph,
-             'feedback_preboil_volume':session.feedback_preboil_volume,
-             'feedback_original_gravity':session.feedback_original_gravity,
-             'feelback_fermentor_volume':session.feedback_fermentor_volume})
+            feedback_fermentor_volume=:feedback_fermentor_volume,\
+            feedback_original_gravity=:feedback_original_gravity,\
+            feedback_intermediate_gravity=:feedback_intermediate_gravity,\
+            feedback_final_gravity=:feedback_final_gravity,\
+            feedback_IG_time_elapsed=:feedback_IG_time_elapsed,\
+            feedback_FG_time_elapsed=:feedback_FG_time_elapsed,\
+            feedback_fermentation_observation=:feedback_fermentation_observation,\
+            feedback_beer_quality_observation=:feedback_beer_quality_observation\
+             where name=:name ",
+            {'name':feedback['name'],
+             'feedback_water_treatment_text':feedback['water_treatment'] ,
+             'feedback_mash_ph':feedback['mash_ph'],
+             'feedback_preboil_volume':feedback['preboil_volume'],
+             'feedback_fermentor_volume': feedback['fermentor_volume'],
+             'feedback_original_gravity':feedback['OG'],
+             'feedback_intermediate_gravity':feedback['IG'],
+             'feedback_final_gravity':feedback['FG'],
+             'feedback_IG_time_elapsed': feedback['IG_time_elapsed'],
+             'feedback_FG_time_elapsed': feedback['FG_time_elapsed'],
+             'feedback_fermentation_observation': feedback['fermentation_observation'],
+             'feedback_beer_quality_observation':feedback['beer_quality_observation']})
         except Error as e:
             print('there was an error while updating session')
             print(e)   
@@ -1136,11 +1164,18 @@ class Model(object):
             strike_temperature real,\
             mash_sparge_water_volume real,\
             boiler_dead_space real,\
-            feedback_water_treatment_text text,\
+            feedback_water_treatment_text text ,\
             feedback_mash_ph real,\
             feedback_preboil_volume real,\
-            feedback_original_gravity real ,\
-            feedback_fermentor_volume real)"""
+            feedback_fermentor_volume real,\
+            feedback_original_gravity real,\
+            feedback_intermediate_gravity real,\
+            feedback_final_gravity real,\
+            feedback_IG_time_elapsed real,\
+            feedback_FG_time_elapsed real,\
+            feedback_fermentation_observation text,\
+            feedback_beer_quality_observation text)"""
+            
             c.execute(sql)
             
             sql="""create table if not exists styles (category text primary key not null, cols text) """

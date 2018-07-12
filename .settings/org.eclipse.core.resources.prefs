@@ -42,6 +42,7 @@ encoding//src/model/constants.py=utf-8
 encoding//src/view/ColorDialog.py=utf-8
 encoding//src/view/CustomProgressBar.py=utf-8
 encoding//src/view/EquipmentDialog.py=utf-8
+encoding//src/view/Feedback.py=utf-8
 encoding//src/view/FolderChooser.py=utf-8
 encoding//src/view/HelpText.py=utf-8
 encoding//src/view/HelpWindow.py=utf-8
