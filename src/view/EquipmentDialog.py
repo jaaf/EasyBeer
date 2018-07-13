@@ -486,9 +486,9 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         
         
     def showEvent(self,ev):
-        self.set_labels()    
+        #self.set_labels()    
         self.set_fonts()
-        self.set_unit_labels()
+        #self.set_unit_labels()
         
         
     def unset_color(self):
