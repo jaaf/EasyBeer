@@ -230,20 +230,7 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
         self.delete_button.show()
         self.new_button.show()
         
-    def set_translatable_textes(self):
-        self.setWindowTitle(self.tr('Hop Database Edition'))
-        self.list_label.setText(self.tr('Hop List'))
-        self.detail_label.setText(self.tr('Selected Hop Details'))
-        self.add_button.setText(self.tr('Add this hop'))
-        self.cancel_button.setText(self.tr('Cancel'))
-        self.update_button.setText(self.tr('Update this hop'))
-        self.name_label.setText(self.tr('Name'))
-        self.alpha_acid_label.setText(self.tr('Alpha Acids'))
-        self.form_label.setText(self.tr('Form'))
-        self.close_button.setText(self.tr('Close'))
-        self.edit_button.setText(self.tr('Edit'))
-        self.delete_button.setText(self.tr('Delete'))
-        self.new_button.setText(self.tr('New'))
+ 
         
         
     def set_fonts(self):
@@ -269,7 +256,6 @@ class HopDialog(QWidget,HopDialogUI.Ui_Form ):
                 
         
     def showEvent(self,ev):
-        self.set_translatable_textes()
         self.set_fonts()
         self.hop_form_list=['',self.tr('Pellets'),self.tr('Leaves'),self.tr('Cones')]    
         for f in self.hop_form_list:
