@@ -367,7 +367,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.fermentor_size_edit.setStyleSheet(sty.field_styles['editable']) 
         self.fermentor_dead_space_edit.setStyleSheet(sty.field_styles['editable']) 
         
-        
+    '''   
     def set_labels(self):
         self.equipment_list_label.setText(self.tr('Equipment List'))
         self.equipment_properties_label.setText(self.tr('Equipment properties'))
@@ -415,7 +415,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         if t_unit:
             t_unit_label=self.util.get_unit_label(t_unit)
             self.mash_tun_heat_losses_unit_label.setText(t_unit_label+self.tr('/hour'))
-        
+     '''   
         
     def set_fonts(self):
         self.add_button.setStyleSheet('background-color:lightgreen;')
