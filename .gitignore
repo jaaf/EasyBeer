@@ -1,4 +1,4 @@
-src/**/__pycache__/**
+*.pcy
 
 dist/**/**
 build/**/**
