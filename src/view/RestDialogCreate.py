@@ -57,8 +57,6 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.rest_key_list=self.model.rest_list        
         self.ensure_unremovable_rests()  
         self.refresh_rest_list_combo()  
-        self.set_translatable_textes()
-        #self.set_translatable_texts()  
         
     def cancel(self):
         self.clear_edits()
@@ -313,20 +311,7 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
         self.usage_guidance_edit.setReadOnly(False)
         self.usage_guidance_edit.setStyleSheet(sty.field_styles['editable'])  
         
-    def set_translatable_textes(self):
-        self.main_label.setText(self.tr('Rest Database'))     
-        self.choose_label.setText(self.tr('Select a rest here or create a new one')) 
-        self.name_label.setText(self.tr('Name'))
-        self.ph_range_label.setText(self.tr('PH range'))
-        self.temperature_label.setText(self.tr('Temperature range'))
-        
-        
-        self.add_button.setText(self.tr('Add this rest'))
-        self.cancel_button.setText(self.tr('Cancel'))
-        self.update_button.setText(self.tr('Update this rest'))
-        self.delete_button.setText(self.tr('Delete'))
-        self.new_button.setText(self.tr('New'))
-        self.edit_button.setText(self.tr('Edit'))
+    
         
     def showEvent(self,e):  
         self.set_fonts()   
