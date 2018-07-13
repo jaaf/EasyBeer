@@ -148,6 +148,7 @@ class Feedback(QDialog,FeedbackUI.Ui_Dialog ):
              'fermentation_observation': fermentation_observation,
              'beer_quality_observation':beer_quality_observation}
         self.model.update_session(feedback)
+        self.load_feedback()
         
     def set_connections(self):
         self.edit_button.clicked.connect(self.edit)    
