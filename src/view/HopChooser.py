@@ -78,16 +78,10 @@ class HopChooser(QWidget,HopChooserUI.Ui_Form ):
         self.form_edit.setStyleSheet(sty.field_styles['read_only'])
             
         
-    def set_translatable_textes(self):
-        self.hop_list_label.setText(self.tr('Available hops'))
-        self.name_label.setText(self.tr('Name '))
-        self.alpha_acid_label.setText(self.tr('Alpha acids'))
-        self.form_label.setText(self.tr('Form'))
-        self.hop_add_button.setText(self.tr('Add this hop'))
-        self.close_button.setText(self.tr('Close'))
+    
             
     def showEvent(self, ev):
-        self.set_translatable_textes()
+        #self.set_translatable_textes()
         self.set_ro()    
         
     def on_model_changed_hop_chooser(self,target):

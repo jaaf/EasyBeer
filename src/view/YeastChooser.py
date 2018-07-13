@@ -101,23 +101,10 @@ class YeastChooser(QWidget,YeastChooserUI.Ui_Form ):
         self.floculation_edit.setReadOnly(True)
             
         
-    def set_translatable_textes(self):
-        self.setWindowTitle(self.tr('Yeast Chooser'))
-        self.yeast_list_label.setText(self.tr('Yeast List'))
-        self.detail_label.setText(self.tr('Selected Yeast Details'))
-        self.add_button.setText(self.tr('Select this yeast'))
-        self.name_label.setText(self.tr('Name'))
-        self.maker_label.setText(self.tr('Maker'))
-        self.max_allowed_temperature_label.setText(self.tr('Maximum Allowed Temperature'))
-        self.min_allowed_temperature_label.setText(self.tr('Minimum Allowed Temperature'))
-        self.max_advised_temperature_label.setText(self.tr('Maximum Advised Temperature'))
-        self.min_advised_temperature_label.setText(self.tr('Minimum Advised Temperature'))
-        self.form_label.setText(self.tr('Form'))
-        self.attenuation_label.setText(self.tr('Attenuation'))
-        self.floculation_label.setText(self.tr('Floculation'))
+  
             
     def showEvent(self, ev):
-        self.set_translatable_textes()
+        #self.set_translatable_textes()
         self.set_ro()  
         
     def on_model_changed_yeast_chooser(self,target):

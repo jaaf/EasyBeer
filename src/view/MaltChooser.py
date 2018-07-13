@@ -108,7 +108,8 @@ class MaltChooser(QWidget,MaltChooserUI.Ui_Form ):
         self.add_button.setText(self.tr('Add this malt'))
         
     def showEvent(self, ev):
-        self.set_translatable_text()  
+        pass
+        #self.set_translatable_text()  
         #self.setReadOnly(True)  
         
     def on_model_changed_malt_chooser(self, target):

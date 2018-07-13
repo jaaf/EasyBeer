@@ -155,22 +155,11 @@ class RestDialog(QWidget,RestDialogUI.Ui_Form ):
         self.rest_list_widget.currentItemChanged.connect(self.selection_changed_rest)
         self.select_guidance_help_button.clicked.connect(self.explain_rest_selection)
         
-    def set_translatable_textes(self):
-        self.setWindowTitle(self.tr('Dialog: choosing a rest for recipe'))
-        self.select_rest_label.setText(self.tr('Select a rest type for guidance'))
-        self.standard_settings_label.setText(self.tr('Standard Settings'))
-        self.customize_zone_label.setText(self.tr('Customize your rest'))
-        self.purpose_label.setText(self.tr('Purpose or name'))
-        self.duration_label.setText(self.tr('Duration'))
-        self.temperature_label.setText(self.tr('Temperature'))
-        self.temperature_range_label.setText(self.tr('Temperature Range'))
-        self.ph_range_label.setText(self.tr('PH Range'))
-        self.insert_after_label.setText(self.tr('Insert after'))
-        self.add_button.setText(self.tr('Add this rest'))  
+  
  
     def showEvent(self, event):
         self.update_rest_list()
-        self.set_translatable_textes()
+        #self.set_translatable_textes()
         
         
     def update_rest_list(self):

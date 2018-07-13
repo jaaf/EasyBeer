@@ -367,55 +367,7 @@ class EquipmentDialog(QWidget,EquipmentDialogUI.Ui_Form ):
         self.fermentor_size_edit.setStyleSheet(sty.field_styles['editable']) 
         self.fermentor_dead_space_edit.setStyleSheet(sty.field_styles['editable']) 
         
-    '''   
-    def set_labels(self):
-        self.equipment_list_label.setText(self.tr('Equipment List'))
-        self.equipment_properties_label.setText(self.tr('Equipment properties'))
-        self.type_guidance_label.setText(self.tr('Select a type below. Click the question mark for explanation.'))
-        self.basic_type_radiobutton.setText(self.tr('Basic type'))
-        self.all_in_one_type_radiobutton.setText(self.tr('All in one type'))
-        self.brewing_efficiency_label.setText(self.tr('Breewing efficiency'))
-        self.mash_tun_size_label.setText(self.tr('Mash tun size'))
-        
-        self.mash_tun_dead_space_label.setText(self.tr('Mash tun dead space'))
-        
-        self.mash_tun_heat_losses_label.setText(self.tr('Mash tun heat losses'))
-        
-        self.boiler_size_label.setText(self.tr('Boiler capacity'))
-        
-        self.boiler_dead_space_label.setText(self.tr('Boiler dead space'))
-        self.boiler_evaporation_rate_label.setText(self.tr('Boiler evaporation rate'))
-        
-        self.fermentor_size_label.setText(self.tr('Fermentor capacity'))
-        
-        self.fermentor_dead_space_label.setText(self.tr('Fermentor dead space'))
-        
-        self.name_label.setText(self.tr('Name'))
-        self.mash_tun_groupbox.setTitle(self.tr('Mash Tun'))
-        self.boiler_groupbox.setTitle(self.tr('Boiler'))
-        self.fermentor_groupbox.setTitle(self.tr('Fermentor'))
-        self.general_groupbox.setTitle(self.tr('General'))
-        self.update_button.setText(self.tr('Update Equipment'))
-        self.cancel_button.setText(self.tr('Cancel'))
-        self.add_button.setText(self.tr('Add Equipment'))
-        
-    def set_unit_labels(self):    
-        v_unit=self.model.get_unit('water_volume')
-        if v_unit:
-            v_unit_label=self.util.get_unit_label(v_unit)
-            self.mash_tun_size_unit_label.setText(v_unit_label)
-        
-            self.boiler_dead_space_unit_label.setText(v_unit_label)
-            self.boiler_size_unit_label.setText(v_unit_label)
-            self.boiler_evaporation_rate_unit_label.setText(v_unit_label+self.tr('/hour'))
-            self.mash_tun_dead_space_unit_label.setText(v_unit_label)
-            self.fermentor_size_unit_label.setText(v_unit_label)
-            self.fermentor_dead_space_unit_label.setText(v_unit_label)
-        t_unit=self.model.get_unit('temperature')
-        if t_unit:
-            t_unit_label=self.util.get_unit_label(t_unit)
-            self.mash_tun_heat_losses_unit_label.setText(t_unit_label+self.tr('/hour'))
-     '''   
+
         
     def set_fonts(self):
         self.add_button.setStyleSheet('background-color:lightgreen;')
