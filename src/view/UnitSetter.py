@@ -60,6 +60,7 @@ class UnitSetter(QDialog,UnitSetterUI.Ui_Dialog ):
         self.model.update_unit(Unit('water_volume', 'Liter'))
         self.model.update_unit(Unit('malt_mass','Kilogram'))
         self.model.update_unit(Unit('yeast_mass','Gram'))  
+        self.model.update_unit(Unit('yeast_rate','Billion/°P/Liter'))
         self.model.update_unit(Unit('hop_rate','Gram per liter'))
         self.model.update_unit(Unit('hop_mass','Gram'))
         
@@ -122,6 +123,7 @@ class UnitSetter(QDialog,UnitSetterUI.Ui_Dialog ):
         u.append(Unit('hop_rate',hop_rate))
         hop_mass=self.hop_mass_combo.currentText()
         u.append(Unit('hop_mass',hop_mass))
+        'this is a special one'
         u.append(Unit('yeast_rate','Billion/°P/'+water_volume))
         return u
         

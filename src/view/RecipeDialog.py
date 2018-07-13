@@ -343,8 +343,10 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         hl2.addWidget(rate_edit)
         if rate:
             rate_edit.setText(str(rate))
-        
-        rate_unit=QLabel('billions/°P/liter')   
+            
+        yr_unit=self.model.get_unit('yeast_rate')
+        yr_unit_label=self.util.get_unit_label(yr_unit)
+        rate_unit=QLabel(yr_unit_label)   
         rate_unit.setAccessibleName('rate_unit')
         rate_unit.setMaximumSize(150,30)
         #rate_unit.setStyleSheet("font-size: 14px;")
@@ -497,9 +499,10 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
                 self.boiling_time_edit.setText(str(recipe.boiling_time))   
                 
             if hasattr(recipe,'yeast_in_recipe'):
+                yr_unit=self.model.get_unit('yeast_rate')
                 yir=recipe.yeast_in_recipe
                 yeast=self.model.get_yeast(yir.yeast)  
-                self.add_yeast_view(yeast, yir.pitching_rate)  
+                self.add_yeast_view(yeast,self.util.convert_to(yr_unit,yir.pitching_rate))  
                 
             if hasattr(recipe,'fermentation_explanation'):
                 self.fermentation_explain_edit.setPlainText(recipe.fermentation_explanation)          
@@ -645,6 +648,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
    
                 
         'Yeast in recipe'
+        yr_unit=self.model.get_unit('yeast_rate')
         yeast_name_edit=self.util.get_by_name_recursive(self.yeast_layout,'name')
       
         if not yeast_name_edit: 
@@ -652,7 +656,7 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         else: yeast_name= yeast_name_edit.text()
         w=self.util.get_by_name_recursive(self.yeast_layout, 'rate')
         if not w: return 
-        pitching_rate=util.check_input(w,False,self.tr('Pitching Rate'),False, 0,1)
+        pitching_rate=util.check_input(w,False,self.tr('Pitching Rate'),False, 0,1,None,yr_unit)
         if not pitching_rate: return
         yir=YeastInRecipe(yeast_name,pitching_rate)
         fermentation_explanation=self.fermentation_explain_edit.toPlainText()
