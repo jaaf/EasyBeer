@@ -404,9 +404,10 @@ class RecipeDialog(QWidget,RecipeDialogUI.Ui_Form ):
         self.recipe_new_button.show()      
         
     def changeEvent(self, event):
-        print('changeEvent triggered in RecipeDialog')
-        if event.type() == QtCore.QEvent.LanguageChange:
-            self.retranslateUi(self)  
+        #print('changeEvent triggered in RecipeDialog')
+        'the following lines are no longer required as application restarts after language change'
+        #if event.type() == QtCore.QEvent.LanguageChange:
+        #    self.retranslateUi(self)  
             
                                
     def clear_edits(self):
