@@ -44,7 +44,7 @@ class YeastChooser(QWidget,YeastChooserUI.Ui_Form ):
         yeastT=self.owner.model.get_yeast(str(self.yeast_list_widget.currentItem().text()))
         self.owner.add_yeast_view(yeastT)      
     
-   
+    
         
     def load_selected_yeast(self):
         #load the selected yeast

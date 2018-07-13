@@ -1241,8 +1241,8 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
                 self.set_fonts()  
     
     def open_session_sheet(self):
-         if(os.path.isfile('session_sheet.html')):
-             webbrowser.open('session_sheet.html')
+        if(os.path.isfile('session_sheet.html')):
+            webbrowser.open('session_sheet.html')
                         
                     
     def remove_session(self):

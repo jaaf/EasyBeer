@@ -55,7 +55,13 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.delete_button.hide()
         self.new_button.show()    
   
+    def changeEvent(self, event):
+        print('changeEvent triggered')
+        'the following lines are no longer required as the application restarts after a language change'
+        #if event.type() == QtCore.QEvent.LanguageChange:
+            #self.retranslateUi(self)
             
+                    
     def clear_edits(self):
         self.name_edit.setText('')  
         self.maker_edit.setText('')
@@ -255,28 +261,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.color_edit.setStyleSheet(sty.field_styles['read_only'])
         self.kolbach_min.setStyleSheet(sty.field_styles['read_only'])
         self.kolbach_max.setStyleSheet(sty.field_styles['read_only'])
-        
-        
-    def set_translatable_texts(self):    
-        self.setWindowTitle(self.tr('Malt Database Edition'))
-        self.add_button.setText(self.tr('Add this malt'))
-        
-        self.update_button.setText(self.tr('Update this malt'))
-        self.cancel_button.setText(self.tr('Cancel'))
-        self.edit_button.setText(self.tr('Edit'))
-        self.delete_button.setText(self.tr('Delete'))
-        self.new_button.setText(self.tr('New'))
-        self.malt_list_label.setText(self.tr('Malt List'))
-        self.detail_label.setText(self.tr('Selected Malt Details'))
-        self.name_label.setText(self.tr('Name'))
-        self.maker_label.setText(self.tr('Maker'))
-        self.max_yield_label.setText(self.tr('Maximum Yield'))
-        self.color_label.setText(self.tr('Color'))
-        self.kolbach_min_label.setText('Min')
-        self.kolbach_max_label.setText('Max')
-        self.kolbach_index_label.setText('Kolbach Index')
-        self.close_button.setText(self.tr('Close'))
-                                   
+                       
             
     def set_read_only(self):
         self.name_edit.setReadOnly(True)
@@ -288,8 +273,7 @@ class MaltDialog(QWidget,MaltDialogUI.Ui_MaltDialog ):
         self.set_read_only_style()
         
                 
-    def showEvent(self,e):
-        self.set_translatable_texts()   
+    def showEvent(self,e):  
         self.set_fonts()
         
      
