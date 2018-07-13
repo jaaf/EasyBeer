@@ -327,7 +327,7 @@
              <string notr="true">background-color:lightgreen; margin-bottom: 10px</string>
             </property>
             <property name="text">
-             <string>Edit feedback of current session</string>
+             <string>See feedback of current session</string>
             </property>
            </widget>
           </item>

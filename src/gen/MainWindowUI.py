@@ -835,7 +835,7 @@ class Ui_MainWindow(object):
         self.main_help_button.setText(_translate("MainWindow", "?"))
         self.designation_label.setText(_translate("MainWindow", "Designation"))
         self.add_button.setText(_translate("MainWindow", "Record this session"))
-        self.edit_feedback_button.setText(_translate("MainWindow", "Edit feedback of current session"))
+        self.edit_feedback_button.setText(_translate("MainWindow", "See feedback of current session"))
         self.batch_volume_label.setText(_translate("MainWindow", "Batch Volume"))
         self.grain_temperature_label.setText(_translate("MainWindow", "Grain temperature"))
         self.recipe_label.setText(_translate("MainWindow", "Recipe"))

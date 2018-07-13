@@ -405,7 +405,8 @@ class Model(object):
         #print(ris)
         his=pickle.loads(s[12])#hops in session
         yis=pickle.loads(s[13])#yeast in session
-        session=Session(s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7],s[8],s[9],mis,ris,his,yis,s[14],s[15],s[16],s[17],s[18],s[19],s[20],s[21],s[22])
+        session=Session(s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7],s[8],s[9],mis,ris,his,yis,s[14],s[15],s[16],s[17],s[18],s[19],s[20],s[21],s[22]
+                        ,s[23],s[24],s[25],s[26],s[27],s[28])
         return session
         
     
@@ -956,7 +957,10 @@ class Model(object):
         self.announce_model_changed('rest')   
         
     def update_session(self,feedback):
-        'we cannot update the firt part of a session, only the feedback'
+        'we cannot update the first part of a session, only the feedback'
+        print('updating session')
+        print(feedback['name'])
+        print(feedback['water_treatment'])
         con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
         
@@ -986,6 +990,7 @@ class Model(object):
              'feedback_FG_time_elapsed': feedback['FG_time_elapsed'],
              'feedback_fermentation_observation': feedback['fermentation_observation'],
              'feedback_beer_quality_observation':feedback['beer_quality_observation']})
+            con.commit()
         except Error as e:
             print('there was an error while updating session')
             print(e)   

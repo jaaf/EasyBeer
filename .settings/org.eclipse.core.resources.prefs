@@ -4,6 +4,7 @@ encoding//src/doc/Documentation.py=utf-8
 encoding//src/gen/ColorDialogUI.py=utf-8
 encoding//src/gen/DialogRecipeUI.py=utf-8
 encoding//src/gen/EquipmentDialogUI.py=utf-8
+encoding//src/gen/FeedbackUI.py=utf-8
 encoding//src/gen/FolderChooserUI.py=utf-8
 encoding//src/gen/HelpWindowUI.py=utf-8
 encoding//src/gen/HopChooserUI.py=utf-8

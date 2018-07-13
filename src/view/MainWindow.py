@@ -843,6 +843,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.yeastDialog.close()
         self.hopDialog.close()
         self.restDialogCreate.close()
+        self.feedback.close()
      
     
         

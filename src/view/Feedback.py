@@ -38,39 +38,80 @@ class Feedback(QDialog,FeedbackUI.Ui_Dialog ):
         self.model.subscribe_model_changed(['fontset'],self.on_model_changed)
         self.set_connections()
         
+    def cancel(self):
+        'in order to discard last changes'
+        self.load_feedback()
+        
         
     def edit(self):
-        pass    
+        self.set_writable()
+    
+    def explain(self,txt):
+        mb=QMessageBox()
+        mb.setIcon(QMessageBox.Information)
+        mb.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint)
+        mb.setText(self.tr(''))
+        mb.setInformativeText(txt)
+        mb.setStandardButtons(QMessageBox.Ok)
+        mb.exec_()
     
     def explain_fermentor_observation(self):
-        pass
-    
-
+        txt=self.tr('''
+        Describe here what you have observed during fermentation. How did you prepare your pitching. How long it took before bubbling. 
+        How long was the high-growth phase? How long was the maturation phase? Did you transfer the wort into a secondary fermentor after 
+        primary fermentation? Did you practice a cold conditionning?
+        ''')
+        self.explain(txt)
+       
     def explain_fermentor_volume(self):
-        pass
+        txt=self.tr('It is the volume of wort you put into the fermentor just after cooling the wort')
+        self.explain(txt)
     
     
     def explain_FG(self):
-        pass
+        txt=self.tr('The specific gravity you measured just before priming.')
+        self.explain(txt)
     
     def explain_IG(self):
-        pass
+        txt=self.tr('If you transferred the wort into a secondary fermentor for secondary fermentation, what was the specific gravity at this time.')
+        self.explain(txt)
     
     
     def explain_OG(self):
-        pass
-    
+        txt=self.tr('The specific gravity you measured when transferring the wort from boiler to fermentor. Give it at 20 °C.')
+        self.explain(txt)
     
     def explain_preboil_volume(self):
-        pass
+        txt=self.tr('The volume of wort in the boiler just at boil starting')
+        self.explain(txt)
+        
     
     def explain_quality(self):
-        pass
+        txt=self.tr('Give feedback on how the beer was and when.')
+        self.explain(txt)
     
     
     def explain_water_treatment(self):
-        pass
-    
+        txt=self.tr('Give feedback about what you did to prepare the water')
+        self.explain(txt)
+        
+    def load_feedback(self):
+        session=self.model.get_session(self.current_session_name)
+        self.name_edit.setText(session.name)
+        self.water_treatment_edit.setText(session.feedback_water_treatment_text)
+        self.mash_PH_edit.setText(str(session.feedback_mash_ph))
+        self.preboil_volume_edit.setText(str(session.feedback_preboil_volume))
+        self.fermentor_volume_edit.setText(str(session.feedback_fermentor_volume))
+        self.OG_edit.setText(str(session.feedback_original_gravity))
+        self.IG_edit.setText(str(session.feedback_intermediate_gravity))
+        self.FG_edit.setText(str(session.feedback_final_gravity))
+        self.IG_time_elapsed.setText(str(session.feedback_IG_time_elapsed))
+        self.FG_time_elapsed.setText(str(session.feedback_FG_time_elapsed))
+        self.fermentation_observation_edit.setText(session.feedback_fermentation_observation)
+        self.beer_quality_edit.setText(session.feedback_beer_quality_observation)
+        self.set_ro()
+        
+                   
     
     def on_model_changed(self,target):
         print('model changed in feedback')
@@ -111,6 +152,8 @@ class Feedback(QDialog,FeedbackUI.Ui_Dialog ):
     def set_connections(self):
         self.edit_button.clicked.connect(self.edit)    
         self.save_button.clicked.connect(self.save)
+        self.cancel_button.clicked.connect(self.cancel)
+        self.close_button.clicked.connect(self.close)
         self.water_treatment_button.clicked.connect(self.explain_water_treatment)
         self.preboil_button.clicked.connect(self.explain_preboil_volume)
         self.fermentor_button.clicked.connect(self.explain_fermentor_volume)
@@ -124,6 +167,9 @@ class Feedback(QDialog,FeedbackUI.Ui_Dialog ):
     def set_fonts(self):
         self.edit_button.setFont(self.model.in_use_fonts['button'])
         self.save_button.setFont(self.model.in_use_fonts['button'])
+        self.cancel_button.setFont(self.model.in_use_fonts['button'])
+        self.close_button.setFont(self.model.in_use_fonts['button'])
+        self.name_edit.setFont(self.model.in_use_fonts['field'])
         self.water_treatment_button.setFont(self.model.in_use_fonts['button'])
         self.preboil_button.setFont(self.model.in_use_fonts['button'])
         self.fermentor_button.setFont(self.model.in_use_fonts['button'])
@@ -161,11 +207,68 @@ class Feedback(QDialog,FeedbackUI.Ui_Dialog ):
         self.Fermentation_observation_label.setFont(self.model.in_use_fonts['title_slanted'])
         self.observed_beer_quality_label.setFont(self.model.in_use_fonts['title_slanted'])
         
+    def set_ro(self):
+        self.water_treatment_edit.setStyleSheet(sty.field_styles['read_only'])   
+        self.water_treatment_edit.setEnabled(False) 
+        self.mash_PH_edit.setStyleSheet(sty.field_styles['read_only']) 
+        self.mash_PH_edit.setEnabled(False)
+        self.preboil_volume_edit.setStyleSheet(sty.field_styles['read_only']) 
+        self.preboil_volume_edit.setEnabled(False)
+        self.fermentor_volume_edit.setStyleSheet(sty.field_styles['read_only']) 
+        self.fermentor_volume_edit.setEnabled(False)
+        self.OG_edit.setStyleSheet(sty.field_styles['read_only']) 
+        self.OG_edit.setEnabled(False)
+        self.IG_edit.setStyleSheet(sty.field_styles['read_only']) 
+        self.IG_edit.setEnabled(False)
+        self.FG_edit.setStyleSheet(sty.field_styles['read_only']) 
+        self.FG_edit.setEnabled(False)
+        self.IG_time_elapsed.setStyleSheet(sty.field_styles['read_only']) 
+        self.IG_time_elapsed.setEnabled(False)
+        self.FG_time_elapsed.setStyleSheet(sty.field_styles['read_only']) 
+        self.FG_time_elapsed.setEnabled(False)
+        self.fermentation_observation_edit.setStyleSheet(sty.field_styles['read_only'])  
+        self.fermentation_observation_edit.setEnabled(False) 
+        self.beer_quality_edit.setStyleSheet(sty.field_styles['read_only'])  
+        self.beer_quality_edit.setEnabled(False)   
+        self.save_button.hide()
+        self.cancel_button.hide()
+        self.edit_button.show()
+        
+    def set_writable(self):
+        self.water_treatment_edit.setStyleSheet(sty.field_styles['editable'])   
+        self.water_treatment_edit.setEnabled(True) 
+        self.mash_PH_edit.setStyleSheet(sty.field_styles['editable']) 
+        self.mash_PH_edit.setEnabled(True)
+        self.preboil_volume_edit.setStyleSheet(sty.field_styles['editable']) 
+        self.preboil_volume_edit.setEnabled(True)
+        self.fermentor_volume_edit.setStyleSheet(sty.field_styles['editable']) 
+        self.fermentor_volume_edit.setEnabled(True)
+        self.OG_edit.setStyleSheet(sty.field_styles['editable']) 
+        self.OG_edit.setEnabled(True)
+        self.IG_edit.setStyleSheet(sty.field_styles['editable']) 
+        self.IG_edit.setEnabled(True)
+        self.FG_edit.setStyleSheet(sty.field_styles['editable']) 
+        self.FG_edit.setEnabled(True)
+        self.IG_time_elapsed.setStyleSheet(sty.field_styles['editable']) 
+        self.IG_time_elapsed.setEnabled(True)
+        self.FG_time_elapsed.setStyleSheet(sty.field_styles['editable']) 
+        self.FG_time_elapsed.setEnabled(True)
+        self.fermentation_observation_edit.setStyleSheet(sty.field_styles['editable'])  
+        self.fermentation_observation_edit.setEnabled(True) 
+        self.beer_quality_edit.setStyleSheet(sty.field_styles['editable'])  
+        self.beer_quality_edit.setEnabled(True) 
+        self.save_button.show()
+        self.cancel_button.show()
+        self.edit_button.hide()
+        
+        
+        
     def set_session_name(self,name):
         self.current_session_name=name    
         
-    def showEven(self,event):
-        self.set_fonts()        
+    def showEvent(self,event):
+        self.set_fonts()   
+        self.load_feedback()     
         
         
         
