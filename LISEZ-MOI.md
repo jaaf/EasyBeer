@@ -19,7 +19,7 @@ L'interface graphique est fournie en plusieurs langues (pour le moment Français
 
 Une langue peut être ajoutée en traduisant un fichier spécifique pour cela.
 
-L'installation se fait en téléchargeant un fichier compréssé  EasyBeer-<version>-<System>.zip  pour un système donné (Linux et Windows sont disponibles pour le moment).
+L'installation se fait en téléchargeant un fichier compréssé  EasyBeer-&lt;version&gt;-&lt;système&gt;.zip  pour un système donné (Linux et Windows sont disponibles pour le moment).
 
 Une fois que le fichier a été téléchargé, l'utilisateur doit décompresser le fichier. Dans le dossier extrait (dist) se trouve un dossier dist/main dans lequel se trouve l'exécutable.
 Il suffit de lancer cet exécutable (main ou main.exe). Éventuellement un raccourci peut être placé sur le bureau.
