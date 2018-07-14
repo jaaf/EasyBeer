@@ -76,7 +76,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         self.setupUi(self)
         
         self.translator=translator
-        
+        '''
         'THIS IS FOR CX FREEZE ONLY'
         self.frozen='not'
         if getattr(sys, 'frozen', False):
@@ -118,7 +118,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             'the path to the .qm translated files'
             (filepath,filename)=os.path.split(__file__)
             self.trad_path=os.path.join(filepath,'..','translate')
-        '''
+        
         
         self.controller = Controller(self.model)
         self.unitSetter=UnitSetter(self.model,self)
