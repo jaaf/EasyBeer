@@ -19,13 +19,16 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <layout class="QGridLayout" name="layout">
-     <item row="0" column="0">
-      <widget class="QTextEdit" name="textEdit"/>
-     </item>
-    </layout>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTextEdit" name="text_edit"/>
+   </item>
+   <item>
+    <widget class="QPushButton" name="close_button">
+     <property name="text">
+      <string>PushButton</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

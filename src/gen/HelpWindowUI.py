@@ -17,14 +17,14 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Form.sizePolicy().hasHeightForWidth())
         Form.setSizePolicy(sizePolicy)
-        self.gridLayout = QtWidgets.QGridLayout(Form)
-        self.gridLayout.setObjectName("gridLayout")
-        self.layout = QtWidgets.QGridLayout()
-        self.layout.setObjectName("layout")
-        self.textEdit = QtWidgets.QTextEdit(Form)
-        self.textEdit.setObjectName("textEdit")
-        self.layout.addWidget(self.textEdit, 0, 0, 1, 1)
-        self.gridLayout.addLayout(self.layout, 0, 0, 1, 1)
+        self.verticalLayout = QtWidgets.QVBoxLayout(Form)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.text_edit = QtWidgets.QTextEdit(Form)
+        self.text_edit.setObjectName("text_edit")
+        self.verticalLayout.addWidget(self.text_edit)
+        self.close_button = QtWidgets.QPushButton(Form)
+        self.close_button.setObjectName("close_button")
+        self.verticalLayout.addWidget(self.close_button)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -32,4 +32,5 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
+        self.close_button.setText(_translate("Form", "PushButton"))
 

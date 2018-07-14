@@ -333,7 +333,13 @@ class Model(object):
         c.close()
         con.close()
         
-        
+    def drop_rests(self):
+        con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
+        c=con.cursor()
+        c.execute('drop table if exists rests')
+        c.close()
+        con.close()    
+            
     def drop_units(self):
         con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c=con.cursor()
@@ -551,6 +557,7 @@ class Model(object):
         
     def remove_rest(self,key):
         'remove a rest from db given its key'
+        print('removing rest '+ key)
         con=lite.connect(os.path.join(self.database_path,'easybeer.db'))
         c = con.cursor()  
         try:
@@ -659,7 +666,7 @@ class Model(object):
             c.execute("insert into rests values (:name,:phs,:temperatures,:guidance,:removable)",
                   {'name':rest.name, 'phs':pickle.dumps(rest.phs), 'temperatures':pickle.dumps(rest.temperatures),'guidance':rest.guidance,'removable':rest.removable})
             con.commit()
-            c.execute("select * from hops")    
+            #c.execute("select * from hops")    
         except Error as e :
             print(e)   
         c.close()

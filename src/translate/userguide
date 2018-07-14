@@ -1,9 +1,8 @@
 Message extraction
 Depuis le niveau qui contient src 
 
-pylupdate5 src/view/*.py -ts src/translate/fr_FR.ts
-
-Dans la commmade précédente MaMousse contient les sources
+pylupdate5 src/view/*.py src/gen/*.py -ts src/translate/fr_FR.ts
+avec cette commande les fichiers pris en compte sur les fichiers générés qui contiennent les fonctions retranslate 
 
 Cette command produit le fichier fr_FR.ts qu'il faut ouvrir avec Qt5Linguist pour le traduire
 

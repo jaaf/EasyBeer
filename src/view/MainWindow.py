@@ -1847,86 +1847,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
              '\nFermentor dead space: '+str(self.equipment.fermentor_dead_space)
             self.equipment_combo.setToolTip(text)
             
-    '''       
-    def set_translatable_textes(self):
-        self.menuFile.setTitle(self.tr("File"))
-        self.menuDatabase.setTitle(self.tr("Database"))
-        self.menuHelp.setTitle(self.tr( "Help"))
-        self.menuSettings.setTitle(self.tr("Settings"))
-        self.actionEdit_Malt_Database.setText(self.tr('Edit Malt Database'))
-        self.actionEdit_Hop_Database.setText(self.tr('Edit Hop Database'))
-        self.actionEdit_Yeast_Database.setText(self.tr('Edit Yeast Database'))
-        self.actionEdit_Recipe_Database.setText(self.tr('Edit Recipe Database'))
-        self.actionEdit_Equipment_Database.setText(self.tr('Edit Equipment Database'))
-        self.actionEdit_Rest_Database.setText(self.tr('Edit Rest Database'))
-        self.actionCustomize_colors.setText(self.tr('Customize Colors'))
-        self.actionView_Help.setText(self.tr('View Help'))
-        self.menuChoose_Language.setTitle(self.tr('Choose Language'))
-        self.actionFrench.setText(self.tr('French'))
-        self.actionEnglish.setText(self.tr('English'))
-        self.actionJapanese.setText(self.tr('Japanese'))
-        #self.edit_button.setText(self.tr('Edit'))
-        self.delete_button.setText(self.tr('Delete'))
-        self.new_button.setText(self.tr('New'))
-        self.designation_label.setText(self.tr('Designation'))
-        
-        self.current_brewing_session_label.setText(self.tr('Current Brewing Session')) 
-        self.choose_session_label.setText(self.tr('Display or delete an existing session'))
-        self.new_session_label.setText(self.tr('Create a new brewing session'))
-        
-        self.batch_volume_label.setText(self.tr('Batch Volume'))  
-        
-        self.grain_temperature_label.setText(self.tr('Grain Temperature'))
-        
-        self.add_button.setText(self.tr('Save Current Session'))
-        
-        self.recipe_label.setText(self.tr('Recipe'))
-        self.equipment_label.setText(self.tr('Equipment'))
-        
-        self.boiling_time_label.setText(self.tr('Boiling Time'))
-        self.boiling_time_unit_label.setText(self.tr('min.'))
-        self.recipe_label.setText(self.tr('Recipe'))
-        self.targeted_original_gravity_label.setText(self.tr('Targeted Original Gravity'))
-        self.targeted_bitterness_label.setText(self.tr('Targeted Bitterness'))
-        self.targeted_bitterness_unit_label.setText(self.tr('IBU'))
-        #self.brewing_efficiency_label.setText(self.tr('Brewing Efficiency'))
-        
-        self.mash_label.setText(self.tr('Mashing'))
-        self.malt_label.setText(self.tr('Malts'))
-        self.calculate_button.setText(self.tr('Calculate Button'))
-        
-        self.mash_rest_label.setText(self.tr('Mash Rests'))
-        self.mash_water_volume_label.setText(self.tr('Mash Water Volume'))
-        
-        
-        self.strike_temperature_label.setText(self.tr('Strike Temperature'))
-        
-        
-        self.mash_sparge_water_volume_label.setText(self.tr('Sparge Water Volume'))
-        
-        
-        self.boil_label.setText(self.tr('Boiling'))
-        self.hop_label.setText(self.tr('Hops'))
-        self.ibu_bar_label.setText(self.tr('Current Bitterness vs. Target'))
-        self.hop_calculate_button.setText(self.tr('Reset to recipe values'))
-        
-        self.adjunct_label.setText(self.tr('Adjuncts'))
-        
-        self.pitching_label.setText(self.tr('Pitching'))
-        self.yeast_label.setText(self.tr('Yeast'))
-        self.pitching_rate_bar_label.setText(self.tr('Current Pitching Rate vs. Recommendation'))
-        
-        #self.feedback_label.setText(self.tr('Feedback'))
-        #self.feedback_water_treatment_label.setText(self.tr('Water Treatment'))
-        #self.feedback_observed_data_label.setText(self.tr('Observed Data'))
-        #self.feedback_mash_PH_label_2.setText(self.tr('Mash PH'))
-        #self.feedback_preboil_volume_label_2.setText(self.tr('Preboil Volume'))
-        #self.feedback_preboil_volume_unit_label_2.setText(self.tr('liters'))
-        #self.feedback_original_gravity_label_2.setText(self.tr('Original Gravity'))
-        #self.feedback_fermentor_volume_label_2.setText(self.tr('Fermentor Volume'))
-        #self.feedback_fermentor_volume_unit_label_2.setText(self.tr('liters')) 
-        #self.feedback_save_button.setText(self.tr('Save Feedback'))     
-    '''    
+   
        
     def set_units(self,units):
         for u in units:
@@ -2055,7 +1976,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         
     def show_help(self):
         self.helpWindow.show()
-        self.helpWindow.textEdit.setHtml(Documentation.text)
+        #self.helpWindow.text_edit.setHtml(Documentation.text)
             
            
     def show_malt_dialog(self):

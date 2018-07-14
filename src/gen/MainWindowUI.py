@@ -45,6 +45,7 @@ class Ui_MainWindow(object):
         self.session_combo.setObjectName("session_combo")
         self.horizontalLayout_8.addWidget(self.session_combo)
         self.view_session_button = QtWidgets.QPushButton(self.scrollAreaWidgetContents)
+        self.view_session_button.setMinimumSize(QtCore.QSize(300, 0))
         self.view_session_button.setMaximumSize(QtCore.QSize(200, 16777215))
         self.view_session_button.setObjectName("view_session_button")
         self.horizontalLayout_8.addWidget(self.view_session_button)
@@ -816,9 +817,9 @@ class Ui_MainWindow(object):
         self.menuImport_Export.addAction(self.actionImport_Export_Databases)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuDatabase.menuAction())
-        self.menubar.addAction(self.menuHelp.menuAction())
         self.menubar.addAction(self.menuSettings.menuAction())
         self.menubar.addAction(self.menuImport_Export.menuAction())
+        self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)

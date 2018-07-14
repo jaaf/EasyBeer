@@ -71,6 +71,12 @@
           </item>
           <item>
            <widget class="QPushButton" name="view_session_button">
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="maximumSize">
              <size>
               <width>200</width>
@@ -1750,9 +1756,9 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDatabase"/>
-   <addaction name="menuHelp"/>
    <addaction name="menuSettings"/>
    <addaction name="menuImport_Export"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionEdit_Malt_Database">
