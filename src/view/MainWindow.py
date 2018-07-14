@@ -792,7 +792,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
        
         
     def changeEvent(self, event):
-        print('changeEvent triggered')
+        print('changeEvent triggered'+str(event.type()))
         if event.type() == QtCore.QEvent.LanguageChange:
             self.retranslateUi(self)
             #self.set_translatable_textes()
@@ -987,7 +987,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             self.model.save_font_set(FontSet('small','inactive'))
             self.model.save_font_set(FontSet('big','inactive'))
             self.model.save_font_set(FontSet('huge','inactive'))
-            self.model.save_font_set(FontSet('tiny','active'))
+            #self.model.save_font_set(FontSet('tiny','active'))
         
         self.model.set_in_use_fonts()    
             

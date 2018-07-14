@@ -116,7 +116,9 @@ class Feedback(QDialog,FeedbackUI.Ui_Dialog ):
     def on_model_changed(self,target):
         print('model changed in feedback')
         if target == 'fontset':
-            self.set_fonts()
+            'to prevent calling set_fonts before in_use_fonts is ready'
+            if self.model.in_use_fonts:
+                self.set_fonts()
      
     def save(self): 
         v_unit=self.model.get_unit('water_volume')

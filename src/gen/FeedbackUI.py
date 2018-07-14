@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'feedback-new.ui'
+# Form implementation generated from reading ui file 'feedback.ui'
 #
 # Created by: PyQt5 UI code generator 5.10
 #
@@ -304,7 +304,7 @@ class Ui_Dialog(object):
         self.horizontalLayout_2.addItem(spacerItem7)
         self.IG_date_label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.IG_date_label.setMinimumSize(QtCore.QSize(300, 0))
-        self.IG_date_label.setMaximumSize(QtCore.QSize(200, 16777215))
+        self.IG_date_label.setMaximumSize(QtCore.QSize(400, 16777215))
         self.IG_date_label.setObjectName("IG_date_label")
         self.horizontalLayout_2.addWidget(self.IG_date_label)
         self.IG_time_elapsed = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)
@@ -340,7 +340,7 @@ class Ui_Dialog(object):
         self.horizontalLayout_3.addItem(spacerItem9)
         self.FG_date_label = QtWidgets.QLabel(self.scrollAreaWidgetContents)
         self.FG_date_label.setMinimumSize(QtCore.QSize(300, 0))
-        self.FG_date_label.setMaximumSize(QtCore.QSize(200, 16777215))
+        self.FG_date_label.setMaximumSize(QtCore.QSize(400, 16777215))
         self.FG_date_label.setObjectName("FG_date_label")
         self.horizontalLayout_3.addWidget(self.FG_date_label)
         self.FG_time_elapsed = QtWidgets.QLineEdit(self.scrollAreaWidgetContents)

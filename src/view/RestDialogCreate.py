@@ -194,7 +194,7 @@ class RestDialogCreate(QWidget,RestDialogCreateUI.Ui_Form ):
              mash ph (see optimal values for each category of enzymes), water to grain ratio and temperature.
                   To guaranty a high level of fermentability <strong>60 mn </strong> is the recommended duration.
         ''')
-        print(TEXT_REST_SACH)
+        
         self.sach_rest_LB=Rest('Saccharification Rest Light Body',[5, 5.2, 5.6, 6],[55,62,65,75],TEXT_REST_SACH,'no') 
         self.sach_rest_HB=Rest('Saccharification Rest Heavy Body',[5, 5.2, 5.6, 6],[55,68,72,75],TEXT_REST_SACH,'no') 
         
