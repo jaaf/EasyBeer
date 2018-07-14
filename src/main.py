@@ -29,7 +29,7 @@ if __name__=='__main__':
     while current_exit_code == MainWindow.EXIT_CODE_REBOOT:
         app = QApplication(sys.argv)
         translator = QtCore.QTranslator()
-        (filepath,filename)=os.path.split(__file__)
+        #(filepath,filename)=os.path.split(__file__)
         #trad_path=os.path.join(filepath,'translate','fr_FR.qm')
         #translator.load(os.path.join(trad_path))
    

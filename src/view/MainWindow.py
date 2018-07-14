@@ -77,6 +77,30 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
         
         self.translator=translator
         
+        'THIS IS FOR CX FREEZE ONLY'
+        self.frozen='not'
+        if getattr(sys, 'frozen', False):
+        # frozen
+            dir_ = os.path.dirname(sys.executable)
+            self.frozen='yes'
+            self.bundle_dir=dir_
+            self.model=Model(self.bundle_dir)
+            self.trad_path=os.path.join(self.bundle_dir,'translate')
+        else:
+        # unfrozen
+            dir_ = os.path.dirname(os.path.realpath(__file__))
+            'l’import export is reserved to the frozen application (bundled)'
+            self.actionImport_Export_Databases.setVisible(False)
+            self.model = Model()
+            'the path to the .qm translated files'
+            (filepath,filename)=os.path.split(__file__)
+            self.trad_path=os.path.join(filepath,'..','translate')
+            
+           
+            
+            
+        '''    
+        'THIS IS FOR PYINSTALLER ONLY'
         'Folder structure is quite different when running in a bundle'
         'Please see pyinstaller’s documentation'
         self.frozen = 'not' 
@@ -94,7 +118,7 @@ class MainWindow(QMainWindow,MainWindowUI.Ui_MainWindow):
             'the path to the .qm translated files'
             (filepath,filename)=os.path.split(__file__)
             self.trad_path=os.path.join(filepath,'..','translate')
-        
+        '''
         
         self.controller = Controller(self.model)
         self.unitSetter=UnitSetter(self.model,self)
