@@ -18,4 +18,4 @@ The GUI and the help is provided in several languages French, English.
 Any language can be added by translating a specific file for it.
 
 Installation is made by downloading the relevant EasyBeer-<version>-<System>.zip  for a given system (Linux and Windows are available at the moment).
-Once the file downloaded, the user must extract the archive. In the extracted folder there is a dist/main directory in which a main executable resides. The user has just to launch this excutable and it's done. After that, a look at the included documentation is advised.
+Once the file downloaded, the user must extract the archive. In the extracted folder there is a dist/main directory in which a main executable resides. The user has just to launch this excutable and it's done. They can also add a shortcut if whished. After that, a look at the included documentation is advised.
