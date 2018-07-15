@@ -21,7 +21,11 @@ Une langue peut être ajoutée en traduisant un fichier spécifique pour cela.
 
 L'installation se fait en téléchargeant un fichier compréssé  EasyBeer-&lt;version&gt;-&lt;système&gt;.zip  pour un système donné (Linux et Windows sont disponibles pour le moment).
 
-Une fois que le fichier a été téléchargé, l'utilisateur doit décompresser le fichier. Dans le dossier extrait (dist) se trouve un dossier dist/main dans lequel se trouve l'exécutable.
+Pour le télécharger, rendez-vous à l'adresse https://github.com/jaaf/EasyBeer/Downloads , puis cliquez sur le fichier correspondant à votre système (Windows ou Linux pour le moment). Une page s'affiche vous disant que le fichier ne peut être affiché compte tenu de sa trop grande taille. Utilisez le bouton Download pour lancer le téléchargement.
+
+Une fois que le fichier a été téléchargé, l'utilisateur doit décompresser le fichier. Dans le dossier extrait (dist) se trouve un dossier dist/main, ou tout simplement un dossier (main), dans lequel se trouve l'exécutable.
 Il suffit de lancer cet exécutable (main ou main.exe). Éventuellement un raccourci peut être placé sur le bureau.
 
 Une fois l'application lancée, un coup d'œil à la documentation (menu Aide) est fortement conseillé.
+
+
